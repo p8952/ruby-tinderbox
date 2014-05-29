@@ -1,0 +1,4 @@
+.vagrant/
+gentoo-x86/
+logs/
+ruby-overlay/

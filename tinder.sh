@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+[[ $(whoami) == 'root' ]] || exit 1
 
 function ENV_SETUP() {
 	if [[ ! -d /etc/portage/env/ ]]; then

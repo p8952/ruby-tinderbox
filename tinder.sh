@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o errexit
 [[ $(whoami) == 'root' ]] || exit 1
 
 function ENV_SETUP() {
@@ -22,15 +23,19 @@ function SETUP () {
 		rm /usr/portage/packages/dev-ruby/$RUBY_PACKAGE.tbz2
 	fi
 
+	set +e
 	emerge --pretend "=dev-ruby/$RUBY_PACKAGE"
 	if [[ $? == 1 ]]; then
 		emerge --autounmask-write "=dev-ruby/$RUBY_PACKAGE"
 		etc-update --automode -5
 	fi
+	set -e
 }
 
 function EMERGE() {
+	set +e
 	emerge --usepkg --buildpkg "=dev-ruby/$RUBY_PACKAGE"
+	set -e
 	if [[ $? == 1 ]]; then
 		LOG dev-ruby/$RUBY_PACKAGE
 	fi

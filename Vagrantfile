@@ -9,4 +9,5 @@ Vagrant.configure(2) do |config|
 		override.ssh.username = 'ec2-user'
 		override.ssh.private_key_path = '~/.ssh/AWS-Key.pem'
 	end
+	config.vm.provision "shell", inline: "sudo cp /vagrant/conf/make.conf /etc/portage/make.conf"
 end

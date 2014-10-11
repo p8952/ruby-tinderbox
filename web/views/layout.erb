@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Ruby Stats</title>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/flatly/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container-fluid">
+			<nav class="navbar navbar-default" role="navigation" id="navbar">
+				<a class="navbar-brand" href="#navbar">Ruby Stats</a>
+				<a class="navbar-text" href="#ruby_targets">Ruby Targets</a>
+			</nav>
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8"><%=yield%></div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+	</body>
+</html>

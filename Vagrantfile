@@ -1,7 +1,7 @@
 Vagrant.configure(2) do |config|
 	config.vm.box = 'gentoo-amd64'
 	config.vm.box_url = 'http://vagrant.p8952.info/gentoo-amd64-aws-1412531813.box'
-	config.vm.synced_folder '.', '/vagrant', type: 'rsync', :rsync_excludes => ['gentoo-x86/']
+	config.vm.synced_folder '.', '/vagrant', type: 'rsync', :rsync_excludes => ['gentoo-x86/', 'web/']
 	config.vm.provider :aws do |aws, override|
 		aws.instance_type = 't2.micro'
 		aws.region = 'eu-west-1'

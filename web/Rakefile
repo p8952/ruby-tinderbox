@@ -1,0 +1,17 @@
+namespace :db do
+	require 'sequel'
+	require 'logger'
+
+	task :migrate do
+		Sequel.extension :migration
+		DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :loggers => [Logger.new($stdout)])
+		Sequel::Migrator.run(DB, 'db/migrations')
+	end
+
+	task :update do
+		require_relative 'lib/update_db'
+		DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :loggers => [Logger.new($stdout)])
+		db_update(DB)
+	end
+
+end

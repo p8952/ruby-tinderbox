@@ -3,6 +3,7 @@ set -o errexit
 [[ $(whoami) == 'root' ]] || exit 1
 
 function ENV_SETUP() {
+	eselect news read --quiet all
 	if [[ ! -d /etc/portage/env/ ]]; then
 		mkdir /etc/portage/env/
 	fi
@@ -24,7 +25,7 @@ function SETUP () {
 	fi
 
 	set +e
-	emerge --pretend "=dev-ruby/$RUBY_PACKAGE"
+	emerge --pretend --quiet "=dev-ruby/$RUBY_PACKAGE"
 	if [[ $? == 1 ]]; then
 		emerge --autounmask-write "=dev-ruby/$RUBY_PACKAGE"
 		etc-update --automode -5
@@ -34,11 +35,14 @@ function SETUP () {
 
 function EMERGE() {
 	set +e
-	emerge --usepkg --buildpkg "=dev-ruby/$RUBY_PACKAGE"
-	set -e
+	emerge --usepkg --buildpkg --quiet "=dev-ruby/$RUBY_PACKAGE"
 	if [[ $? == 1 ]]; then
 		LOG dev-ruby/$RUBY_PACKAGE
+		RESULT="\e[0;31mBUILD FAILED\e[0m"
+	else
+		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
 	fi
+	set -e
 }
 
 function LOG() {
@@ -52,7 +56,7 @@ function LOG() {
 
 function CLEANUP() {
 	mv /var/lib/portage/world.original /var/lib/portage/world
-	emerge --depclean
+	emerge --depclean --quiet
 }
 
 ENV_SETUP
@@ -61,4 +65,5 @@ for RUBY_PACKAGE in ${RUBY_PACKAGES[@]}; do
 	SETUP $RUBY_PACKAGE
 	EMERGE $RUBY_PACKAGE
 	CLEANUP
+	echo -e $RESULT
 done

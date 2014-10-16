@@ -1,4 +1,5 @@
 *.box
+*.sqlite3
 .vagrant/
 gentoo-x86/
 logs/

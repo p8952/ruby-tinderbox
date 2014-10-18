@@ -35,23 +35,25 @@ function SETUP () {
 
 function EMERGE() {
 	set +e
-	emerge --usepkg --buildpkg --quiet "=dev-ruby/$RUBY_PACKAGE"
-	if [[ $? == 1 ]]; then
-		LOG dev-ruby/$RUBY_PACKAGE
-		RESULT="\e[0;31mBUILD FAILED\e[0m"
-	else
-		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-	fi
+	emerge --usepkg --buildpkg "=dev-ruby/$RUBY_PACKAGE"
+	LOG $? dev-ruby/$RUBY_PACKAGE
 	set -e
 }
 
 function LOG() {
 	DATE=$(date +%s)
 	mkdir -p /vagrant/logs/$RUBY_PACKAGE/$DATE
-	emerge --info "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-info
-	emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-pqv
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log /vagrant/logs/$RUBY_PACKAGE/$DATE/build.log
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment /vagrant/logs/$RUBY_PACKAGE/$DATE/environment
+	if [[ $1 == 1 ]]; then
+		RESULT="\e[0;31mBUILD FAILED\e[0m"
+		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/failed
+		emerge --info "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-info
+		emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-pqv
+		cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log /vagrant/logs/$RUBY_PACKAGE/$DATE/build.log
+		cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment /vagrant/logs/$RUBY_PACKAGE/$DATE/environment
+	else
+		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
+		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/succeeded
+	fi
 }
 
 function CLEANUP() {
@@ -65,5 +67,5 @@ for RUBY_PACKAGE in ${RUBY_PACKAGES[@]}; do
 	SETUP $RUBY_PACKAGE
 	EMERGE $RUBY_PACKAGE
 	CLEANUP
-	echo -e $RESULT
+	echo -e "$RUBY_PACKAGE : $RESULT"
 done

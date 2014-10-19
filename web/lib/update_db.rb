@@ -6,11 +6,12 @@ def db_update(db)
 
 	db.transaction do
 		packages_txt.lines.each do |line|
-			category, name, version, slot, r19_target, r20_target, r21_target = line.split(' ')
+			category, name, version, revision, slot, r19_target, r20_target, r21_target = line.split(' ')
 			packages.insert(
 				:category => category,
 				:name => name,
 				:version => version,
+				:revision => revision,
 				:slot => slot,
 				:r19_target => r19_target,
 				:r20_target => r20_target,

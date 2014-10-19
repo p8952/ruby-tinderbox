@@ -12,7 +12,7 @@ for package in portdb.cp_all():
                         package_v_best = portage.best(list(package_v_dict))
                         category, pkgname, version, revision = portage.catpkgsplit(package_v_best)
                         if category == 'dev-ruby':
-                            print(category + ' ' + pkgname + ' ' + version + ' ' + slot, end=' ')
+                            print(category + ' ' + pkgname + ' ' + version + ' ' + revision + ' ' + slot, end=' ')
                             if 'ruby_targets_ruby19' in iuse:
                                     print('ruby19', end=' ')
                             else:

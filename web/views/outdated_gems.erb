@@ -1,3 +1,28 @@
 <div id="outdated_gems">
 	<h3>Outdated Gems</h3>
 </div>
+<table class="table table-bordered table-condensed" id="ruby_targets_table">
+	<tr>
+		<th>Package</th>
+		<th>Gentoo Version</th>
+		<th>RubyGem Version</th>
+	</tr>
+	<%packages.group(:name).each do |package|%>
+		<%category = "#{package[:category]}"%>
+		<%name = "#{package[:name]}"%>
+		<%version = package[:version]%>
+		<%gem_version = package[:gem_version]%>
+		<%unless gem_version.nil?%>
+			<%if gem_version > version%>
+				<tr>
+					<td width="52%">
+						<%=category + '/'  + name%>
+					</td>
+					<td width="24%" class="success"><%=version%></td>
+					<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=name%>"><%=gem_version%></a></td>
+					</td>
+				</tr>
+			<%end%>
+		<%end%>
+	<%end%>
+</table>

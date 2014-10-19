@@ -8,7 +8,7 @@
 	</tr>
 	<%packages.each do |package|%>
 		<tr>
-			<td width="55%">
+			<td width="52%">
 				<%category = "#{package[:category]}"%>
 				<%name = "/#{package[:name]}"%>
 				<%version = "-#{package[:version]}"%>
@@ -16,13 +16,13 @@
 				<%slot = package[:slot] == "0" ? "" : ":#{package[:slot]}"%>
 				<%=category + name + slot%>
 			</td>
-			<td width="15%" class="<%=package[:r19_target] == "nil" ? "danger" : "success"%>">
+			<td width="16%" class="<%=package[:r19_target] == "nil" ? "danger" : "success"%>">
 				<%=package[:r19_target]%>
 			</td>
-			<td width="15%" class="<%=package[:r20_target] == "nil" ? "danger" : "success"%>">
+			<td width="16%" class="<%=package[:r20_target] == "nil" ? "danger" : "success"%>">
 				<%=package[:r20_target]%>
 			</td>
-			<td width="15%" class="<%=package[:r21_target] == "nil" ? "danger" : "success"%>">
+			<td width="16%" class="<%=package[:r21_target] == "nil" ? "danger" : "success"%>">
 				<%=package[:r21_target]%>
 			</td>
 		</tr>

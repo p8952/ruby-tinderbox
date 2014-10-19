@@ -4,3 +4,5 @@
 gentoo-x86/
 logs/
 ruby-overlay/
+web/ci-logs/
+!web/ci-logs/.keep

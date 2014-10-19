@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    gems (0.8.3)
+    pmap (1.0.1)
     puma (2.9.1)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
@@ -18,6 +20,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  gems
+  pmap
   puma
   sequel
   sinatra

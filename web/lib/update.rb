@@ -1,3 +1,6 @@
+require 'gems'
+require 'pmap'
+
 def packages_clear(db)
 
 	packages = db[:packages]
@@ -11,8 +14,9 @@ def packages_update(db)
 	packages_txt = `python3 lib/packages.py`
 
 	db.transaction do
-		packages_txt.lines.each do |line|
+		packages_txt.lines.peach do |line|
 			category, name, version, revision, slot, r19_target, r20_target, r21_target = line.split(' ')
+			gem_version = Gems.info(name)['version']
 			packages.insert(
 				:category => category,
 				:name => name,
@@ -20,6 +24,7 @@ def packages_update(db)
 				:revision => revision,
 				:slot => slot,
 				:identifier => category + '/' + name + '-' + version + '-' + revision + ':' + slot,
+				:gem_version => gem_version,
 				:r19_target => r19_target,
 				:r20_target => r20_target,
 				:r21_target => r21_target,

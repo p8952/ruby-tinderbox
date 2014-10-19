@@ -5,7 +5,7 @@ require 'sinatra/base'
 class RubyStats < Sinatra::Base
 
 	DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :loggers => [Logger.new($stdout)])
-	packages = DB[:packages]
+	packages = DB[:packages].order(:name, :slot)
 
 	get '/' do
 		redirect to('/ruby_targets')

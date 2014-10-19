@@ -9,10 +9,10 @@ namespace :db do
 	end
 
 	task :update do
-		require_relative 'lib/update_db'
+		require_relative 'lib/update'
 		DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :loggers => [Logger.new($stdout)])
-		db_clear(DB)
-		db_update(DB)
+		packages_clear(DB)
+		packages_update(DB)
 	end
 
 end

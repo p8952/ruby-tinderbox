@@ -1,11 +1,11 @@
-def db_clear(db)
+def packages_clear(db)
 
 	packages = db[:packages]
 	packages.delete
 
 end
 
-def db_update(db)
+def packages_update(db)
 
 	packages = db[:packages]
 	packages_txt = `python3 lib/packages.py`

@@ -1,3 +1,9 @@
+def db_clear(db)
+
+	packages = db[:packages]
+	packages.delete
+
+end
 
 def db_update(db)
 
@@ -13,6 +19,7 @@ def db_update(db)
 				:version => version,
 				:revision => revision,
 				:slot => slot,
+				:identifier => category + '/' + name + '-' + version + '-' + revision + ':' + slot,
 				:r19_target => r19_target,
 				:r20_target => r20_target,
 				:r21_target => r21_target,

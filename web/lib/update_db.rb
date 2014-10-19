@@ -8,7 +8,7 @@ end
 def db_update(db)
 
 	packages = db[:packages]
-	packages_txt = `python lib/targets.py`
+	packages_txt = `python3 lib/packages.py`
 
 	db.transaction do
 		packages_txt.lines.each do |line|

@@ -23,7 +23,7 @@ def packages_update(db)
 				:version => version,
 				:revision => revision,
 				:slot => slot,
-				:identifier => category + '/' + name + '-' + version + '-' + revision + ':' + slot,
+				:identifier => category + '/' + name + '-' + version + '-' + revision,
 				:gem_version => gem_version,
 				:r19_target => r19_target,
 				:r20_target => r20_target,

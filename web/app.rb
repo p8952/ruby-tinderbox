@@ -1,11 +1,14 @@
+require 'gems'
 require 'logger'
+require 'pmap'
 require 'sequel'
 require 'sinatra/base'
+require_relative 'lib/models'
+require_relative 'lib/update'
 
 class RubyStats < Sinatra::Base
 
-	DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :loggers => [Logger.new($stdout)])
-	packages = DB[:packages].order(:name, :slot)
+	packages = Package.order(:name, :slot)
 
 	get '/' do
 		redirect to('/ruby_targets')

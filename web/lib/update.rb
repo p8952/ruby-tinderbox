@@ -1,19 +1,10 @@
-require 'gems'
-require 'pmap'
+def package_update()
 
-def packages_clear(db)
-
-	packages = db[:packages]
+	packages = DB[:packages]
 	packages.delete
-
-end
-
-def packages_update(db)
-
-	packages = db[:packages]
 	packages_txt = `python3 lib/packages.py`
 
-	db.transaction do
+	DB.transaction do
 		packages_txt.lines.peach do |line|
 			category, name, version, revision, slot, r19_target, r20_target, r21_target = line.split(' ')
 			gem_version = Gems.info(name)['version']
@@ -32,4 +23,15 @@ def packages_update(db)
 		end
 	end
 
+end
+
+def ci_update()
+
+	packages = DB[:packages]
+
+	Dir.glob('ci-logs/*') do |dir|
+		next if File.file?(dir)
+		identifier = File.basename(dir)
+		puts Package
+	end
 end

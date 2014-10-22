@@ -7,7 +7,7 @@
 		<th>Gentoo Version</th>
 		<th>RubyGem Version</th>
 	</tr>
-	<%packages.group(:name).each do |package|%>
+	<%Package.group(:name).each do |package|%>
 		<%category = "#{package[:category]}"%>
 		<%name = "#{package[:name]}"%>
 		<%version = package[:version]%>

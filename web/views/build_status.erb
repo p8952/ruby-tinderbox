@@ -1,3 +1,30 @@
 <div id="build_status">
 	<h3>Build Status (CI)</h3>
 </div>
+<table class="table table-bordered table-condensed" id="ruby_targets_table">
+	<tr>
+		<th>Package</th>
+		<th>Build Date</th>
+		<th>Build Result</th>
+	</tr>
+	<%Package.each do |package|%>
+		<%next if package.builds.empty?%>
+		<%category = "#{package[:category]}"%>
+		<%name = "/#{package[:name]}"%>
+		<%slot = package[:slot] == "0" ? "" : ":#{package[:slot]}"%>
+		<%identifier = package[:identifier]%>
+		<%time = Time.at(package.builds[0][:time].to_i).strftime('%Y-%m-%d')%>
+		<%result = package.builds[0][:result]%>
+		<tr>
+			<td width="52%">
+				<%=category + name + slot%>
+			</td>
+			<td width="24%" class="<%=result == 'succeeded' ? 'success' : 'danger'%>">
+				<%=time%>
+			</td>
+			<td width="24%" class="<%=result == 'succeeded' ? 'success' : 'danger'%>">
+				<%=result%>
+			</td>
+		</tr>
+	<%end%>
+</table>

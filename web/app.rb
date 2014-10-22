@@ -8,22 +8,20 @@ require_relative 'lib/update'
 
 class RubyStats < Sinatra::Base
 
-	packages = Package.order(:name, :slot)
-
 	get '/' do
 		redirect to('/ruby_targets')
 	end
 
 	get '/ruby_targets' do
-		erb :ruby_targets, :locals => {:packages => packages}
+		erb :ruby_targets
 	end
 
 	get '/outdated_gems' do
-		erb :outdated_gems, :locals => {:packages => packages}
+		erb :outdated_gems
 	end
 
 	get '/build_status' do
-		erb :build_status, :locals => {:packages => packages}
+		erb :build_status
 	end
 
 end

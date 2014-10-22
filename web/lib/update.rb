@@ -22,16 +22,36 @@ def package_update()
 			)
 		end
 	end
-
 end
 
 def ci_update()
 
-	packages = DB[:packages]
+	builds = DB[:builds]
+	builds.delete
 
-	Dir.glob('ci-logs/*') do |dir|
-		next if File.file?(dir)
-		identifier = File.basename(dir)
-		puts Package
+	DB.transaction do
+		Dir.glob('ci-logs/*/*') do |build|
+			next if File.file?(build)
+
+			build_array = build.split('/')
+			identifier = "dev-ruby/#{build_array[1]}"
+			package_id = Package.filter(:identifier => identifier).first[:id]
+			time = build_array[2]
+
+			if File.exists?("#{build}/succeeded")
+				result = 'succeeded'
+			elsif File.exists?("#{build}/failed")
+				result = 'failed'
+			else
+				result = 'unknown'
+			end
+
+			builds.insert(
+				:package_id => package_id,
+				:time => time,
+				:result => result,
+			)
+		end
 	end
+
 end

@@ -6,7 +6,17 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
 
-	task :package_update do
+	task :package_clear do
+		packages = DB[:packages]
+		packages.delete
+	end
+
+	task :ci_clear do
+		builds = DB[:builds]
+		builds.delete
+	end
+
+	task :package_update => [:package_clear] do
 		package_update()
 	end
 

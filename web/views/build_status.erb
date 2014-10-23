@@ -12,9 +12,9 @@
 		<%category = "#{package[:category]}"%>
 		<%name = "/#{package[:name]}"%>
 		<%slot = package[:slot] == "0" ? "" : ":#{package[:slot]}"%>
-		<%identifier = package[:identifier]%>
-		<%time = Time.at(package.builds[0][:time].to_i).strftime('%Y-%m-%d')%>
-		<%result = package.builds[0][:result]%>
+		<%build = package.builds_dataset.reverse_order(:time).first%>
+		<%time = Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
+		<%result = build[:result]%>
 		<tr>
 			<td width="52%">
 				<%=category + name + slot%>
@@ -23,7 +23,7 @@
 				<%=time%>
 			</td>
 			<td width="24%" class="<%=result == 'succeeded' ? 'success' : 'danger'%>">
-				<%=result%>
+				<%=result.camelcase%>
 			</td>
 		</tr>
 	<%end%>

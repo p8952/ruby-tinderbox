@@ -3,6 +3,7 @@ require 'logger'
 require 'pmap'
 require 'sequel'
 require 'sinatra/base'
+require_relative 'lib/helpers'
 require_relative 'lib/models'
 require_relative 'lib/update'
 

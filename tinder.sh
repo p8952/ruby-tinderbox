@@ -43,16 +43,16 @@ function EMERGE() {
 function LOG() {
 	DATE=$(date +%s)
 	mkdir -p /vagrant/logs/$RUBY_PACKAGE/$DATE
+	emerge --info "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-info
+	emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-pqv
+	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log /vagrant/logs/$RUBY_PACKAGE/$DATE/build.log
+	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment /vagrant/logs/$RUBY_PACKAGE/$DATE/environment
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
 		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/succeeded
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
 		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/failed
-		emerge --info "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-info
-		emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > /vagrant/logs/$RUBY_PACKAGE/$DATE/emerge-pqv
-		cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log /vagrant/logs/$RUBY_PACKAGE/$DATE/build.log
-		cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment /vagrant/logs/$RUBY_PACKAGE/$DATE/environment
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
 		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/timedout

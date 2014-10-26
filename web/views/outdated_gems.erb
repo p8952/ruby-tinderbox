@@ -7,19 +7,15 @@
 		<th>Gentoo Version</th>
 		<th>RubyGem Version</th>
 	</tr>
-	<%Package.group(:name).each do |package|%>
-		<%category = "#{package[:category]}"%>
-		<%name = "#{package[:name]}"%>
-		<%version = package[:version]%>
-		<%gem_version = package[:gem_version]%>
-		<%unless gem_version.nil?%>
-			<%if gem_version > version%>
+	<%Package.order(:name, :version).each do |package|%>
+		<%unless package[:gem_version].nil?%>
+			<%if package[:gem_version] > package[:version]%>
 				<tr>
 					<td width="52%">
-						<%=category + '/'  + name%>
+						<%=package[:identifier]%>
 					</td>
-					<td width="24%" class="success"><%=version%></td>
-					<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=name%>"><%=gem_version%></a></td>
+					<td width="24%" class="success"><%=package[:version]%></td>
+					<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
 					</td>
 				</tr>
 			<%end%>

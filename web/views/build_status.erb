@@ -7,23 +7,18 @@
 		<th>Build Date</th>
 		<th>Build Result</th>
 	</tr>
-	<%Package.each do |package|%>
+	<%Package.order(:name, :version).each do |package|%>
 		<%next if package.builds.empty?%>
-		<%category = "#{package[:category]}"%>
-		<%name = "/#{package[:name]}"%>
-		<%slot = package[:slot] == "0" ? "" : ":#{package[:slot]}"%>
 		<%build = package.builds_dataset.reverse_order(:time).first%>
-		<%time = Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
-		<%result = build[:result]%>
 		<tr>
 			<td width="52%">
-				<%=category + name + slot%>
+				<%=package[:identifier]%>
 			</td>
-			<td width="24%" class="<%=result == 'succeeded' ? 'success' : 'danger'%>">
-				<%=time%>
+			<td width="24%" class="<%=build[:result] == 'succeeded' ? 'success' : 'danger'%>">
+				<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 			</td>
-			<td width="24%" class="<%=result == 'succeeded' ? 'success' : 'danger'%>">
-				<%=result.camelcase%>
+			<td width="24%" class="<%=build[:result] == 'succeeded' ? 'success' : 'danger'%>">
+				<a href="/build_logs/<%=package[:identifier]%>"><%=build[:result].camelcase%></a>
 			</td>
 		</tr>
 	<%end%>

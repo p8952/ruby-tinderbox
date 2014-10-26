@@ -60,6 +60,7 @@ function LOG() {
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
 		touch /vagrant/logs/$RUBY_PACKAGE/$DATE/unknown
 	fi
+	chmod 755 -R /vagrant/logs/$RUBY_PACKAGE/$DATE
 }
 
 function CLEANUP() {

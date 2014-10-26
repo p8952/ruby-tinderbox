@@ -42,14 +42,22 @@ def ci_update()
 				result = 'succeeded'
 			elsif File.exists?("#{build}/failed")
 				result = 'failed'
-			else
-				result = 'unknown'
+				emerge_info = File.read("#{build}/emerge-info") if File.exists?("#{build}/emerge-info")
+				emerge_pqv = File.read("#{build}/emerge-pqv") if File.exists?("#{build}/emerge-pqv")
+				build_log = File.read("#{build}/build.log") if File.exists?("#{build}/build.log")
+				environment = File.read("#{build}/environment") if File.exists?("#{build}/environment")
+			elsif File.exists?("#{build}/timedout")
+				result = 'timed out'
 			end
 
 			builds.insert(
 				:package_id => package_id,
 				:time => time,
 				:result => result,
+				:emerge_info => emerge_info,
+				:emerge_pqv => emerge_pqv,
+				:build_log => build_log,
+				:environment => environment,
 			)
 		end
 	end

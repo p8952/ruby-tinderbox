@@ -1,0 +1,25 @@
+<%identifier = category + '/' + package%>
+<%package = Package.filter(:identifier => identifier).first%>
+<%build = package.builds_dataset.reverse_order(:time).first%>
+
+<div class="text-center">
+	<h3><%=identifier%></h3>
+	<ul class="pagination">
+		<li><a href="#emerge_info">Emerge Info</a></li>
+		<li><a href="#emerge_pqv">Emerge PQV</a></li>
+		<li><a href="#build_log">Build Log</a></li>
+		<li><a href="#environment">Environment</a></li>
+	</ul>
+</div>
+
+<h4><a name="emerge_info">Emerge Info:</a><small class="pull-right"><a href="#navbar">Top</a></small></h4>
+<pre><%=build[:emerge_info]%></pre>
+
+<h4><a name="emerge_pqv">Emerge PQV:</a><small class="pull-right"><a href="#navbar">Top</a></small></h4>
+<pre><%=build[:emerge_pqv]%></pre>
+
+<h4><a name="build_log">Build Log:</a><small class="pull-right"><a href="#navbar">Top</a></small></h4>
+<pre><%=build[:build_log]%></pre>
+
+<h4><a name="environment">Environment</a><small class="pull-right"><a href="#navbar">Top</a></small></h4>
+<pre><%=build[:environment]%></pre>

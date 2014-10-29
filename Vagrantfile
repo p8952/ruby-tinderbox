@@ -10,4 +10,5 @@ Vagrant.configure(2) do |config|
 		override.ssh.private_key_path = '~/.ssh/AWS-Key.pem'
 	end
 	config.vm.provision "shell", path: "conf/provision.sh"
+	config.vm.provision "file", source: "web/lib/packages.py", destination: "packages.py"
 end

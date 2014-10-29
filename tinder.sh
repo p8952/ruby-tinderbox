@@ -7,7 +7,7 @@ function ENV_SETUP() {
 	if [[ ! -d /etc/portage/env/ ]]; then
 		mkdir /etc/portage/env/
 	fi
-	echo 'FEATURES="${FEATURES} test"' > /etc/portage/env/test
+	echo 'FEATURES="${FEATURES} test keepwork"' > /etc/portage/env/test
 
 	if [[ ! -d /vagrant/logs/ ]]; then
 		mkdir /vagrant/logs/

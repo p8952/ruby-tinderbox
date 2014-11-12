@@ -1,8 +1,9 @@
 def package_update()
 
+	`sudo emerge --sync`
+	packages_txt = `python3 lib/packages.py`
 	packages = DB[:packages]
 	packages.delete
-	packages_txt = `python3 lib/packages.py`
 
 	DB.transaction do
 		packages_txt.lines.peach do |line|
@@ -27,7 +28,6 @@ end
 def ci_update()
 
 	builds = DB[:builds]
-	builds.delete
 
 	DB.transaction do
 		Dir.glob('ci-logs/*/*') do |build|
@@ -49,6 +49,8 @@ def ci_update()
 			elsif File.exists?("#{build}/timedout")
 				result = 'timed out'
 			end
+
+			next unless builds.where(:package_id => package_id, :time => time).nil?
 
 			builds.insert(
 				:package_id => package_id,

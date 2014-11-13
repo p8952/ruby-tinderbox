@@ -10,8 +10,8 @@ function ENV_SETUP() {
 	fi
 	echo 'FEATURES="${FEATURES} test keepwork"' > /etc/portage/env/test
 
-	if [[ ! -d $SCRIPT_DIR/logs/ ]]; then
-		mkdir $SCRIPT_DIR/logs/
+	if [[ ! -d $SCRIPT_DIR/ci-logs/ ]]; then
+		mkdir $SCRIPT_DIR/ci-logs/
 	fi
 }
 
@@ -43,25 +43,25 @@ function EMERGE() {
 
 function LOG() {
 	DATE=$(date +%s)
-	mkdir -p $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE
-	emerge --info "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/emerge-info
-	emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/emerge-pqv
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/build.log
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/environment
+	mkdir -p $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE
+	emerge --info "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/emerge-info
+	emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/emerge-pqv
+	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/build.log
+	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/environment
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		touch $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/succeeded
+		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/succeeded
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		touch $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/failed
+		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/failed
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		touch $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/timedout
+		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/timedout
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		touch $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE/unknown
+		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/unknown
 	fi
-	chmod 755 -R $SCRIPT_DIR/logs/$RUBY_PACKAGE/$DATE
+	chmod 755 -R $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE
 }
 
 function CLEANUP() {

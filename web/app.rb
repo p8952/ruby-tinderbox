@@ -1,8 +1,13 @@
+require 'aws-sdk'
 require 'gems'
 require 'logger'
+require 'net/ssh'
+require 'net/scp'
 require 'pmap'
 require 'sequel'
 require 'sinatra/base'
+
+require_relative 'lib/aws'
 require_relative 'lib/helpers'
 require_relative 'lib/models'
 require_relative 'lib/update'

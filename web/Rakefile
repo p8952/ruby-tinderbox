@@ -1,5 +1,7 @@
+require_relative 'app'
+DB.loggers << Logger.new($stdout)
+
 namespace :db do
-	require_relative 'app'
 
 	task :migrate do
 		Sequel.extension :migration
@@ -22,6 +24,18 @@ namespace :db do
 
 	task :ci_update do
 		ci_update()
+	end
+
+end
+
+namespace :aws do
+
+	task :ci_full_run do
+		ci_run(0)
+	end
+
+	task :ci_limited_run do
+		ci_run(5)
 	end
 
 end

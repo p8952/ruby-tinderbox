@@ -5,9 +5,7 @@ def ci_run(num_of_packages)
 		packages << File.basename(package[:identifier])
 	end
 
-	unless num_of_packages == 0
-		packages = packages.sample(num_of_packages)
-	end
+	packages = packages.sample(num_of_packages) unless num_of_packages == 0
 
 	begin
 		ec2 = AWS::EC2.new(ec2_endpoint: 'ec2.eu-west-1.amazonaws.com')

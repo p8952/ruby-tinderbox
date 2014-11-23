@@ -1,4 +1,4 @@
-DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', :pool_timeout => 25)
+DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://db/database.sqlite3', pool_timeout: 25)
 
 class Package < Sequel::Model
 	one_to_many :builds

@@ -13,7 +13,6 @@ require_relative 'lib/models'
 require_relative 'lib/update'
 
 class RubyStats < Sinatra::Base
-
 	get '/' do
 		redirect to('/ruby_targets')
 	end
@@ -31,7 +30,6 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/build_logs/:category/:package' do
-		erb :build_logs, :locals => {:category => params[:category], :package => params[:package]}
+		erb :build_logs, locals: { category: params[:category], package: params[:package] }
 	end
-
 end

@@ -9,3 +9,9 @@ gem 'puma'
 gem 'sequel'
 gem 'sinatra'
 gem 'sqlite3'
+
+group :development do
+	gem 'minitest'
+	gem 'rerun'
+	gem 'rubocop'
+end

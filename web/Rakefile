@@ -1,7 +1,12 @@
 require_relative 'app'
-DB.loggers << Logger.new($stdout)
+
+task :test do
+	Dir.glob('./test/test_*.rb') { |f| require f }
+end
 
 namespace :db do
+
+	DB.loggers << Logger.new($stdout)
 
 	task :migrate do
 		Sequel.extension :migration
@@ -18,7 +23,7 @@ namespace :db do
 		builds.delete
 	end
 
-	task package_update: [:package_clear] do
+	task :package_update do
 		package_update
 	end
 

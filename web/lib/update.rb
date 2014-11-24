@@ -40,13 +40,14 @@ def ci_update
 				result = 'succeeded'
 			elsif File.exist?("#{build}/failed")
 				result = 'failed'
-				emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
-				emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
-				build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
-				environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
 			elsif File.exist?("#{build}/timedout")
 				result = 'timed out'
 			end
+
+			emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
+			emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
+			build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
+			environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
 
 			builds.insert(
 				package_id: package_id,

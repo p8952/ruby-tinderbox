@@ -18,17 +18,17 @@ function ENV_SETUP() {
 function SETUP () {
 	cp /var/lib/portage/world /var/lib/portage/world.original
 	echo "" > /etc/portage/package.accept_keywords
-	echo "=dev-ruby/$RUBY_PACKAGE doc" > /etc/portage/package.use
-	echo "=dev-ruby/$RUBY_PACKAGE test" > /etc/portage/package.env
+	echo "=$PACKAGE doc" > /etc/portage/package.use
+	echo "=$PACKAGE test" > /etc/portage/package.env
 
-	if [[ -e /usr/portage/packages/dev-ruby/$RUBY_PACKAGE.tbz2 ]]; then
-		rm /usr/portage/packages/dev-ruby/$RUBY_PACKAGE.tbz2
+	if [[ -e /usr/portage/packages/$PACKAGE.tbz2 ]]; then
+		rm /usr/portage/packages/$PACKAGE.tbz2
 	fi
 
 	set +e
-	emerge --pretend --quiet "=dev-ruby/$RUBY_PACKAGE"
+	emerge --pretend --quiet "=$PACKAGE"
 	if [[ $? == 1 ]]; then
-		emerge --autounmask-write "=dev-ruby/$RUBY_PACKAGE"
+		emerge --autounmask-write "=$PACKAGE"
 		etc-update --automode -5
 	fi
 	set -e
@@ -36,44 +36,45 @@ function SETUP () {
 
 function EMERGE() {
 	set +e
-	timeout 1000 emerge --usepkg --buildpkg "=dev-ruby/$RUBY_PACKAGE"
-	LOG $? dev-ruby/$RUBY_PACKAGE
+	timeout 1000 emerge --usepkg --buildpkg "=$PACKAGE"
+	LOG $? $PACKAGE
 	set -e
 }
 
 function LOG() {
 	DATE=$(date +%s)
-	mkdir -p $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE
-	emerge --info "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/emerge-info
-	emerge -pqv "=dev-ruby/$RUBY_PACKAGE" > $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/emerge-pqv
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/build.log $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/build.log
-	cp /var/tmp/portage/dev-ruby/$RUBY_PACKAGE/temp/environment $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/environment
+	mkdir -p $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE
+	emerge --info "=$PACKAGE" > $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-info
+	emerge -pqv "=$PACKAGE" > $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-pqv
+	cp /var/tmp/portage/$PACKAGE/temp/build.log $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/build.log
+	cp /var/tmp/portage/$PACKAGE/temp/environment $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/environment
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/succeeded
+		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/succeeded
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/failed
+		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/failed
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/timedout
+		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/timedout
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE/unknown
+		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/unknown
 	fi
-	chmod 755 -R $SCRIPT_DIR/ci-logs/$RUBY_PACKAGE/$DATE
+	chmod 755 -R $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE
 }
 
 function CLEANUP() {
 	mv /var/lib/portage/world.original /var/lib/portage/world
 	emerge --depclean --quiet
+	rm -r /var/tmp/portage/*
 }
 
 ENV_SETUP
-RUBY_PACKAGES=$@
-for RUBY_PACKAGE in ${RUBY_PACKAGES[@]}; do
-	SETUP $RUBY_PACKAGE
-	EMERGE $RUBY_PACKAGE
+PACKAGES=$@
+for PACKAGE in ${PACKAGES[@]}; do
+	SETUP $PACKAGE
+	EMERGE $PACKAGE
 	CLEANUP
-	echo -e "$RUBY_PACKAGE : $RESULT"
+	echo -e "$PACKAGE : $RESULT"
 done

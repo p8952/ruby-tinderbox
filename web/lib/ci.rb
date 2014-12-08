@@ -31,40 +31,33 @@ def run_ci(num_of_packages)
 	end
 end
 
-def ci_update
-	builds = DB[:builds]
+def update_ci
+	Dir.glob('ci-logs/*/*/*') do |build|
+		build_array = build.split('/')
+		package = Package.filter(identifier: "dev-ruby/#{build_array[2]}").first
+		time = build_array[3]
 
-	DB.transaction do
-		Dir.glob('ci-logs/*/*') do |build|
-			next if File.file?(build)
-
-			build_array = build.split('/')
-			identifier = "dev-ruby/#{build_array[1]}"
-			package_id = Package.filter(identifier: identifier).first[:id]
-			time = build_array[2]
-
-			if File.exist?("#{build}/succeeded")
-				result = 'succeeded'
-			elsif File.exist?("#{build}/failed")
-				result = 'failed'
-			elsif File.exist?("#{build}/timedout")
-				result = 'timed out'
-			end
-
-			emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
-			emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
-			build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
-			environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
-
-			builds.insert(
-				package_id: package_id,
-				time: time,
-				result: result,
-				emerge_info: emerge_info,
-				emerge_pqv: emerge_pqv,
-				build_log: build_log,
-				environment: environment
-			)
+		if File.exist?("#{build}/succeeded")
+			result = 'succeeded'
+		elsif File.exist?("#{build}/failed")
+			result = 'failed'
+		elsif File.exist?("#{build}/timedout")
+			result = 'timed out'
 		end
+
+		emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
+		emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
+		build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
+		environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
+
+		Build.find_or_create(
+			package_id: package[:id],
+			time: time,
+			result: result,
+			emerge_info: emerge_info,
+			emerge_pqv: emerge_pqv,
+			build_log: build_log,
+			environment: environment
+		)
 	end
 end

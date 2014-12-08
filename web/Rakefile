@@ -1,11 +1,14 @@
 require_relative 'app'
 
-task :test do
-	Dir.glob('./test/test_*.rb') { |f| require f }
+task default: 'unit:test'
+
+namespace :unit do
+	task :test do
+		Dir.glob('./test/test_*.rb') { |f| require f }
+	end
 end
 
 namespace :db do
-
 	DB.loggers << Logger.new($stdout)
 
 	task :migrate do
@@ -13,34 +16,21 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
 
-	task :package_clear do
-		packages = DB[:packages]
-		packages.delete
+	task :update_packages do
+		update_packages
 	end
 
-	task :ci_clear do
-		builds = DB[:builds]
-		builds.delete
+	task :update_ci do
+		update_ci
 	end
-
-	task :package_update do
-		package_update
-	end
-
-	task :ci_update do
-		ci_update
-	end
-
 end
 
 namespace :aws do
-
-	task :ci_full_run do
-		ci_run(0)
+	task :run_ci_fill do
+		run_ci(0)
 	end
 
-	task :ci_limited_run do
-		ci_run(5)
+	task :run_ci_limited do
+		run_ci(5)
 	end
-
 end

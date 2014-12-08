@@ -8,8 +8,8 @@
 		<th>Build Result</th>
 	</tr>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
-		<%next if package.builds.empty?%>
-		<%build = package.builds_dataset.reverse_order(:time).first%>
+		<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
+		<%next if build.nil?%>
 		<tr>
 			<td width="52%">
 				<%=package[:identifier]%>

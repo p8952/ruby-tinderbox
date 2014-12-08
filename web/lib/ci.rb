@@ -34,7 +34,7 @@ end
 def update_ci
 	Dir.glob('ci-logs/*/*/*') do |build|
 		build_array = build.split('/')
-		package = Package.filter(identifier: "dev-ruby/#{build_array[2]}").first
+		package_id = "dev-ruby/#{build_array[2]}"
 		time = build_array[3]
 
 		if File.exist?("#{build}/succeeded")
@@ -51,7 +51,7 @@ def update_ci
 		environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
 
 		Build.find_or_create(
-			package_id: package[:id],
+			package_id: package_id,
 			time: time,
 			result: result,
 			emerge_info: emerge_info,

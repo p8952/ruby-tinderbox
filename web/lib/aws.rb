@@ -1,61 +1,46 @@
-def ci_run(num_of_packages)
-	packages = []
+def ec2
+	ec2 = AWS::EC2.new(
+		access_key_id: ENV['AWS_ACCESS_KEY'],
+		secret_access_key: ENV['AWS_SECRET_KEY'],
+		region: 'eu-west-1'
+	)
+	ec2
+end
 
-	Package.each do |package|
-		packages << File.basename(package[:identifier])
+def start_instance
+	security_group = nil
+	if ec2.security_groups.filter('group-name', 'ruby-tinderbox').first.nil?
+		security_group = ec2.security_groups.create('ruby-tinderbox')
+		security_group.authorize_ingress(:any, '0.0.0.0/0')
+	else
+		security_group = ec2.security_groups.filter('group-name', 'ruby-tinderbox').first
 	end
 
-	packages = packages.sample(num_of_packages) unless num_of_packages == 0
+	ami_id = ec2.images.tagged('genstall').to_a.sort_by(&:name).last.id
+	key_pair = ec2.key_pairs.create("ruby-tinderbox-#{Time.now.to_i}")
+	instance = ec2.instances.create(
+		image_id: ami_id,
+		instance_type: 't2.micro',
+		count: 1,
+		security_group_ids: security_group.id,
+		key_pair: key_pair
+	)
+	instance.add_tag('ruby-tinderbox')
+	sleep 5
 
 	begin
-		ec2 = AWS::EC2.new(ec2_endpoint: 'ec2.eu-west-1.amazonaws.com')
-		ami_id = ec2.images.tagged('genstall').to_a.sort_by(&:name).last.id
-		key_pair = ec2.key_pairs.create("ruby-sdk-#{Time.now.to_i}")
-
-		instance = ec2.instances.create(
-			image_id: ami_id,
-			instance_type: 't2.micro',
-			count: 1,
-			security_groups: 'default',
-			key_pair: key_pair
-		)
-
-		begin
-			sleep 5
-			Net::SSH.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |ssh|
-				ssh.exec!('uname -a') do |_ch, _stream, data|
-					puts data
-				end
-			end
-		rescue SystemCallError, Timeout::Error => e
-			puts e
-			retry
-		end
-
-		file_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
-
-		Net::SCP.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |scp|
-			scp.upload!(file_path + '/conf', '/home/ec2-user', recursive: true)
-			scp.upload!(file_path + '/tinder.sh', '/home/ec2-user/tinder.sh')
-		end
-
-		Net::SSH.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |ssh|
-			ssh.exec!('sudo /home/ec2-user/conf/provision.sh') do |_ch, _stream, data|
-				puts data
-			end
-			ssh.exec!('sudo /home/ec2-user/tinder.sh ' + packages.join(' ')) do |_ch, _stream, data|
-				puts data
-			end
-		end
-
-		Net::SCP.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |scp|
-			scp.download!('/home/ec2-user/ci-logs', file_path + '/web', recursive: true)
-		end
-
-	rescue => e
+		Net::SSH.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key])
+	rescue SystemCallError, Timeout::Error => e
 		puts e
-	ensure
-		instance.delete
-		key_pair.delete
+		sleep 5
+		retry
 	end
+
+	return instance, key_pair
+end
+
+def delete_instance(instance)
+	return if instance.status != :running
+	instance.key_pair.delete
+	instance.delete
 end

@@ -7,7 +7,7 @@
 		<th>Build Date</th>
 		<th>Build Result</th>
 	</tr>
-	<%Package.order(:name, :version).each do |package|%>
+	<%Package.order{[category, lower(name), version]}.each do |package|%>
 		<%next if package.builds.empty?%>
 		<%build = package.builds_dataset.reverse_order(:time).first%>
 		<tr>

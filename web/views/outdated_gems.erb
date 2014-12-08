@@ -7,8 +7,9 @@
 		<th>Gentoo Version</th>
 		<th>RubyGem Version</th>
 	</tr>
-	<%Package.order(:name, :version).each do |package|%>
-		<%unless package[:gem_version].nil?%>
+	<%Package.order{[category, lower(name), version]}.each do |package|%>
+		<%next unless package[:version] == Package.where(name: package[:name]).order(:version).last[:version]%>
+		<%unless package[:gem_version] == 'nil'%>
 			<%if package[:gem_version] > package[:version]%>
 				<tr>
 					<td width="52%">

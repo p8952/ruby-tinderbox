@@ -2,6 +2,8 @@
 set -o errexit
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+sudo emerge --sync
+
 if [[ -f $SCRIPT_DIR/make.conf ]]; then
 	sudo cp $SCRIPT_DIR/make.conf /etc/portage/make.conf
 else

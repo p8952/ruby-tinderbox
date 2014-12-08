@@ -1,4 +1,5 @@
 def update_packages
+	`sudo emerge --sync`
 	packages_txt = `python3 lib/packages.py`
 	packages = DB[:packages]
 	packages.delete

@@ -1,16 +1,17 @@
 require 'aws-sdk'
 require 'gems'
 require 'logger'
-require 'net/ssh'
 require 'net/scp'
+require 'net/ssh'
 require 'pmap'
 require 'sequel'
 require 'sinatra/base'
 
 require_relative 'lib/aws'
+require_relative 'lib/ci'
 require_relative 'lib/helpers'
 require_relative 'lib/models'
-require_relative 'lib/update'
+require_relative 'lib/packages'
 
 class RubyStats < Sinatra::Base
 	get '/' do

@@ -67,7 +67,7 @@ function LOG() {
 function CLEANUP() {
 	mv /var/lib/portage/world.original /var/lib/portage/world
 	emerge --depclean --quiet
-	rm -r /var/tmp/portage/*
+	rm -r /var/tmp/portage/* || true
 }
 
 ENV_SETUP

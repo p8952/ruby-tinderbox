@@ -11,7 +11,9 @@ gem 'sinatra'
 gem 'sqlite3'
 
 group :development do
+	gem 'flamegraph'
 	gem 'minitest'
+	gem 'rack-mini-profiler'
 	gem 'rerun'
 	gem 'rubocop'
 end

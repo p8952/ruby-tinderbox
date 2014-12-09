@@ -14,6 +14,12 @@ require_relative 'lib/models'
 require_relative 'lib/packages'
 
 class RubyStats < Sinatra::Base
+	configure :development do
+		require 'flamegraph'
+		require 'rack-mini-profiler'
+		use Rack::MiniProfiler
+	end
+
 	get '/' do
 		redirect to('/ruby_targets')
 	end

@@ -30,7 +30,8 @@ namespace :aws do
 		run_ci(0)
 	end
 
+	num_of_packages = ENV['num_of_packages'].to_i || 5
 	task :run_ci_limited do
-		run_ci(5)
+		run_ci(num_of_packages)
 	end
 end

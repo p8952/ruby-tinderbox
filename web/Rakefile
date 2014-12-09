@@ -26,7 +26,7 @@ namespace :db do
 end
 
 namespace :aws do
-	task :run_ci_fill do
+	task :run_ci_full do
 		run_ci(0)
 	end
 

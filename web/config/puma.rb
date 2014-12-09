@@ -5,5 +5,6 @@ environment ENV['RACK_ENV'] || 'development'
 port ENV['PORT'] || 9292
 
 daemonize
+bind 'unix://var/run/puma.sock'
 pidfile 'var/run/puma.pid'
 stdout_redirect 'var/log/puma.log', 'var/log/puma_error.log'

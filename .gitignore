@@ -6,4 +6,6 @@ logs/
 ruby-overlay/
 web/.rubocop.yml
 web/ci-logs/
+web/var/log/*.log
+web/var/run/*.pid
 !web/ci-logs/.keep

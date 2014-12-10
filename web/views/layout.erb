@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Ruby Stats</title>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/flatly/bootstrap.min.css">
-		<link rel="stylesheet" href="/css/style.css">
-	</head>
-	<body>
-		<div class="container-fluid">
-			<nav class="navbar navbar-default" role="navigation" id="navbar">
-				<a class="goto-top" href="#navbar">Top</a>
-				<a class="navbar-brand" href="/">Ruby Stats</a>
-				<a class="navbar-text" href="/ruby_targets">Ruby Targets</a>
-				<a class="navbar-text" href="/outdated_gems">Outdated Gems</a>
-				<a class="navbar-text" href="/build_status">Build Status (CI)</a>
-			</nav>
-			<div class="row">
-				<div class="col-md-2"></div>
-				<div class="col-md-8"><%=yield%></div>
-				<div class="col-md-2"></div>
-			</div>
-		</div>
-	</body>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruby Stats</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/flatly/bootstrap.min.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container-fluid">
+	<nav class="navbar navbar-default" role="navigation" id="navbar">
+		<a class="goto-top" href="#navbar">Top</a>
+		<a class="navbar-brand" href="/">Ruby Stats</a>
+		<a class="navbar-text" href="/ruby_targets">Ruby Targets</a>
+		<a class="navbar-text" href="/outdated_gems">Outdated Gems</a>
+		<a class="navbar-text" href="/build_status">Build Status (CI)</a>
+	</nav>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8"><%=yield%></div>
+		<div class="col-md-2"></div>
+	</div>
+</div>
+</body>
 </html>

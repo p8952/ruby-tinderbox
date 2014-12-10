@@ -8,18 +8,17 @@
 		<th>RubyGem Version</th>
 	</tr>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
-		<%next unless package[:version] == Package.where(name: package[:name]).order(:version).last[:version]%>
-		<%unless package[:gem_version] == 'nil'%>
-			<%if package[:gem_version] > package[:version]%>
-				<tr>
-					<td width="52%">
-						<%=package[:identifier]%>
-					</td>
-					<td width="24%" class="success"><%=package[:version]%></td>
-					<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
-					</td>
-				</tr>
-			<%end%>
-		<%end%>
+	<%next unless package[:version] == Package.where(name: package[:name]).order(:version).last[:version]%>
+	<%unless package[:gem_version] == 'nil'%>
+	<%if package[:gem_version] > package[:version]%>
+	<tr>
+		<td width="52%">
+			<%=package[:identifier]%>
+		</td>
+		<td width="24%" class="success"><%=package[:version]%></td>
+		<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
+	</tr>
+	<%end%>
+	<%end%>
 	<%end%>
 </table>

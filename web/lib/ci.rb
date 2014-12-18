@@ -26,6 +26,8 @@ def run_ci(num_of_packages)
 		Net::SCP.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |scp|
 			scp.download!('/home/ec2-user/ci-logs', file_path + '/web', recursive: true)
 		end
+	rescue => e
+		puts e
 	ensure
 		delete_instance(instance)
 	end
@@ -60,4 +62,8 @@ def update_ci
 			environment: environment
 		)
 	end
+end
+
+def clear_ci
+	Build.map(&:delete)
 end

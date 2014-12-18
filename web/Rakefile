@@ -23,6 +23,10 @@ namespace :db do
 	task :update_ci do
 		update_ci
 	end
+
+	task :clear_ci do
+		clear_ci
+	end
 end
 
 namespace :aws do

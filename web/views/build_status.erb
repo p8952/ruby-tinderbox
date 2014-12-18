@@ -13,7 +13,6 @@
 	<%result = 'success' if build[:result] == 'succeeded'%>
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
-	<%puts result%>
 	<tr>
 		<td width="52%">
 			<%=package[:identifier]%>

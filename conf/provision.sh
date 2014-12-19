@@ -2,7 +2,7 @@
 set -o errexit
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-sudo emerge --sync
+sudo emerge-webrsync
 sudo emerge --update --newuse --deep @world
 
 if [[ -f $SCRIPT_DIR/make.conf ]]; then

@@ -1,5 +1,4 @@
 def update_packages
-	`sudo emerge --sync`
 	packages_txt = `python3 lib/packages.py`
 	Package.map(&:delete)
 	packages_txt.lines.each do |line|

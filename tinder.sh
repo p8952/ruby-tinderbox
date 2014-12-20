@@ -36,7 +36,7 @@ function SETUP () {
 
 function EMERGE() {
 	set +e
-	timeout 1000 emerge --usepkg --buildpkg "=$PACKAGE"
+	timeout 600 emerge --usepkg --buildpkg "=$PACKAGE"
 	LOG $? $PACKAGE
 	set -e
 }

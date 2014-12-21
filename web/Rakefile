@@ -30,12 +30,16 @@ namespace :db do
 end
 
 namespace :aws do
-	task :run_ci_full do
-		run_ci(0)
+	task :run_ci_all do
+		run_ci(:all)
 	end
 
-	num_of_packages = ENV['num_of_packages'].to_i || 5
-	task :run_ci_limited do
+	task :run_ci_daily do
+		run_ci(:daily)
+	end
+
+	num_of_packages = ENV['num_of_packages'].to_i
+	task :run_ci_some do
 		run_ci(num_of_packages)
 	end
 end

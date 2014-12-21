@@ -3,7 +3,16 @@ def run_ci(num_of_packages)
 	Package.each do |package|
 		packages << package[:identifier]
 	end
-	packages = packages.sample(num_of_packages) unless num_of_packages == 0
+
+	if num_of_packages == :all
+		packages = packages
+	elsif num_of_packages == :daily
+		packages = packages[((699.to_f / 7).ceil * (Time.now.wday + 1) - 100)..(699.to_f / 7).ceil * (Time.now.wday + 1)]
+	elsif num_of_packages == 0
+		packages = packages.sample(5)
+	else
+		packages = packages.sample(num_of_packages)
+	end
 
 	begin
 		instance, key_pair = start_instance

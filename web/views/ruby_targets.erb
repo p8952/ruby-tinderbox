@@ -1,13 +1,15 @@
 <div id="ruby_targets">
 	<h3>Ruby Targets</h3>
 </div>
-<table class="table table-bordered table-condensed">
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
 	<tr>
 		<th>Package</th>
 		<th>Ruby 1.9</th>
 		<th>Ruby 2.0</th>
 		<th>Ruby 2.1</th>
 	</tr>
+	</thead>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
 	<tr>
 		<td width="52%">

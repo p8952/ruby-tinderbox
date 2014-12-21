@@ -1,12 +1,14 @@
 <div id="outdated_gems">
 	<h3>Outdated Gems</h3>
 </div>
-<table class="table table-bordered table-condensed">
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
 	<tr>
 		<th>Package</th>
 		<th>Gentoo Version</th>
 		<th>RubyGem Version</th>
 	</tr>
+	</thead>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
 	<%next unless package[:version] == Package.where(name: package[:name]).order(:version).last[:version]%>
 	<%unless package[:gem_version] == 'nil'%>

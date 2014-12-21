@@ -1,12 +1,14 @@
 <div id="build_status">
 	<h3>Build Status (CI)</h3>
 </div>
-<table class="table table-bordered table-condensed">
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
 	<tr>
 		<th>Package</th>
 		<th>Build Date</th>
 		<th>Build Result</th>
 	</tr>
+	</thead>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
 	<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
 	<%next if build.nil?%>

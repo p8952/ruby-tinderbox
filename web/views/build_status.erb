@@ -2,16 +2,6 @@
 	<h3>Build Status (CI)</h3>
 </div>
 
-<%total_packages = Package.count%>
-<%succeeded_packages = Build.where(result: 'succeeded').count%>
-<%timed_out_packages = Build.where(result: 'timed out').count%>
-<%failed_packages = Build.where(result: 'failed').count%>
-<div class="progress">
-	<div class="progress-bar progress-bar-success" style="width: <%=((succeeded_packages.to_f / total_packages.to_f) * 100).to_i%>%"></div>
-	<div class="progress-bar progress-bar-info" style="width: <%=((timed_out_packages.to_f / total_packages.to_f) * 100).to_i%>%"></div>
-	<div class="progress-bar progress-bar-danger" style="width: <%=((failed_packages.to_f / total_packages.to_f) * 100).to_i%>%"></div>
-</div>
-
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 	<tr>

@@ -1,33 +1,27 @@
-<div id="build_status">
-	<h3>Build Status (CI)</h3>
-</div>
+<%identifier = category + '/' + package%>
+<%package = Package.filter(identifier: identifier).first%>
+<%builds = Build.where(package_id: package[:identifier]).reverse_order(:time)%>
+
+<h3 class="text-center"><%=identifier%></h3>
+
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 	<tr>
-		<th>Package</th>
 		<th>Build Date</th>
 		<th>Build Result</th>
-		<th>Build History</th>
 	</tr>
 	</thead>
-	<%Package.order{[category, lower(name), version]}.each do |package|%>
-	<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
+	<%builds.each do |build|%>
 	<%next if build.nil?%>
 	<%result = 'success' if build[:result] == 'succeeded'%>
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
 	<tr>
-		<td width="52%">
-			<%=package[:identifier]%>
-		</td>
-		<td width="17%">
+		<td width="24%">
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td width="17%" class="<%=result%>">
+		<td width="24%" class="<%=result%>">
 			<a href="/build_logs/<%=package[:identifier]%>"><%=build[:result].camelcase%></a>
-		</td>
-		<td width="14%">
-			<a href="/build_history/<%=package[:identifier]%>"><%=Build.where(package_id: package[:identifier]).count%> Build(s)</a>
 		</td>
 	</tr>
 	<%end%>

@@ -8,7 +8,6 @@ gem 'pmap'
 gem 'puma'
 gem 'sequel'
 gem 'sinatra'
-gem 'sqlite3'
 
 group :development do
 	gem 'flamegraph'
@@ -16,4 +15,9 @@ group :development do
 	gem 'rack-mini-profiler'
 	gem 'rerun'
 	gem 'rubocop'
+	gem 'sqlite3'
+end
+
+group :production do
+	gem 'pg'
 end

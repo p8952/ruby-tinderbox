@@ -36,8 +36,8 @@ class RubyStats < Sinatra::Base
 		erb :build_status
 	end
 
-	get '/build_logs/:category/:package' do
-		erb :build_logs, locals: { category: params[:category], package: params[:package] }
+	get '/build_logs/:category/:package/:time' do
+		erb :build_logs, locals: { category: params[:category], package: params[:package], time: params[:time] }
 	end
 
 	get '/build_history/:category/:package' do

@@ -21,7 +21,7 @@
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td width="24%" class="<%=result%>">
-			<a href="/build_logs/<%=package[:identifier]%>"><%=build[:result].camelcase%></a>
+			<a href="/build_logs/<%=package[:identifier]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
 	</tr>
 	<%end%>

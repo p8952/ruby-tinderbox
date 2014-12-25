@@ -1,6 +1,6 @@
 <%identifier = category + '/' + package%>
 <%package = Package.filter(identifier: identifier).first%>
-<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
+<%build = Build.where(package_id: package[:identifier], time: time).first%>
 
 <div class="text-center">
 	<h3><%=identifier%></h3>

@@ -2,7 +2,7 @@ def update_packages
 	packages_txt = `python3 lib/packages.py`
 	Package.map(&:delete)
 	packages_txt.lines.each do |line|
-		category, name, version, revision, slot, r19_target, r20_target, r21_target = line.split(' ')
+		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target = line.split(' ')
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
 		Package.find_or_create(
@@ -11,6 +11,7 @@ def update_packages
 			version: version,
 			revision: revision,
 			slot: slot,
+			amd64_keyword: amd64_keyword,
 			identifier: category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}"),
 			gem_version: gem_version,
 			r19_target: r19_target,

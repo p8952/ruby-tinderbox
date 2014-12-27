@@ -4,6 +4,10 @@
 	right: 20px;
 }
 
+html {
+	overflow-y: scroll;
+}
+
 th.sort-header::selection {
 	background: transparent;
 }

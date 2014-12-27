@@ -2,13 +2,18 @@
 	<h3>Build Status (CI)</h3>
 </div>
 
+<form class="pull-right">
+	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64<br>
+	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
+</form>
+
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 	<tr>
-		<th>Package</th>
-		<th>Build Date</th>
-		<th>Build Result</th>
-		<th>Build History</th>
+		<th width="52%">Package</th>
+		<th width="17%">Build Date</th>
+		<th width="17%">Build Result</th>
+		<th width="14%">Build History</th>
 	</tr>
 	</thead>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
@@ -29,6 +34,9 @@
 		</td>
 		<td width="14%">
 			<a href="/build_history/<%=package[:identifier]%>"><%=Build.where(package_id: package[:identifier]).count%> Build(s)</a>
+		</td>
+		<td style="display:none;">
+			+<%=package[:amd64_keyword]%>
 		</td>
 	</tr>
 	<%end%>

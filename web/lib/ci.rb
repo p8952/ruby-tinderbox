@@ -1,13 +1,14 @@
 def run_ci(num_of_packages)
 	packages = []
-	Package.each do |package|
+	Package.order{[category, lower(name), version]}.each do |package|
 		packages << package[:identifier]
 	end
 
 	if num_of_packages == :all
 		packages = packages
 	elsif num_of_packages == :daily
-		packages = packages[((699.to_f / 7).ceil * (Time.now.wday + 1) - 100)..(699.to_f / 7).ceil * (Time.now.wday + 1)]
+		packages_per_day = ((packages.length.to_f / 7).ceil)
+		packages = packages[(Time.now.wday * packages_per_day)..((Time.now.wday * packages_per_day) + packages_per_day)]
 	elsif num_of_packages == 0
 		packages = packages.sample(5)
 	else

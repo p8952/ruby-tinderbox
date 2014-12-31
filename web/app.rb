@@ -14,12 +14,6 @@ require_relative 'lib/models'
 require_relative 'lib/packages'
 
 class RubyStats < Sinatra::Base
-	configure :development do
-		require 'flamegraph'
-		require 'rack-mini-profiler'
-		use Rack::MiniProfiler
-	end
-
 	get '/' do
 		redirect to('/ruby_targets')
 	end
@@ -42,5 +36,9 @@ class RubyStats < Sinatra::Base
 
 	get '/build_history/:category/:package' do
 		erb :build_history, locals: { category: params[:category], package: params[:package] }
+	end
+
+	get '/visualizations' do
+		erb :visualizations
 	end
 end

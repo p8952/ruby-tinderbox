@@ -4,20 +4,14 @@ gem 'aws-sdk'
 gem 'gems'
 gem 'net-scp'
 gem 'net-ssh'
+gem 'pg'
 gem 'pmap'
 gem 'puma'
 gem 'sequel'
 gem 'sinatra'
 
 group :development do
-	gem 'flamegraph'
 	gem 'minitest'
-	gem 'rack-mini-profiler'
 	gem 'rerun'
 	gem 'rubocop'
-	gem 'sqlite3'
-end
-
-group :production do
-	gem 'pg'
 end

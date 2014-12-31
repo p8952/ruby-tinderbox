@@ -1,0 +1,95 @@
+<%r19_stable = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count%>
+<%r19_unstable = Package.where(r19_target: 'ruby19', amd64_keyword: '~amd64').count%>
+<%r20_stable = Package.where(r20_target: 'ruby20', amd64_keyword: 'amd64').count%>
+<%r20_unstable = Package.where(r20_target: 'ruby20', amd64_keyword: '~amd64').count%>
+<%r21_stable = Package.where(r21_target: 'ruby21', amd64_keyword: 'amd64').count%>
+<%r21_unstable = Package.where(r21_target: 'ruby21', amd64_keyword: '~amd64').count%>
+<script src='/js/jquery.flot.min.js'></script>
+<script src='/js/jquery.flot.categories.min.js'></script>
+<script src="/js/jquery.flot.tickrotor.js"></script>
+<script>
+$(function() {
+	var datasets = {
+		"ruby_1.9_amd64": {
+			label: "Ruby 1.9 amd64",
+			data: [[1, <%=r19_stable%>]]
+		},
+		"ruby_1.9_~amd64": {
+			label: "Ruby 1.9 ~amd64",
+			data: [[1, <%=r19_unstable%>]]
+		},
+		"ruby_2.0_amd64": {
+			label: "Ruby 2.0 amd64",
+			data: [[1, <%=r20_stable%>]]
+		},
+		"ruby_2.0_~amd64": {
+			label: "Ruby 2.0 ~amd64",
+			data: [[1, <%=r20_unstable%>]]
+		},
+		"ruby_2.1_amd64": {
+			label: "Ruby 2.1 amd64",
+			data: [[1, <%=r21_stable%>]]
+		},
+		"ruby_2.1_~amd64": {
+			label: "Ruby 2.1 ~amd64",
+			data: [[1, <%=r21_unstable%>]]
+		}
+	};
+
+	var i = 0;
+	$.each(datasets, function(key, val) {
+		val.color = i;
+		++i;
+	});
+
+	var choiceContainer = $("#package-targets-options");
+	$.each(datasets, function(key, val) {
+		choiceContainer.append("<br/><input type='checkbox' name='" + key +
+			"' checked='checked' id='id" + key + "'></input>" +
+			"<label for='id" + key + "'>"
+			+ val.label + "</label>");
+	});
+
+	choiceContainer.find("input").click(plotAccordingToChoices);
+
+	function plotAccordingToChoices() {
+		var data = [];
+		var ticks = [];
+		var i = 1;
+		choiceContainer.find("input:checked").each(function () {
+			var key = $(this).attr("name");
+			datasets[key].data[0][0] = i;
+			ticks.push([i, datasets[key].label]);
+			++i;
+			if (key && datasets[key]) {
+				data.push(datasets[key]);
+			}
+		});
+		$.plot("#package-targets-plot", data, {
+			legend: {
+				show: false
+			},
+			bars: {
+				align: "center",
+				barWidth: 0.9,
+				fill: 0.9,
+				show: true
+			},
+			xaxis: {
+				max: i,
+				min: 0,
+				rotateTicks: 35,	
+				ticks: ticks
+			},
+		});
+	}
+
+	plotAccordingToChoices();
+});
+</script>
+
+<h4>Number of Packages per Ruby Target:</h4>
+<div class="package-targets-container">
+    <div class="package-targets-plot" id="package-targets-plot"></div>
+    <p class="package-targets-options" id="package-targets-options"></p>
+</div></p>

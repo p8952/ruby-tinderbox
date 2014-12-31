@@ -4,6 +4,21 @@
 	right: 20px;
 }
 
+.package-targets-container {
+	height: 400px;
+}
+
+.package-targets-plot {
+	width: 80%;
+	height: 100%;
+	float: left;
+}
+
+.package-targets-options {
+	width: 20%;
+	float: right;
+}
+
 html {
 	overflow-y: scroll;
 }

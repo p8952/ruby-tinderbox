@@ -1,6 +1,6 @@
 def run_ci(num_of_packages)
 	packages = []
-	Package.order{[category, lower(name), version]}.each do |package|
+	Package.order { [category, lower(name), version] }.each do |package|
 		packages << package[:identifier]
 	end
 

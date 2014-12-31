@@ -26,7 +26,7 @@ def start_instance
 		key_pair: key_pair
 	)
 	instance.add_tag('ruby-tinderbox')
-	sleep 5
+	sleep 5 while instance.status != :running
 
 	begin
 		Net::SSH.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key])

@@ -11,6 +11,11 @@ def run_ci(num_of_packages)
 		packages = packages[(Time.now.wday * packages_per_day)..((Time.now.wday * packages_per_day) + packages_per_day)]
 	elsif num_of_packages == 0
 		packages = packages.sample(5)
+	elsif num_of_packages == :untested
+		packages = []
+		Package.exclude(tested: true).order { [category, lower(name), version] }.each do |package|
+			packages << package[:identifier]
+		end
 	else
 		packages = packages.sample(num_of_packages)
 	end
@@ -71,6 +76,9 @@ def update_ci
 			build_log: build_log,
 			environment: environment
 		)
+	end
+	Build.each do |build|
+		Package.where(identifier: build[:package_id]).update(tested: true)
 	end
 end
 

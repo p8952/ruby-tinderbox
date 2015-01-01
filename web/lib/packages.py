@@ -1,6 +1,6 @@
 import portage
 
-def format_output(cpv, slot, keyword):
+def format_output(cpv, slot, iuse, keyword):
     category, pkgname, version, revision = portage.catpkgsplit(cpv)
     print (category + ' ' + pkgname + ' ' + version + ' ' + revision + ' ' + slot + ' ' + keyword, end=' ')
     if 'ruby_targets_ruby19' in iuse:
@@ -28,12 +28,12 @@ for cp in porttree.dbapi.cp_all():
 
             cpvbs = (porttree.dep_bestmatch(cp))
             if cpvbs:
-                slot, keywords = porttree.dbapi.aux_get(cpvbs, ['SLOT', 'KEYWORDS'])
+                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbs, ['SLOT', 'IUSE','KEYWORDS'])
                 if '~amd64' not in keywords and 'amd64' in keywords:
-                    format_output(cpvbs, slot, 'amd64')
+                    format_output(cpvbs, slot, iuse, 'amd64')
 
             cpvbu = portage.best(list(cpvd))
             if cpvbu:
-                slot, keywords = porttree.dbapi.aux_get(cpvbu, ['SLOT', 'KEYWORDS'])
+                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbu, ['SLOT', 'IUSE', 'KEYWORDS'])
                 if '~amd64' in keywords:
-                    format_output(cpvbu, slot, '~amd64')
+                    format_output(cpvbu, slot, iuse, '~amd64')

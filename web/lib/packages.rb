@@ -23,7 +23,9 @@ def update_packages
 	end
 
 	Package.each do |package|
-		unless packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]}")
+		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]}")
+			package.update(dependencies: `python3 lib/deps.py #{package[:identifier].split(':')[0]}`)
+		else
 			package.delete
 		end
 	end

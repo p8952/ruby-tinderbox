@@ -51,7 +51,7 @@ end
 def update_ci
 	Dir.glob('ci-logs/*/*/*') do |build|
 		build_array = build.split('/')
-		package_id = "dev-ruby/#{build_array[2]}"
+		package_id = "#{build_array[1]}/#{build_array[2]}"
 		time = build_array[3]
 
 		if File.exist?("#{build}/succeeded")

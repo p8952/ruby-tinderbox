@@ -1,5 +1,6 @@
 *.box
 *.sqlite3
+*.tar.xz
 .vagrant/
 gentoo-x86/
 logs/

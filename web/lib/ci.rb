@@ -1,7 +1,7 @@
 def run_ci(num_of_packages)
 	packages = []
 	Package.order { [category, lower(name), version] }.each do |package|
-		packages << package[:identifier].split(':')[0]
+		packages << package[:identifier]
 	end
 
 	if num_of_packages == :all

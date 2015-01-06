@@ -17,7 +17,7 @@
 	</tr>
 	</thead>
 	<%Package.order{[category, lower(name), version]}.each do |package|%>
-	<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
+	<%build = Build.where(package_id: package[:identifier].split(':')[0]).order(:time).last%>
 	<%next if build.nil?%>
 	<%result = 'success' if build[:result] == 'succeeded'%>
 	<%result = 'info' if build[:result] == 'timed out'%>

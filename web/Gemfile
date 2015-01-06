@@ -12,6 +12,8 @@ gem 'sinatra'
 
 group :development do
 	gem 'minitest'
+	gem 'rack-test'
 	gem 'rerun'
 	gem 'rubocop'
+	gem 'sqlite3'
 end

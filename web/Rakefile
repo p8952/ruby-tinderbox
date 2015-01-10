@@ -1,11 +1,8 @@
 require_relative 'app'
 
-task default: 'unit:test'
-
-namespace :unit do
-	task :test do
-		Dir.glob('./test/test_*.rb') { |f| require f }
-	end
+task default: 'test'
+task :test do
+	Dir.glob('./test/test_*.rb') { |f| require f }
 end
 
 namespace :db do
@@ -29,7 +26,7 @@ namespace :db do
 	end
 end
 
-namespace :aws do
+namespace :vm do
 	task :run_ci_all do
 		run_ci(:all)
 	end

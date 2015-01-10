@@ -21,30 +21,18 @@ def run_ci(num_of_packages)
 	end
 
 	begin
-		instance, key_pair = start_instance
-		file_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
+		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
+		vagrant = Vagrant_Rbapi.new(vagrant_path)
+		vagrant.up
+		sleep 5 while vagrant.status != 'running'
+		config = vagrant.ssh_config
+		vagrant.ssh('sudo /vagrant/tinder.sh ' + packages.join(' '))
 
-		Net::SCP.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |scp|
-			scp.upload!(file_path + '/conf', '/home/ec2-user', recursive: true)
-			scp.upload!(file_path + '/tinder.sh', '/home/ec2-user/tinder.sh')
+		Net::SCP.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |scp|
+			scp.download!('/home/ec2-user/ci-logs', vagrant_path + '/web', recursive: true)
 		end
-
-		Net::SSH.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |ssh|
-			ssh.exec!('sudo /home/ec2-user/conf/provision.sh') do |_ch, _stream, data|
-				puts data
-			end
-			ssh.exec!('sudo /home/ec2-user/tinder.sh ' + packages.join(' ')) do |_ch, _stream, data|
-				puts data
-			end
-		end
-
-		Net::SCP.start(instance.ip_address, 'ec2-user', key_data: [key_pair.private_key]) do |scp|
-			scp.download!('/home/ec2-user/ci-logs', file_path + '/web', recursive: true)
-		end
-	rescue => e
-		puts e
 	ensure
-		delete_instance(instance)
+		vagrant.destroy
 	end
 end
 

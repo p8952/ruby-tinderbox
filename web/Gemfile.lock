@@ -4,28 +4,19 @@ GEM
     ast (2.0.0)
     astrolabe (1.3.0)
       parser (>= 2.2.0.pre.3, < 3.0)
-    aws-sdk (1.58.0)
-      aws-sdk-v1 (= 1.58.0)
-    aws-sdk-v1 (1.58.0)
-      json (~> 1.4)
-      nokogiri (>= 1.4.4)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     ffi (1.9.6)
     gems (0.8.3)
     hitimes (1.2.2)
-    json (1.8.0)
     listen (2.8.0)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
-    mini_portile (0.6.0)
     minitest (2.5.1)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    nokogiri (1.6.3.1)
-      mini_portile (= 0.6.0)
     parser (2.2.0.pre.8)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
@@ -40,6 +31,7 @@ GEM
     rack-test (0.6.2)
       rack (>= 1.0)
     rainbow (2.0.0)
+    rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
@@ -62,12 +54,14 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
+    vagrant_rbapi (0.0.1)
+      net-ssh
+      rake
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
   gems
   minitest
   net-scp
@@ -81,3 +75,4 @@ DEPENDENCIES
   sequel
   sinatra
   sqlite3
+  vagrant_rbapi

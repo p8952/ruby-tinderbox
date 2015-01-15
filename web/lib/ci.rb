@@ -1,4 +1,4 @@
-def run_ci(num_of_packages)
+def run_ci(num_of_packages, provisioner)
 	packages = []
 	Package.order { [category, lower(name), version] }.each do |package|
 		packages << package[:identifier]
@@ -23,14 +23,10 @@ def run_ci(num_of_packages)
 	begin
 		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
 		vagrant = Vagrant_Rbapi.new(vagrant_path)
-		vagrant.up
+		vagrant.up(provisioner)
 		sleep 5 while vagrant.status != 'running'
-		config = vagrant.ssh_config
 		vagrant.ssh('sudo /vagrant/tinder.sh ' + packages.join(' '))
-
-		Net::SCP.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |scp|
-			scp.download!('/home/ec2-user/ci-logs', vagrant_path + '/web', recursive: true)
-		end
+		vagrant.scp(:download, true, '/vagrant/ci-logs', 'web')
 	ensure
 		vagrant.destroy
 	end

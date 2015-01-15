@@ -1,6 +1,11 @@
 Vagrant.configure(2) do |config|
 	config.vm.box = 'gentoo-amd64'
-	config.vm.provision "shell", path: "conf/provision.sh"
+
+	config.vm.provider :virtualbox do |vbox|
+		vbox.cpus = 2
+		vbox.memory = 2048
+	end
+
 	config.vm.provider :aws do |aws, override|
 		config.vm.box_url = 'http://vagrant.p8952.info/gentoo-amd64-aws-1418910301.box'
 		config.vm.synced_folder '.', '/vagrant', type: 'rsync', rsync__exclude: ['gentoo-x86/', 'web/'], :rsync_excludes => ['gentoo-x86/', 'web/']
@@ -10,4 +15,6 @@ Vagrant.configure(2) do |config|
 		override.ssh.username = 'ec2-user'
 		override.ssh.private_key_path = '~/.ssh/AWS-Key.pem'
 	end
+
+	config.vm.provision "shell", path: "conf/provision.sh"
 end

@@ -15,5 +15,4 @@ group :development do
 	gem 'rack-test'
 	gem 'rerun'
 	gem 'rubocop'
-	gem 'sqlite3'
 end

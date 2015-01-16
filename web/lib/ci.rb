@@ -15,11 +15,21 @@ def run_ci(num_of_packages, provisioner)
 		packages = []
 		Package.exclude(tested: true).order { [category, lower(name), version] }.each do |package|
 			packages << package[:identifier]
+			Package.where(Sequel.like(
+				:dependencies,
+				"#{package[:category]}/#{package[:name]} %",
+				"% #{package[:category]}/#{package[:name]} %",
+				"% #{package[:category]}/#{package[:name]}",
+			)).each do |rdep|
+				packages << rdep[:identifier]
+			end
 		end
 	else
 		packages = packages.sample(num_of_packages)
 	end
 
+	exit if packages.empty?
+	
 	begin
 		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
 		vagrant = Vagrant_Rbapi.new(vagrant_path)

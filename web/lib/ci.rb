@@ -15,6 +15,13 @@ def run_ci(num_of_packages, provisioner)
 		packages = []
 		Package.exclude(tested: true).order { [category, lower(name), version] }.each do |package|
 			packages << package[:identifier]
+			next if [
+				'virtual/rubygems',
+				'dev-ruby/rake',
+				'dev-ruby/rspec',
+				'dev-ruby/rspec-core',
+				'dev-ruby/rdoc'
+			].include?("#{package[:category]}/#{package[:name]}")
 			Package.where(Sequel.like(
 				:dependencies,
 				"#{package[:category]}/#{package[:name]} %",
@@ -29,7 +36,7 @@ def run_ci(num_of_packages, provisioner)
 	end
 
 	exit if packages.empty?
-	
+
 	begin
 		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
 		vagrant = Vagrant_Rbapi.new(vagrant_path)

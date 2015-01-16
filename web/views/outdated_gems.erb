@@ -2,6 +2,11 @@
 	<h3>Outdated Gems</h3>
 </div>
 
+<form class="pull-right">
+	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64<br>
+	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
+</form>
+
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 	<tr>
@@ -20,6 +25,9 @@
 		</td>
 		<td width="24%" class="success"><%=package[:version]%></td>
 		<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
+		<td style="display:none;">
+			+<%=package[:amd64_keyword]%>
+		</td>
 	</tr>
 	<%end%>
 	<%end%>

@@ -23,6 +23,14 @@ $(function() {
 		"ruby_2.1_~amd64": {
 			label: "Ruby 2.1 ~amd64",
 			data: [[1, $('td[id="ruby_2.1_~amd64"]').text()]]
+		},
+		"ruby_2.2_amd64": {
+			label: "Ruby 2.2 amd64",
+			data: [[1, $('td[id="ruby_2.2_amd64"]').text()]]
+		},
+		"ruby_2.2_~amd64": {
+			label: "Ruby 2.2 ~amd64",
+			data: [[1, $('td[id="ruby_2.2_~amd64"]').text()]]
 		}
 	};
 
@@ -70,7 +78,7 @@ $(function() {
 				min: 0,
 				rotateTicks: 35,
 				ticks: ticks
-			},
+			}
 		});
 	}
 

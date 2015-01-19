@@ -16,27 +16,25 @@
 		<th width="14%">History</th>
 	</tr>
 	</thead>
-	<%Package.order{[category, lower(name), version]}.each do |package|%>
-	<%build = Build.where(package_id: package[:identifier]).order(:time).last%>
-	<%next if build.nil?%>
+	<%Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).each do |build|%>
 	<%result = 'success' if build[:result] == 'succeeded'%>
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
 	<tr>
 		<td width="52%">
-			<%=package[:identifier]%>
+			<%=build[:package_id]%>
 		</td>
 		<td width="17%">
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td width="17%" class="<%=result%>">
-			<a href="/build_logs/<%=package[:identifier]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
+			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
 		<td width="14%">
-			<a href="/build_history/<%=package[:identifier]%>"><%=Build.where(package_id: package[:identifier]).count%> Build(s)</a>
+			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
 		</td>
 		<td style="display:none;">
-			+<%=package[:amd64_keyword]%>
+			+<%=Package.where(identifier: build[:package_id]).first[:amd64_keyword]%>
 		</td>
 	</tr>
 	<%end%>

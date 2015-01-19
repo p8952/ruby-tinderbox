@@ -2,6 +2,7 @@
 <script src='/js/jquery.flot.categories.min.js'></script>
 <script src='/js/jquery.flot.tickrotor.min.js'></script>
 <script src='/js/jquery.flot.plot.packages.per.target.js'></script>
+<script src='/js/jquery.flot.plot.build.result.js'></script>
 
 <h4>Number of Packages per Ruby Target:</h4>
 <table style="display:none;" class='table table-bordered table-condensed'>
@@ -16,7 +17,20 @@
 		<td id='ruby_2.2_~amd64'><%=Package.where(r22_target: 'ruby22', amd64_keyword: '~amd64').count%></td>
 	</tr>
 </table>
-<div class='package-targets-container'>
-	<div class='package-targets-plot' id='package-targets-plot'></div>
-	<p class='package-targets-options' id='package-targets-options'></p>
-</div></p>
+<div class='flot-container'>
+	<div class='flot-plot' id='package-targets-plot'></div>
+	<p class='flot-options' id='package-targets-options'></p>
+</div>
+
+<h4>Number of Packages per Build Result</h4>
+<table style="display:none;" class='table table-bordered table-condensed'>
+	<tr>
+		<td id='succeeded'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'succeeded').count%></td>
+		<td id='failed'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'failed').count%></td>
+		<td id='timed_out'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'timed_out')count%></td>
+	</tr>
+</table>
+<div class='flot-container'>
+	<div class='flot-plot' id='build-result-plot'></div>
+	<p class='flot-options' id='build-result-options'></p>
+</div>

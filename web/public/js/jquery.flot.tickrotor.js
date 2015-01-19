@@ -1,18 +1,10 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 /*
- * flot-tickrotor: flot plugin to display angled X-axis tick labels.
- *
- * Requires flot 0.7 or higher and a browser supporting <canvas>.
- *
- * To activate, just set xaxis.rotateTicks to an angle in degrees.  Labels
- * are rotated clockwise, so if you want the labels to angle up and to the
- * right (/) you need to provide an angle > 90.  The text will be flipped so
- * that it is still right-side-up.
- * Angles greater than or equal to 180 are ignored.
- */
+flot-tickrotor: flot plugin to display angled X-axis tick labels.
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this file,
+You can obtain one at http://mozilla.org/MPL/2.0/. 
+*/
+
 (function ($) {
     var options = { };
 

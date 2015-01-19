@@ -1,7 +1,7 @@
 def update_packages
 	packages_txt = `python3 lib/packages.py`
 	packages_txt.lines.peach do |line|
-		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target = line.split(' ')
+		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
@@ -19,11 +19,12 @@ def update_packages
 			r19_target: r19_target,
 			r20_target: r20_target,
 			r21_target: r21_target,
+			r22_target: r22_target,
 		)
 	end
 
 	Package.each do |package|
-		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]}")
+		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]} #{package[:slot]} #{package[:amd64_keyword]} #{package[:r19_target]} #{package[:r20_target]} #{package[:r21_target]} #{package[:r22_target]}")
 			package.update(dependencies: `python3 lib/deps.py #{package[:identifier]}`)
 		else
 			package.delete

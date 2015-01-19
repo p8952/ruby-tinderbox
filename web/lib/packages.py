@@ -15,6 +15,10 @@ def format_output(cpv, slot, iuse, keyword):
         print('ruby21', end=' ')
     else:
         print('nil', end=' ')
+    if 'ruby_targets_ruby22' in iuse:
+        print('ruby22', end=' ')
+    else:
+        print('nil', end=' ')
     print()
 
 porttree = portage.db[portage.root]['porttree']

@@ -25,9 +25,9 @@
 <h4>Number of Packages per Build Result</h4>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
-		<td id='succeeded'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'succeeded').count%></td>
-		<td id='failed'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'failed').count%></td>
-		<td id='timed_out'><%=Build.order(:package_id, Sequel.desc(:time)).distinct(:package_id).where(result: 'timed_out')count%></td>
+		<td id='succeeded'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count%></td>
+		<td id='failed'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'failed').count%></td>
+		<td id='timed_out'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count%></td>
 	</tr>
 </table>
 <div class='flot-container'>

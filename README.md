@@ -1,6 +1,6 @@
 # Ruby Tinderbox
 
-Script for testing Ruby related packages in Gentoo Linux.
+Scripts for testing Ruby related packages in Gentoo Linux.
 
 ## Usage
 
@@ -11,6 +11,6 @@ Script for testing Ruby related packages in Gentoo Linux.
     
 # [Ruby Stats](http://ruby-stats.p8952.info/)
 
-Web interface and build server built on top of the above script.
+Web interface and build server built on top of the above mentioned scripts.
 
 Maintains a database of the build results of all Ruby related packages.

@@ -17,25 +17,26 @@
 	</tr>
 	</thead>
 	<%Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).each do |build|%>
-	<%result = 'success' if build[:result] == 'succeeded'%>
-	<%result = 'info' if build[:result] == 'timed out'%>
-	<%result = 'danger' if build[:result] == 'failed'%>
-	<tr>
-		<td width="52%">
-			<%=build[:package_id]%>
-		</td>
-		<td width="17%">
-			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
-		</td>
-		<td width="17%" class="<%=result%>">
-			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
-		</td>
-		<td width="14%">
-			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
-		</td>
-		<td style="display:none;">
-			+<%=Package.where(identifier: build[:package_id]).first[:amd64_keyword]%>
-		</td>
-	</tr>
+		<%next if Package.where(identifier: build[:package_id]).first.nil?%>
+		<%result = 'success' if build[:result] == 'succeeded'%>
+		<%result = 'info' if build[:result] == 'timed out'%>
+		<%result = 'danger' if build[:result] == 'failed'%>
+		<tr>
+			<td width="52%">
+				<%=build[:package_id]%>
+			</td>
+			<td width="17%">
+				<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
+			</td>
+			<td width="17%" class="<%=result%>">
+				<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
+			</td>
+			<td width="14%">
+				<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
+			</td>
+			<td style="display:none;">
+				<%=Package.where(identifier: build[:package_id]).first[:amd64_keyword]%>
+			</td>
+		</tr>
 	<%end%>
 </table>

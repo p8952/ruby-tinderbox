@@ -1,6 +1,4 @@
-<%identifier = category + '/' + package%>
-<%package = Package.filter(identifier: identifier).first%>
-<%builds = Build.where(package_id: package[:identifier]).reverse_order(:time)%>
+<%builds = Build.where(package_id: category + '/' + package).reverse_order(:time)%>
 
 <h3 class="text-center"><%=identifier%></h3>
 
@@ -21,7 +19,7 @@
 				<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 			</td>
 			<td width="24%" class="<%=result%>">
-				<a href="/build_logs/<%=package[:identifier]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
+				<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 			</td>
 		</tr>
 	<%end%>

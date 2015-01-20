@@ -76,7 +76,7 @@ $(function() {
 			xaxis: {
 				max: i,
 				min: 0,
-				rotateTicks: 35,
+				rotateTicks: 145,
 				ticks: ticks
 			}
 		});

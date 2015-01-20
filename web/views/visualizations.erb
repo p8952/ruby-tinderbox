@@ -2,6 +2,7 @@
 <script src='/js/jquery.flot.categories.min.js'></script>
 <script src='/js/jquery.flot.tickrotor.min.js'></script>
 <script src='/js/jquery.flot.plot.packages.per.target.js'></script>
+<script src='/js/jquery.flot.plot.outdated.gems.js'></script>
 <script src='/js/jquery.flot.plot.build.result.js'></script>
 
 <h4>Number of Packages per Ruby Target:</h4>
@@ -20,6 +21,22 @@
 <div class='flot-container'>
 	<div class='flot-plot' id='package-targets-plot'></div>
 	<p class='flot-options' id='package-targets-options'></p>
+</div>
+
+<h4>Number of Outdated Gems</h4>
+<table style="display:none;" class='table table-bordered table-condensed'>
+	<tr>
+		<%uptodate = []%>
+		<%Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| uptodate << p if p[:version] >= p[:gem_version] }%>
+		<%outdated = []%>
+		<%Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }%>
+		<td id='uptodate'><%=uptodate.count%></td>
+		<td id='outdated'><%=outdated.count%></td>
+	</tr>
+</table>
+<div class='flot-container'>
+	<div class='flot-plot' id='outdated-gems-plot'></div>
+	<p class='flot-options' id='outdated-gems-options'></p>
 </div>
 
 <h4>Number of Packages per Build Result</h4>

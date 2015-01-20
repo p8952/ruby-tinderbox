@@ -1,23 +1,18 @@
 $(function() {
 	var datasets = {
-		"succeeded": {
-			label: "Succeeded",
-			data: [[1, $('td[id="succeeded"]').text()]],
+		"uptodate": {
+			label: "Up-to-date",
+			data: [[1, $('td[id="uptodate"]').text()]],
 			color: 3
 		},
-		"failed": {
-			label: "Failed",
-			data: [[1, $('td[id="failed"]').text()]],
-			color: 2,
-		},
-		"timed_out": {
-			label: "Timed Out",
-			data: [[1, $('td[id="timed_out"]').text()]],
-			color: 1
+		"outdated": {
+			label: "Outdated",
+			data: [[1, $('td[id="outdated"]').text()]],
+			color: 2
 		}
 	};
 
-	var choiceContainer = $("#build-result-options");
+	var choiceContainer = $("#outdated-gems-options");
 	$.each(datasets, function(key, val) {
 		choiceContainer.append("<br/><input type='checkbox' name='" + key +
 			"' checked='checked' id='id" + key + "'></input>" +
@@ -40,7 +35,7 @@ $(function() {
 				data.push(datasets[key]);
 			}
 		});
-		$.plot("#build-result-plot", data, {
+		$.plot("#outdated-gems-plot", data, {
 			legend: {
 				show: false
 			},

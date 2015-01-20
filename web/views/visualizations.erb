@@ -5,7 +5,7 @@
 <script src='/js/jquery.flot.plot.outdated.gems.js'></script>
 <script src='/js/jquery.flot.plot.build.result.js'></script>
 
-<h4>Number of Packages per Ruby Target:</h4>
+<h3>Number of Packages per Ruby Target:</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
 		<td id='ruby_1.9_amd64'><%=Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count%></td>
@@ -23,7 +23,7 @@
 	<p class='flot-options' id='package-targets-options'></p>
 </div>
 
-<h4>Number of Outdated Gems</h4>
+<h3>Number of Outdated Gems</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
 		<%uptodate = []%>
@@ -39,7 +39,7 @@
 	<p class='flot-options' id='outdated-gems-options'></p>
 </div>
 
-<h4>Number of Packages per Build Result</h4>
+<h3>Number of Packages per Build Result</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
 		<td id='succeeded'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count%></td>

@@ -36,6 +36,6 @@ class TestWeb < MiniTest::Unit::TestCase
 	def test_visualizations
 		get '/visualizations'
 		assert last_response.ok?
-		assert last_response.body.include? '<h4>Number of Packages per Ruby Target:</h4>'
+		assert last_response.body.include? '<h3>Number of Packages per Ruby Target:</h3>'
 	end
 end

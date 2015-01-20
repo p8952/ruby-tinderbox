@@ -1,6 +1,6 @@
 # Ruby Tinderbox
 
-Scripts for testing Ruby related packages in Gentoo Linux.
+Script for testing Ruby related packages in Gentoo Linux.
 
 ## Usage
 

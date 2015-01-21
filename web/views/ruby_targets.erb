@@ -18,26 +18,26 @@
 		</tr>
 	</thead>
 	<%packages.each do |package|%>
-		<%package = package[1][0]%>
-		<tr>
-			<td width="52%">
-				<%=package[:identifier]%>
-			</td>
-			<td width="12%" class="<%=package[:r19_target] == "nil" ? "danger" : "success"%>">
-				<%=package[:r19_target]%>
-			</td>
-			<td width="12%" class="<%=package[:r20_target] == "nil" ? "danger" : "success"%>">
-				<%=package[:r20_target]%>
-			</td>
-			<td width="12%" class="<%=package[:r21_target] == "nil" ? "danger" : "success"%>">
-				<%=package[:r21_target]%>
-			</td>
-			<td width="12%" class="<%=package[:r22_target] == "nil" ? "danger" : "success"%>">
-				<%=package[:r22_target]%>
-			</td>
-			<td style="display:none;">
-				+<%=package[:amd64_keyword]%>
-			</td>
-		</tr>
+	<%package = package[1][0]%>
+	<tr>
+		<td width="52%">
+			<%=package[:identifier]%>
+		</td>
+		<td width="12%" class="<%=package[:r19_target] == "nil" ? "danger" : "success"%>">
+			<%=package[:r19_target]%>
+		</td>
+		<td width="12%" class="<%=package[:r20_target] == "nil" ? "danger" : "success"%>">
+			<%=package[:r20_target]%>
+		</td>
+		<td width="12%" class="<%=package[:r21_target] == "nil" ? "danger" : "success"%>">
+			<%=package[:r21_target]%>
+		</td>
+		<td width="12%" class="<%=package[:r22_target] == "nil" ? "danger" : "success"%>">
+			<%=package[:r22_target]%>
+		</td>
+		<td style="display:none;">
+			+<%=package[:amd64_keyword]%>
+		</td>
+	</tr>
 	<%end%>
 </table>

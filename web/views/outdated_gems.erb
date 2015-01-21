@@ -16,17 +16,17 @@
 		</tr>
 	</thead>
 	<%packages.each do |package|%>
-		<%if package[:gem_version] > package[:version]%>
-			<tr>
-				<td width="52%">
-					<%=package[:identifier]%>
-				</td>
-				<td width="24%" class="success"><%=package[:version]%></td>
-				<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
-				<td style="display:none;">
-					+<%=package[:amd64_keyword]%>
-				</td>
-			</tr>
-		<%end%>
+	<%if package[:gem_version] > package[:version]%>
+	<tr>
+		<td width="52%">
+			<%=package[:identifier]%>
+		</td>
+		<td width="24%" class="success"><%=package[:version]%></td>
+		<td width="24%" class="danger"><a href="//rubygems.org/gems/<%=package[:name]%>"><%=package[:gem_version]%></a></td>
+		<td style="display:none;">
+			+<%=package[:amd64_keyword]%>
+		</td>
+	</tr>
+	<%end%>
 	<%end%>
 </table>

@@ -1,10 +1,4 @@
-if ENV['RACK_ENV'] == 'test'
-	DB =  Sequel.sqlite
-	Sequel.extension :migration
-	Sequel::Migrator.run(DB, 'db/migrations')
-else
-	DB = Sequel.connect(ENV['DATABASE_URL'], pool_timeout: 25)
-end
+DB = Sequel.connect(ENV['DATABASE_URL'], pool_timeout: 25)
 
 class Package < Sequel::Model
 end

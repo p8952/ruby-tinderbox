@@ -1,6 +1,4 @@
-require 'minitest/autorun'
-require 'rack/test'
-require_relative '../app'
+require_relative 'minitest_helper'
 
 class TestWeb < MiniTest::Unit::TestCase
 	include Rack::Test::Methods

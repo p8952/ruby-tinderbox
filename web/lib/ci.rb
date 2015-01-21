@@ -6,9 +6,6 @@ def run_ci(num_of_packages, provisioner)
 
 	if num_of_packages == :all
 		packages = packages
-	elsif num_of_packages == :daily
-		packages_per_day = ((packages.length.to_f / 7).ceil)
-		packages = packages[(Time.now.wday * packages_per_day)..((Time.now.wday * packages_per_day) + packages_per_day)]
 	elsif num_of_packages == 0
 		packages = packages.sample(5)
 	elsif num_of_packages == :untested

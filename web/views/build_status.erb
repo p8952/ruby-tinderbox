@@ -16,7 +16,7 @@
 		<th width="14%">History</th>
 	</tr>
 	</thead>
-	<%Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).each do |build|%>
+	<%builds.each do |build|%>
 		<%next if Package.where(identifier: build[:package_id]).first.nil?%>
 		<%result = 'success' if build[:result] == 'succeeded'%>
 		<%result = 'info' if build[:result] == 'timed out'%>

@@ -15,7 +15,7 @@
 			<th>RubyGem Version</th>
 		</tr>
 	</thead>
-	<%Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version)).exclude(gem_version: 'nil').each do |package|%>
+	<%packages.each do |package|%>
 		<%if package[:gem_version] > package[:version]%>
 			<tr>
 				<td width="52%">

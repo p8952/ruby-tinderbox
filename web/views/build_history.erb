@@ -1,6 +1,4 @@
-<%builds = Build.where(package_id: category + '/' + package).reverse_order(:time)%>
-
-<h3 class="text-center"><%=category%>/<%=package%></h3>
+<h3 class="text-center"><%=builds.first[:package_id]%></h3>
 
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>

@@ -8,14 +8,14 @@
 <h3>Number of Packages per Ruby Target:</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
-		<td id='ruby_1.9_amd64'><%=Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count%></td>
-		<td id='ruby_1.9_~amd64'><%=Package.where(r19_target: 'ruby19', amd64_keyword: '~amd64').count%></td>
-		<td id='ruby_2.0_amd64'><%=Package.where(r20_target: 'ruby20', amd64_keyword: 'amd64').count%></td>
-		<td id='ruby_2.0_~amd64'><%=Package.where(r20_target: 'ruby20', amd64_keyword: '~amd64').count%></td>
-		<td id='ruby_2.1_amd64'><%=Package.where(r21_target: 'ruby21', amd64_keyword: 'amd64').count%></td>
-		<td id='ruby_2.1_~amd64'><%=Package.where(r21_target: 'ruby21', amd64_keyword: '~amd64').count%></td>
-		<td id='ruby_2.2_amd64'><%=Package.where(r22_target: 'ruby22', amd64_keyword: 'amd64').count%></td>
-		<td id='ruby_2.2_~amd64'><%=Package.where(r22_target: 'ruby22', amd64_keyword: '~amd64').count%></td>
+		<td id='ruby_1.9_amd64'><%=ruby_1_9_amd64%></td>
+		<td id='ruby_1.9_~amd64'><%=ruby_1_9__amd64%></td>
+		<td id='ruby_2.0_amd64'><%=ruby_2_0_amd64%></td>
+		<td id='ruby_2.0_~amd64'><%=ruby_2_0__amd64%></td>
+		<td id='ruby_2.1_amd64'><%=ruby_2_1_amd64%></td>
+		<td id='ruby_2.1_~amd64'><%=ruby_2_1__amd64%></td>
+		<td id='ruby_2.2_amd64'><%=ruby_2_2_amd64%></td>
+		<td id='ruby_2.2_~amd64'><%=ruby_2_2__amd64%></td>
 	</tr>
 </table>
 <div class='flot-container'>
@@ -26,12 +26,8 @@
 <h3>Number of Outdated Gems</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
-		<%uptodate = []%>
-		<%Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| uptodate << p if p[:version] >= p[:gem_version] }%>
-		<%outdated = []%>
-		<%Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }%>
-		<td id='uptodate'><%=uptodate.count%></td>
-		<td id='outdated'><%=outdated.count%></td>
+		<td id='uptodate'><%=uptodate%></td>
+		<td id='outdated'><%=outdated%></td>
 	</tr>
 </table>
 <div class='flot-container'>
@@ -42,9 +38,9 @@
 <h3>Number of Packages per Build Result</h3>
 <table style="display:none;" class='table table-bordered table-condensed'>
 	<tr>
-		<td id='succeeded'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count%></td>
-		<td id='failed'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'failed').count%></td>
-		<td id='timed_out'><%=Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count%></td>
+		<td id='succeeded'><%=succeeded%></td>
+		<td id='failed'><%=failed%></td>
+		<td id='timed_out'><%=timed_out%></td>
 	</tr>
 </table>
 <div class='flot-container'>

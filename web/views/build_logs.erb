@@ -1,9 +1,5 @@
-<%identifier = category + '/' + package%>
-<%package = Package.filter(identifier: identifier).first%>
-<%build = Build.where(package_id: package[:identifier], time: time).first%>
-
 <div class="text-center">
-	<h3><%=identifier%></h3>
+	<h3><%=build[:package_id]%></h3>
 	<ul class="pagination">
 		<li><a href="#emerge_info">Emerge Info</a></li>
 		<li><a href="#emerge_pqv">Emerge PQV</a></li>

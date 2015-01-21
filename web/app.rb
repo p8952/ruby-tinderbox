@@ -18,26 +18,65 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/ruby_targets' do
-		erb :ruby_targets
+		packages = Package.order{[category, lower(name), version, revision]}.to_hash_groups(:identifier)
+		erb :ruby_targets, locals: { packages: packages }
 	end
 
 	get '/outdated_gems' do
-		erb :outdated_gems
+		packages = Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version), Sequel.desc(:revision)).exclude(gem_version: 'nil')
+		erb :outdated_gems, locals: { packages: packages }
 	end
 
 	get '/build_status' do
-		erb :build_status
-	end
-
-	get '/build_logs/:category/:package/:time' do
-		erb :build_logs, locals: { category: params[:category], package: params[:package], time: params[:time] }
+		builds = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time))
+		erb :build_status, locals: { builds: builds }
 	end
 
 	get '/build_history/:category/:package' do
-		erb :build_history, locals: { category: params[:category], package: params[:package] }
+		builds = Build.where(package_id: params[:category] + '/' + params[:package]).reverse_order(:time)
+		erb :build_history, locals: { builds: builds }
+	end
+
+	get '/build_logs/:category/:package/:time' do
+		build = Build.where(package_id: params[:category] + '/' + params[:package], time: params[:time]).first
+		erb :build_logs, locals: { build: build }
 	end
 
 	get '/visualizations' do
-		erb :visualizations
+		# Ruby Targets
+		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count
+		ruby_1_9__amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: '~amd64').count
+		ruby_2_0_amd64 = Package.where(r20_target: 'ruby20', amd64_keyword: 'amd64').count
+		ruby_2_0__amd64 = Package.where(r20_target: 'ruby20', amd64_keyword: '~amd64').count
+		ruby_2_1_amd64 = Package.where(r21_target: 'ruby21', amd64_keyword: 'amd64').count
+		ruby_2_1__amd64 = Package.where(r21_target: 'ruby21', amd64_keyword: '~amd64').count
+		ruby_2_2_amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: 'amd64').count
+		ruby_2_2__amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: '~amd64').count
+
+
+		# Outdated Gems
+		uptodate = []; Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| uptodate << p if p[:version] >= p[:gem_version] }
+		outdated = []; Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }
+
+		# Build Status
+		succeeded = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count
+		failed = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'failed').count
+		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count
+
+		erb :visualizations, locals: {
+			ruby_1_9_amd64: ruby_1_9_amd64,
+			ruby_1_9__amd64: ruby_1_9__amd64,
+			ruby_2_0_amd64: ruby_2_0_amd64,
+			ruby_2_0__amd64: ruby_2_0__amd64,
+			ruby_2_1_amd64: ruby_2_1_amd64,
+			ruby_2_1__amd64: ruby_2_1__amd64,
+			ruby_2_2_amd64: ruby_2_2_amd64,
+			ruby_2_2__amd64: ruby_2_2__amd64,
+			uptodate: uptodate.count,
+			outdated: outdated.count,
+			succeeded: succeeded,
+			failed: failed,
+			timed_out: timed_out
+		}
 	end
 end

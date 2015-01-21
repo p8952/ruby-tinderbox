@@ -1,5 +1,4 @@
 Sequel.migration do
-
 	change do
 		create_table :packages do
 			primary_key :id
@@ -12,5 +11,4 @@ Sequel.migration do
 			String :r21_target
 		end
 	end
-
 end

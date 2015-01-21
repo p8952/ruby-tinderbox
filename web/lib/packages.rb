@@ -5,8 +5,8 @@ def update_packages
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
-		#ebuild = "/usr/portage/#{category}/#{name}/#{identifier.split('/')[1]}.ebuild"
-		#ebuild_hash = Digest::MD5.hexdigest(File.read(ebuild))
+		# ebuild = "/usr/portage/#{category}/#{name}/#{identifier.split('/')[1]}.ebuild"
+		# ebuild_hash = Digest::MD5.hexdigest(File.read(ebuild))
 		Package.find_or_create(
 			category: category,
 			name: name,
@@ -19,7 +19,7 @@ def update_packages
 			r19_target: r19_target,
 			r20_target: r20_target,
 			r21_target: r21_target,
-			r22_target: r22_target,
+			r22_target: r22_target
 		)
 	end
 

@@ -18,7 +18,7 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/ruby_targets' do
-		packages = Package.order{[category, lower(name), version, revision]}.to_hash_groups(:identifier)
+		packages = Package.order { [category, lower(name), version, revision] }.to_hash_groups(:identifier)
 		erb :ruby_targets, locals: { packages: packages }
 	end
 
@@ -53,10 +53,11 @@ class RubyStats < Sinatra::Base
 		ruby_2_2_amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: 'amd64').count
 		ruby_2_2__amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: '~amd64').count
 
-
 		# Outdated Gems
-		uptodate = []; Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| uptodate << p if p[:version] >= p[:gem_version] }
-		outdated = []; Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }
+		uptodate = []
+		outdated = []
+		Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| uptodate << p if p[:version] >= p[:gem_version] }
+		Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }
 
 		# Build Status
 		succeeded = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count

@@ -6,7 +6,6 @@ gentoo-x86/
 logs/
 ruby-overlay/
 web/.bundle/
-web/.rubocop.yml
 web/ci-logs/
 !web/ci-logs/.keep
 web/var/log/*.log

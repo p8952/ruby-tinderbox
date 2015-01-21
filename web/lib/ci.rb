@@ -23,7 +23,7 @@ def run_ci(num_of_packages, provisioner)
 				:dependencies,
 				"#{package[:category]}/#{package[:name]} %",
 				"% #{package[:category]}/#{package[:name]} %",
-				"% #{package[:category]}/#{package[:name]}",
+				"% #{package[:category]}/#{package[:name]}"
 			)).each do |rdep|
 				packages << rdep[:identifier]
 			end

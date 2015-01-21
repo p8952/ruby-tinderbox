@@ -1,5 +1,4 @@
 Sequel.migration do
-
 	change do
 		create_table :builds do
 			primary_key :id
@@ -8,5 +7,4 @@ Sequel.migration do
 			String :result
 		end
 	end
-
 end

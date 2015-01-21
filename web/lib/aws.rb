@@ -36,7 +36,7 @@ def start_instance
 		retry
 	end
 
-	return instance, key_pair
+	[instance, key_pair]
 end
 
 def delete_instance(instance)

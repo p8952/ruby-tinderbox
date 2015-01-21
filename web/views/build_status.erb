@@ -22,16 +22,16 @@
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
 	<tr>
-		<td width="52%">
+		<td class="width-52">
 			<%=build[:package_id]%>
 		</td>
-		<td width="17%">
+		<td class="width-17">
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td width="17%" class="<%=result%>">
+		<td class="width-17 <%=result%>">
 			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
-		<td width="14%">
+		<td class="width-14">
 			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
 		</td>
 		<td style="display:none;">

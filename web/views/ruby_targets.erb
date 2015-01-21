@@ -10,29 +10,29 @@
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 		<tr>
-			<th width="52%">Package</th>
-			<th width="12%">Ruby 1.9</th>
-			<th width="12%">Ruby 2.0</th>
-			<th width="12%">Ruby 2.1</th>
-			<th width="12%">Ruby 2.2</th>
+			<th class="width-52">Package</th>
+			<th class="width-12">Ruby 1.9</th>
+			<th class="width-12">Ruby 2.0</th>
+			<th class="width-12">Ruby 2.1</th>
+			<th class="width-12">Ruby 2.2</th>
 		</tr>
 	</thead>
 	<%packages.each do |package|%>
 	<%package = package[1][0]%>
 	<tr>
-		<td width="52%">
+		<td class="width-52">
 			<%=package[:identifier]%>
 		</td>
-		<td width="12%" class="<%=package[:r19_target] == "nil" ? "danger" : "success"%>">
+		<td class="width-12 <%=package[:r19_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r19_target]%>
 		</td>
-		<td width="12%" class="<%=package[:r20_target] == "nil" ? "danger" : "success"%>">
+		<td class="width-12 <%=package[:r20_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r20_target]%>
 		</td>
-		<td width="12%" class="<%=package[:r21_target] == "nil" ? "danger" : "success"%>">
+		<td class="width-12 <%=package[:r21_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r21_target]%>
 		</td>
-		<td width="12%" class="<%=package[:r22_target] == "nil" ? "danger" : "success"%>">
+		<td class="width-12 <%=package[:r22_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r22_target]%>
 		</td>
 		<td style="display:none;">

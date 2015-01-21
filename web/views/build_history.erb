@@ -13,10 +13,10 @@
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
 	<tr>
-		<td width="24%">
+		<td>
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td width="24%" class="<%=result%>">
+		<td class="<%=result%>">
 			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
 	</tr>

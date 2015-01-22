@@ -1,5 +1,18 @@
 html {
+	height: 100%;
 	overflow-y: scroll;
+}
+
+body {
+	min-height: 100%;
+	position: relative;
+}
+
+footer {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
 }
 
 th.sort-header::selection {
@@ -15,12 +28,12 @@ th.sort-header::selection {
 }
 
 table th.sort-header:after {
+	border-color: #404040 transparent;
+	border-style: solid;
+	border-width: 0 4px 4px;
 	content: '';
 	float: right;
 	margin-top: 7px;
-	border-width: 0 4px 4px;
-	border-style: solid;
-	border-color: #404040 transparent;
 	visibility: hidden;
 }
 
@@ -29,8 +42,8 @@ table th.sort-header:hover:after {
 }
 
 table th.sort-up:after, table th.sort-down:after, table th.sort-down:hover:after {
-	visibility: visible;
 	opacity: 0.4;
+	visibility: visible;
 }
 
 table th.sort-up:after {
@@ -59,8 +72,8 @@ table th.sort-up:after {
 }
 
 .goto-top {
-	position: fixed;
 	bottom: 10px;
+	position: fixed;
 	right: 20px;
 }
 
@@ -69,12 +82,12 @@ table th.sort-up:after {
 }
 
 .flot-plot {
-	width: 80%;
-	height: 100%;
 	float: left;
+	height: 100%;
+	width: 80%;
 }
 
 .flot-options {
-	width: 20%;
 	float: right;
+	width: 20%;
 }

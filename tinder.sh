@@ -5,6 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 function ENV_SETUP() {
 	eselect news read --quiet all
+	eselect ruby set 1
 	if [[ ! -d /etc/portage/env/ ]]; then
 		mkdir /etc/portage/env/
 	fi
@@ -48,6 +49,7 @@ function LOG() {
 	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-pqv"
 	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/build.log"
 	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/environment"
+	gem list > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/gem-list"
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
 		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/succeeded"

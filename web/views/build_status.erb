@@ -17,7 +17,8 @@
 		</tr>
 	</thead>
 	<%builds.each do |build|%>
-	<%next if Package.where(identifier: build[:package_id]).first.nil?%>
+	<%package = Package.where(identifier: build[:package_id]).first%>
+	<%next if package.nil?%>
 	<%result = 'success' if build[:result] == 'succeeded'%>
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
@@ -35,7 +36,7 @@
 			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
 		</td>
 		<td style="display:none;">
-			<%=Package.where(identifier: build[:package_id]).first[:amd64_keyword]%>
+			+<%=package[:amd64_keyword]%>
 		</td>
 	</tr>
 	<%end%>

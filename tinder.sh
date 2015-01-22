@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o errexit
+set -o errexit -o nounset -o pipefail
 [[ $(whoami) == 'root' ]] || exit 1
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -11,7 +11,7 @@ function ENV_SETUP() {
 	echo 'FEATURES="${FEATURES} test keepwork"' > /etc/portage/env/test
 
 	if [[ ! -d $SCRIPT_DIR/ci-logs/ ]]; then
-		mkdir $SCRIPT_DIR/ci-logs/
+		mkdir "$SCRIPT_DIR/ci-logs"
 	fi
 }
 
@@ -22,7 +22,7 @@ function SETUP () {
 	echo "=$PACKAGE test" > /etc/portage/package.env
 
 	if [[ -e /usr/portage/packages/$PACKAGE.tbz2 ]]; then
-		rm /usr/portage/packages/$PACKAGE.tbz2
+		rm "/usr/portage/packages/$PACKAGE.tbz2"
 	fi
 
 	set +e
@@ -37,31 +37,31 @@ function SETUP () {
 function EMERGE() {
 	set +e
 	timeout 1000 emerge --usepkg --buildpkg "=$PACKAGE"
-	LOG $? $PACKAGE
+	LOG "$?" "$PACKAGE"
 	set -e
 }
 
 function LOG() {
 	DATE=$(date +%s)
-	mkdir -p $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE
-	emerge --info "=$PACKAGE" > $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-info
-	emerge -pqv "=$PACKAGE" > $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-pqv
-	cp /var/tmp/portage/$PACKAGE/temp/build.log $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/build.log
-	cp /var/tmp/portage/$PACKAGE/temp/environment $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/environment
+	mkdir -p "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE"
+	emerge --info "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-info"
+	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-pqv"
+	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/build.log"
+	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/environment"
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/succeeded
+		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/succeeded"
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/failed
+		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/failed"
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/timedout
+		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/timedout"
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		touch $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/unknown
+		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/unknown"
 	fi
-	chmod 755 -R $SCRIPT_DIR/ci-logs/$PACKAGE/$DATE
+	chmod 755 -R "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE"
 }
 
 function CLEANUP() {
@@ -71,8 +71,8 @@ function CLEANUP() {
 }
 
 ENV_SETUP
-PACKAGES=$@
-for PACKAGE in ${PACKAGES[@]}; do
+PACKAGES=("$@")
+for PACKAGE in "${PACKAGES[@]}"; do
 	SETUP $PACKAGE
 	EMERGE $PACKAGE
 	CLEANUP

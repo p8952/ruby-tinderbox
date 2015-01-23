@@ -5,7 +5,6 @@
 		<li class=<%="disabled" if build[:emerge_pqv].nil?%>><a href="#emerge_pqv">Emerge PQV</a></li>
 		<li class=<%="disabled" if build[:build_log].nil?%>><a href="#build_log">Build Log</a></li>
 		<li class=<%="disabled" if build[:gem_list].nil?%>><a href="#gem_list">Gem List</a></li>
-		<li class=<%="disabled" if build[:environment].nil?%>><a href="#environment">Environment</a></li>
 	</ul>
 </div>
 
@@ -27,9 +26,4 @@
 <%unless build[:gem_list].nil?%>
 <h4><a name="gem_list">Gem List:</a></h4>
 <pre><%=build[:gem_list]%></pre>
-<%end%>
-
-<%unless build[:environment].nil?%>
-<h4><a name="environment">Environment</a></h4>
-<pre><%=build[:environment]%></pre>
 <%end%>

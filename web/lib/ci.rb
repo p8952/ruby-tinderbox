@@ -63,7 +63,6 @@ def update_ci
 		emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
 		emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
 		build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
-		environment = File.read("#{build}/environment") if File.exist?("#{build}/environment")
 		gem_list = File.read("#{build}/gem-list") if File.exist?("#{build}/gem-list")
 
 		Build.find_or_create(
@@ -73,7 +72,6 @@ def update_ci
 			emerge_info: emerge_info,
 			emerge_pqv: emerge_pqv,
 			build_log: build_log,
-			environment: environment,
 			gem_list: gem_list
 		)
 	end

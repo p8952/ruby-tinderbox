@@ -24,6 +24,14 @@ namespace :db do
 	task :clear_ci do
 		clear_ci
 	end
+
+	task :update_repoman do
+		update_repoman
+	end
+
+	task :clear_repoman do
+		clear_repoman
+	end
 end
 
 namespace :vm do
@@ -41,5 +49,9 @@ namespace :vm do
 
 	task :run_ci_untested do
 		run_ci(:untested, provisioner)
+	end
+
+	task :run_repoman do
+		run_repoman(provisioner)
 	end
 end

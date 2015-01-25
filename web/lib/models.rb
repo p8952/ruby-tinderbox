@@ -5,3 +5,6 @@ end
 
 class Build < Sequel::Model
 end
+
+class Repoman < Sequel::Model(:repomans)
+end

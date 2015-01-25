@@ -1,0 +1,46 @@
+<div id="repoman_checks">
+	<h1>Repoman Checks</h1>
+</div>
+
+<form class="pull-right">
+	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64
+	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
+</form>
+
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th class="width-52">Package</th>
+			<th class="width-14">Date</th>
+			<th class="width-17">Current</th>
+			<th class="width-17">Next</th>
+		</tr>
+	</thead>
+	<%repomans.each do |repoman|%>
+	<%package = Package.where(identifier: repoman[:package_id]).first%>
+	<%next if package.nil?%>
+	<%c_result = 'success' if repoman[:current_result] == 'succeeded'%>
+	<%c_result = 'info' if repoman[:current_result] == 'unknown'%>
+	<%c_result = 'danger' if repoman[:current_result] == 'failed'%>
+	<%n_result = 'success' if repoman[:next_result] == 'succeeded'%>
+	<%n_result = 'info' if repoman[:next_result] == 'unknown'%>
+	<%n_result = 'danger' if repoman[:next_result] == 'failed'%>
+	<tr>
+		<td class="width-52">
+			<%=repoman[:package_id]%>
+		</td>
+		<td class="width-14">
+			<%=Time.at(repoman[:time].to_i).strftime('%Y-%m-%d')%>
+		</td>
+		<td class="width-17 <%=c_result%>">
+			<%=repoman[:current_result].camelcase%>
+		</td>
+		<td class="width-17 <%=n_result%>">
+			<%=repoman[:next_result].camelcase%>
+		</td>
+		<td style="display:none;">
+			+<%=package[:amd64_keyword]%>
+		</td>
+	</tr>
+	<%end%>
+</table>

@@ -43,6 +43,11 @@ class RubyStats < Sinatra::Base
 		erb :build_logs, locals: { build: build }
 	end
 
+	get '/repoman_checks' do
+		repomans = Repoman.distinct(:package_id).order(:package_id, Sequel.desc(:time))
+		erb :repoman_checks, locals: { repomans: repomans }
+	end
+
 	get '/visualizations' do
 		# Ruby Targets
 		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count

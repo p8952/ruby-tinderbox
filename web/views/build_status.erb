@@ -11,9 +11,9 @@
 	<thead>
 		<tr>
 			<th class="width-52">Package</th>
-			<th class="width-17">Date</th>
+			<th class="width-14">Date</th>
 			<th class="width-17">Result</th>
-			<th class="width-14">History</th>
+			<th class="width-17">History</th>
 		</tr>
 	</thead>
 	<%builds.each do |build|%>
@@ -26,13 +26,13 @@
 		<td class="width-52">
 			<%=build[:package_id]%>
 		</td>
-		<td class="width-17">
+		<td class="width-14">
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td class="width-17 <%=result%>">
 			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
-		<td class="width-14">
+		<td class="width-17">
 			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
 		</td>
 		<td style="display:none;">

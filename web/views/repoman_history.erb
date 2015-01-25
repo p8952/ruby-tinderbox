@@ -3,8 +3,8 @@
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 		<tr>
-			<th>Check Date</th>
-			<th>Check Result</th>
+			<th class="width-50">Check Date</th>
+			<th class="width-5o">Check Result</th>
 		</tr>
 	</thead>
 	<%repomans.each do |repoman|%>
@@ -13,10 +13,10 @@
 	<%result = 'info' if repoman[:next_result] == 'failed'%>
 	<%result = 'danger' if repoman[:current_result] == 'failed'%>
 	<tr>
-		<td>
+		<td class="width-50">
 			<%=Time.at(repoman[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td class="<%=result%>">
+		<td class="width-50 <%=result%>">
 			<a href="/repoman_logs/<%=repoman[:package_id]%>/<%=repoman[:time]%>"><%=repoman[:current_result].camelcase%> / <%=repoman[:next_result].camelcase%></a>
 		</td>
 	</tr>

@@ -3,8 +3,8 @@
 <table id="sortable" class="table table-bordered table-condensed">
 	<thead>
 		<tr>
-			<th>Build Date</th>
-			<th>Build Result</th>
+			<th class="width-50">Build Date</th>
+			<th class="width-50">Build Result</th>
 		</tr>
 	</thead>
 	<%builds.each do |build|%>
@@ -13,10 +13,10 @@
 	<%result = 'info' if build[:result] == 'timed out'%>
 	<%result = 'danger' if build[:result] == 'failed'%>
 	<tr>
-		<td>
+		<td class="width-50">
 			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td class="<%=result%>">
+		<td class="width-50 <%=result%>">
 			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
 		</td>
 	</tr>

@@ -55,6 +55,10 @@ table th.sort-up:after {
 	width: 52%;
 }
 
+.width-50 {
+	width: 50%;
+}
+
 .width-24 {
 	width: 24%;
 }

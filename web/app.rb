@@ -48,6 +48,16 @@ class RubyStats < Sinatra::Base
 		erb :repoman_checks, locals: { repomans: repomans }
 	end
 
+	get '/repoman_logs/:category/:package/:time' do
+		repomans = Repoman.where(package_id: params[:category] + '/' + params[:package], time: params[:time]).first
+		erb :repoman_logs, locals: { repomans: repomans }
+	end
+
+	get '/repoman_history/:category/:package' do
+		repomans = Repoman.where(package_id: params[:category] + '/' + params[:package]).reverse_order(:time)
+		erb :repoman_history, locals: { repomans: repomans }
+	end
+
 	get '/visualizations' do
 		# Ruby Targets
 		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count

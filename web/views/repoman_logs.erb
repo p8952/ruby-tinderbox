@@ -1,0 +1,17 @@
+<div class="text-center">
+	<h1><%=repomans[:package_id]%></h1>
+	<ul class="pagination">
+		<li class=<%="disabled" if repomans[:current_log].nil?%>><a href="#current_log">Current Log</a></li>
+		<li class=<%="disabled" if repomans[:next_log].nil?%>><a href="#next_log">Next Log</a></li>
+	</ul>
+</div>
+
+<%unless repomans[:current_log].nil?%>
+<h4><a name="current_log">Current Log:</a></h4>
+<pre><%=repomans[:current_log]%></pre>
+<%end%>
+
+<%unless repomans[:next_log].nil?%>
+<h4><a name="next_log">Next Log:</a></h4>
+<pre><%=repomans[:next_log]%></pre>
+<%end%>

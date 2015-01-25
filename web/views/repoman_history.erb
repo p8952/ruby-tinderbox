@@ -1,0 +1,24 @@
+<h1 class="text-center"><%=repomans.first[:package_id]%></h1>
+
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th>Check Date</th>
+			<th>Check Result</th>
+		</tr>
+	</thead>
+	<%repomans.each do |repoman|%>
+	<%next if repoman.nil?%>
+	<%result = 'success' if repoman[:next_result] == 'passed'%>
+	<%result = 'info' if repoman[:next_result] == 'failed'%>
+	<%result = 'danger' if repoman[:current_result] == 'failed'%>
+	<tr>
+		<td>
+			<%=Time.at(repoman[:time].to_i).strftime('%Y-%m-%d')%>
+		</td>
+		<td class="<%=result%>">
+			<a href="/repoman_logs/<%=repoman[:package_id]%>/<%=repoman[:time]%>"><%=repoman[:current_result].camelcase%> / <%=repoman[:next_result].camelcase%></a>
+		</td>
+	</tr>
+	<%end%>
+</table>

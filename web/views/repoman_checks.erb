@@ -12,19 +12,16 @@
 		<tr>
 			<th class="width-52">Package</th>
 			<th class="width-14">Date</th>
-			<th class="width-17">Current</th>
-			<th class="width-17">Next</th>
+			<th class="width-17">Result</th>
+			<th class="width-17">History</th>
 		</tr>
 	</thead>
 	<%repomans.each do |repoman|%>
 	<%package = Package.where(identifier: repoman[:package_id]).first%>
 	<%next if package.nil?%>
-	<%c_result = 'success' if repoman[:current_result] == 'succeeded'%>
-	<%c_result = 'info' if repoman[:current_result] == 'unknown'%>
-	<%c_result = 'danger' if repoman[:current_result] == 'failed'%>
-	<%n_result = 'success' if repoman[:next_result] == 'succeeded'%>
-	<%n_result = 'info' if repoman[:next_result] == 'unknown'%>
-	<%n_result = 'danger' if repoman[:next_result] == 'failed'%>
+	<%result = 'success' if repoman[:next_result] == 'passed'%>
+	<%result = 'info' if repoman[:next_result] == 'failed'%>
+	<%result = 'danger' if repoman[:current_result] == 'failed'%>
 	<tr>
 		<td class="width-52">
 			<%=repoman[:package_id]%>
@@ -32,11 +29,11 @@
 		<td class="width-14">
 			<%=Time.at(repoman[:time].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td class="width-17 <%=c_result%>">
-			<%=repoman[:current_result].camelcase%>
+		<td class="width-17 <%=result%>">
+			<a href="/repoman_logs/<%=repoman[:package_id]%>/<%=repoman[:time]%>"><%=repoman[:current_result].camelcase%> / <%=repoman[:next_result].camelcase%></a>
 		</td>
-		<td class="width-17 <%=n_result%>">
-			<%=repoman[:next_result].camelcase%>
+		<td class="width-17">
+			<a href="/repoman_history/<%=repoman[:package_id]%>"><%=Repoman.where(package_id: repoman[:package_id]).count%> Check(s)</a>
 		</td>
 		<td style="display:none;">
 			+<%=package[:amd64_keyword]%>

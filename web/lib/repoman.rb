@@ -47,14 +47,14 @@ def update_repoman
 
 		current_result = 'unknown'
 		if current_log.include?('If everyone were like you, I\'d be out of business!')
-			current_result = 'succeeded'
+			current_result = 'passed'
 		elsif current_log.include?('Make your QA payment on time and you\'ll never see the likes of me.')
 			current_result = 'failed'
 		end
 
 		next_result = 'unknown'
 		if next_log.include?('If everyone were like you, I\'d be out of business!')
-			next_result = 'succeeded'
+			next_result = 'passed'
 		elsif next_log.include?('Make your QA payment on time and you\'ll never see the likes of me.')
 			next_result = 'failed'
 		end

@@ -19,9 +19,10 @@
 	<%repomans.each do |repoman|%>
 	<%package = Package.where(identifier: repoman[:package_id]).first%>
 	<%next if package.nil?%>
+	<%result = 'info'%>
 	<%result = 'success' if repoman[:next_result] == 'passed'%>
-	<%result = 'info' if repoman[:next_result] == 'failed'%>
 	<%result = 'danger' if repoman[:current_result] == 'failed'%>
+	<%result = 'danger' if repoman[:current_result] == 'partial'%>
 	<tr>
 		<td class="width-52">
 			<%=repoman[:package_id]%>

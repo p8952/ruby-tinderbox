@@ -9,9 +9,10 @@
 	</thead>
 	<%repomans.each do |repoman|%>
 	<%next if repoman.nil?%>
+	<%result = 'info'%>
 	<%result = 'success' if repoman[:next_result] == 'passed'%>
-	<%result = 'info' if repoman[:next_result] == 'failed'%>
 	<%result = 'danger' if repoman[:current_result] == 'failed'%>
+	<%result = 'danger' if repoman[:current_result] == 'partial'%>
 	<tr>
 		<td class="width-50">
 			<%=Time.at(repoman[:time].to_i).strftime('%Y-%m-%d')%>

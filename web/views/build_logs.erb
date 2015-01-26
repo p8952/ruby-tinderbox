@@ -1,29 +1,54 @@
 <div class="text-center">
 	<h1><%=build[:package_id]%></h1>
-	<ul class="pagination">
-		<li class=<%="disabled" if build[:emerge_info].nil?%>><a href="#emerge_info">Emerge Info</a></li>
-		<li class=<%="disabled" if build[:emerge_pqv].nil?%>><a href="#emerge_pqv">Emerge PQV</a></li>
-		<li class=<%="disabled" if build[:build_log].nil?%>><a href="#build_log">Build Log</a></li>
-		<li class=<%="disabled" if build[:gem_list].nil?%>><a href="#gem_list">Gem List</a></li>
-	</ul>
+	<div class="btn-group btn-group-justified">
+		<a class="btn btn-default <%="disabled" if build[:emerge_info].nil?%>" href="#emerge_info">Emerge Info</a>
+		<a class="btn btn-default <%="disabled" if build[:emerge_pqv].nil?%>" href="#emerge_pqv">Emerge PQV</a>
+		<a class="btn btn-default <%="disabled" if build[:build_log].nil?%>" href="#build_log">Build Log</a>
+		<a class="btn btn-default <%="disabled" if build[:gem_list].nil?%>" href="#gem_list">Gem List</a>
+	</div>
 </div>
+<br>
 
 <%unless build[:emerge_info].nil?%>
-<h4><a name="emerge_info">Emerge Info:</a></h4>
-<pre><%=build[:emerge_info]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="emerge_info">Emerge Info</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=build[:emerge_info]%></pre>
+	</div>
+</div>
 <%end%>
 
 <%unless build[:emerge_pqv].nil?%>
-<h4><a name="emerge_pqv">Emerge PQV:</a></h4>
-<pre><%=build[:emerge_pqv]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="emerge_pqv">Emerge PQV</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=build[:emerge_pqv]%></pre>
+	</div>
+</div>
 <%end%>
 
 <%unless build[:build_log].nil?%>
-<h4><a name="build_log">Build Log:</a></h4>
-<pre><%=build[:build_log]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="build_log">Build Log</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=build[:build_log]%></pre>
+	</div>
+</div>
 <%end%>
 
 <%unless build[:gem_list].nil?%>
-<h4><a name="gem_list">Gem List:</a></h4>
-<pre><%=build[:gem_list]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="gem_list">Gem List</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=build[:gem_list]%></pre>
+	</div>
+</div>
 <%end%>

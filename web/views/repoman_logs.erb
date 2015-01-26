@@ -1,17 +1,30 @@
 <div class="text-center">
 	<h1><%=repomans[:package_id]%></h1>
-	<ul class="pagination">
-		<li class=<%="disabled" if repomans[:current_log].nil?%>><a href="#current_log">Current Log</a></li>
-		<li class=<%="disabled" if repomans[:next_log].nil?%>><a href="#next_log">Next Log</a></li>
-	</ul>
+	<div class="btn-group btn-group-justified">
+		<a class="btn btn-default <%="disabled" if repomans[:current_log].nil?%>" href="#current_log">Current Ruby Target(s)</a>
+		<a class="btn btn-default <%="disabled" if repomans[:next_log].nil?%>" href="#next_log">Next Ruby Target</a>
+	</div>
 </div>
+<br>
 
 <%unless repomans[:current_log].nil?%>
-<h4><a name="current_log">Current Log:</a></h4>
-<pre><%=repomans[:current_log]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="current_log">Current Ruby Target(s)</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=repomans[:current_log]%></pre>
+	</div>
+</div>
 <%end%>
 
 <%unless repomans[:next_log].nil?%>
-<h4><a name="next_log">Next Log:</a></h4>
-<pre><%=repomans[:next_log]%></pre>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="next_log">Next Ruby Target</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=repomans[:next_log]%></pre>
+	</div>
+</div>
 <%end%>

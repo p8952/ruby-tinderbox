@@ -1,4 +1,4 @@
-DB = Sequel.connect(ENV['DATABASE_URL'], pool_timeout: 25)
+DB = Sequel.connect(ENV['DATABASE_URL'], max_connections: 12 , pool_timeout: 60)
 
 class Package < Sequel::Model
 end

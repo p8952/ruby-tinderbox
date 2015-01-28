@@ -6,13 +6,19 @@ def run_repoman(provisioner)
 		target = package[:r20_target] unless package[:r20_target] == 'nil'
 		target = package[:r21_target] unless package[:r21_target] == 'nil'
 		target = package[:r22_target] unless package[:r22_target] == 'nil'
-		next if target.empty?
+		if target.empty?
+			Repoman.where(package_id: package[:identifier]).delete
+			next
+		end
 
 		next_target = ''
 		next_target = 'ruby20' if target == 'ruby19'
 		next_target = 'ruby21' if target == 'ruby20'
 		next_target = 'ruby22' if target == 'ruby21'
-		next if next_target.empty?
+		if next_target.empty?
+			Repoman.where(package_id: package[:identifier]).delete
+			next
+		end
 
 		category = package[:category]
 		name = package[:name]
@@ -24,6 +30,7 @@ def run_repoman(provisioner)
 
 	packages = "'" + packages.join("' '") + "'"
 
+	exit
 	begin
 		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
 		vagrant = Vagrant_Rbapi.new(vagrant_path)

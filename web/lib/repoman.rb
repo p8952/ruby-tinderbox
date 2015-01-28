@@ -22,7 +22,6 @@ def run_repoman(provisioner)
 		packages << "#{category} #{name} #{version}#{revision} #{target} #{next_target}"
 	end
 
-	packages = packages.sample(100)
 	packages = "'" + packages.join("' '") + "'"
 
 	begin

@@ -80,6 +80,29 @@ def update_repoman
 	end
 end
 
+def tidy_repoman
+	Package.order { [category, lower(name), version] }.each do |package|
+		target = ''
+		target = package[:r19_target] unless package[:r19_target] == 'nil'
+		target = package[:r20_target] unless package[:r20_target] == 'nil'
+		target = package[:r21_target] unless package[:r21_target] == 'nil'
+		target = package[:r22_target] unless package[:r22_target] == 'nil'
+		if target.empty?
+			Repoman.where(package_id: package[:identifier]).delete
+			next
+		end
+
+		next_target = ''
+		next_target = 'ruby20' if target == 'ruby19'
+		next_target = 'ruby21' if target == 'ruby20'
+		next_target = 'ruby22' if target == 'ruby21'
+		if next_target.empty?
+			Repoman.where(package_id: package[:identifier]).delete
+			next
+		end
+	end
+end
+
 def clear_repoman
 	Repoman.map(&:delete)
 end

@@ -29,6 +29,10 @@ namespace :db do
 		update_repoman
 	end
 
+	task :tidy_repoman do
+		tidy_repoman
+	end
+
 	task :clear_repoman do
 		clear_repoman
 	end

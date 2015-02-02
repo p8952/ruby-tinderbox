@@ -30,7 +30,6 @@ def run_repoman(provisioner)
 
 	packages = "'" + packages.join("' '") + "'"
 
-	exit
 	begin
 		vagrant_path = File.dirname(File.dirname(File.expand_path(File.dirname(__FILE__))))
 		vagrant = Vagrant_Rbapi.new(vagrant_path)

@@ -1,3 +1,5 @@
+require 'archive/tar/minitar'
+require 'docker'
 require 'gems'
 require 'logger'
 require 'net/scp'
@@ -5,7 +7,6 @@ require 'net/ssh'
 require 'pmap'
 require 'sequel'
 require 'sinatra/base'
-require 'vagrant_rbapi'
 
 require_relative 'lib/ci'
 require_relative 'lib/helpers'

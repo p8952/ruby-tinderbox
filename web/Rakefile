@@ -1,8 +1,21 @@
 require_relative 'app'
 
 task default: 'test'
+
+desc 'Run the test suite'
 task :test do
 	Dir.glob('./test/test_*.rb') { |f| require f }
+end
+
+desc 'Run : update_packages => run_ci_untested => update_ci => run_repoman => update_repoman'
+task :nightly do
+	Rake::Task['db:update_packages'].invoke
+	Rake::Task['docker:setup'].invoke
+	Rake::Task['docker:run_ci_untested'].invoke
+	Rake::Task['db:update_ci'].invoke
+	Rake::Task['docker:run_repoman'].invoke
+	Rake::Task['db:update_repoman'].invoke
+	Rake::Task['docker:teardown'].invoke
 end
 
 namespace :db do
@@ -13,49 +26,64 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
 
+	desc 'Update the packages database with new versions and targets'
 	task :update_packages do
 		update_packages
 	end
 
+	desc 'Update the build database with logfiles from ci-logs/'
 	task :update_ci do
 		update_ci
 	end
 
+	desc 'Clear the build database'
 	task :clear_ci do
 		clear_ci
 	end
 
+	desc 'Update the repoman database with logfiles from repo-logs/'
 	task :update_repoman do
 		update_repoman
 	end
 
-	task :tidy_repoman do
-		tidy_repoman
-	end
-
+	desc 'Clear the repoman database'
 	task :clear_repoman do
 		clear_repoman
 	end
 end
 
-namespace :vm do
-	provisioner = ENV['provisioner']
-	provisioner = 'virtualbox' if provisioner.nil?
-
-	task :run_ci_all do
-		run_ci(:all, provisioner)
+namespace :docker do
+	desc 'Build a docker image to use with subsequent tasks'
+	task :setup do
+		Docker.options[:read_timeout] = 36_000
+		Docker.options[:write_timeout] = 36_000
+		docker_path = File.dirname(File.expand_path(File.dirname(__FILE__)))
+		@docker_image = Docker::Image.build_from_dir(docker_path)
 	end
 
+	desc 'Remove a previously built docker image'
+	task :teardown do
+		@docker_image.remove
+	end
+
+	desc 'Build and test all packages'
+	task :run_ci_all do
+		run_ci(@docker_image, :all)
+	end
+
+	desc 'Build and test a fixed number of packages (num_of_packages=5)'
 	num_of_packages = ENV['num_of_packages'].to_i
 	task :run_ci_some do
-		run_ci(num_of_packages, provisioner)
+		run_ci(@docker_image, num_of_packages)
 	end
 
+	desc 'Build and test all untested packages and their reverse dependencies'
 	task :run_ci_untested do
-		run_ci(:untested, provisioner)
+		run_ci(@docker_image, :untested)
 	end
 
+	desc 'Run repoman against the current and next targets for all packages'
 	task :run_repoman do
-		run_repoman(provisioner)
+		run_repoman(@docker_image)
 	end
 end

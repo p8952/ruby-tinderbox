@@ -1,4 +1,4 @@
-def run_repoman(docker_image)
+def run_repoman(docker_image, num_of_packages)
 	packages = []
 	Package.order { [category, lower(name), version] }.each do |package|
 		target = ''
@@ -20,6 +20,12 @@ def run_repoman(docker_image)
 		revision = package[:revision] == 'r0' ? '' : "-#{package[:revision]}"
 
 		packages << "#{category} #{name} #{version}#{revision} #{target} #{next_target}"
+	end
+
+	if num_of_packages == :all
+		packages = packages
+	else
+		packages = packages.sample(num_of_packages)
 	end
 
 	packages = packages.uniq

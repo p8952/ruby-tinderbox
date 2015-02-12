@@ -6,8 +6,6 @@ def run_ci(docker_image, num_of_packages)
 
 	if num_of_packages == :all
 		packages = packages
-	elsif num_of_packages == 0
-		packages = packages.sample(5)
 	elsif num_of_packages == :untested
 		packages = []
 		Package.exclude(tested: true).order { [category, lower(name), version] }.each do |package|

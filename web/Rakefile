@@ -53,6 +53,9 @@ namespace :db do
 end
 
 namespace :docker do
+	num_of_packages = ENV['NUM_OF_PACKAGES'].to_i
+	num_of_packages = 5 if num_of_packages == 0
+
 	desc 'Build a docker image to use with subsequent tasks'
 	task :setup do
 		Docker.options[:read_timeout] = 36_000
@@ -71,8 +74,7 @@ namespace :docker do
 		run_ci(@docker_image, :all)
 	end
 
-	desc 'Build and test a fixed number of packages (num_of_packages=5)'
-	num_of_packages = ENV['num_of_packages'].to_i
+	desc 'Build and test a fixed number of packages (NUM_OF_PACKAGES=5)'
 	task :run_ci_some do
 		run_ci(@docker_image, num_of_packages)
 	end
@@ -82,8 +84,13 @@ namespace :docker do
 		run_ci(@docker_image, :untested)
 	end
 
-	desc 'Run repoman against the current and next targets for all packages'
-	task :run_repoman do
-		run_repoman(@docker_image)
+	desc 'QA test all packages'
+	task :run_repoman_all do
+		run_repoman(@docker_image, :all)
+	end
+
+	desc 'QA test a fixed number of packages (NUM_OF_PACKAGES=5)'
+	task :run_repoman_some do
+		run_repoman(@docker_image, num_of_packages)
 	end
 end

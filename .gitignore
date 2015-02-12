@@ -1,11 +1,3 @@
-!cache/.keep
-!web/ci-logs/.keep
-!web/repo-logs/.keep
-cache/
 gentoo-x86/
 ruby-overlay/
 web/.bundle/
-web/ci-logs/
-web/repo-logs/
-web/var/log/*.log
-web/var/run/*.pid

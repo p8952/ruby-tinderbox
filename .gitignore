@@ -1,14 +1,3 @@
-*.box
-*.sqlite3
-*.tar.xz
-.vagrant/
 gentoo-x86/
-logs/
 ruby-overlay/
 web/.bundle/
-web/ci-logs/
-web/repo-logs/
-!web/ci-logs/.keep
-!web/repo-logs/.keep
-web/var/log/*.log
-web/var/run/*.pid

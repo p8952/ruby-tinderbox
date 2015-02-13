@@ -13,7 +13,7 @@ task :nightly do
 	Rake::Task['docker:setup'].invoke
 	Rake::Task['docker:run_ci_untested'].invoke
 	Rake::Task['db:update_ci'].invoke
-	Rake::Task['docker:run_repoman'].invoke
+	Rake::Task['docker:run_repoman_all'].invoke
 	Rake::Task['db:update_repoman'].invoke
 	Rake::Task['docker:teardown'].invoke
 end

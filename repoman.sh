@@ -20,11 +20,9 @@ function REPOMAN() {
 	mkdir -p "$SCRIPT_DIR/repo-logs/$CATEGORY/$NAME-$VERSION/$DATE"
 	cd "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
 	repoman scan || true
-	repoman manifest
-	repoman full > "$SCRIPT_DIR/repo-logs/$CATEGORY/$NAME-$VERSION/$DATE/current.txt" || true
+	repoman --digest=y full > "$SCRIPT_DIR/repo-logs/$CATEGORY/$NAME-$VERSION/$DATE/current.txt" || true
 	sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
-	repoman manifest
-	repoman full > "$SCRIPT_DIR/repo-logs/$CATEGORY/$NAME-$VERSION/$DATE/next.txt" || true
+	repoman --digest=y full > "$SCRIPT_DIR/repo-logs/$CATEGORY/$NAME-$VERSION/$DATE/next.txt" || true
 }
 
 function CLEANUP() {

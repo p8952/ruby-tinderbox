@@ -11,7 +11,8 @@ Build the docker base image:
 
 Run the tinderbox scripts against a single package:
 
-    docker run gentoo/ruby-tinderbox /ruby-tinderbox/tinder.sh category/package-version-revision
+    docker run gentoo/ruby-tinderbox /ruby-tinderbox/tinder.sh \
+		category/package-version-revision
 
 Run the tinderbox scripts against multiple packages:
 

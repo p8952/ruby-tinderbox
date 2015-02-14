@@ -50,10 +50,8 @@ def run_ci(docker_image, num_of_packages)
 
 	update_timestamp = Time.now.to_i
 	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
-	Build.each do |build|
-		build.update(update_timestamp: update_timestamp)
-		build.update(portage_timestamp: portage_timestamp)
-	end
+	Build.dataset.update(update_timestamp: update_timestamp)
+	Build.dataset.update(portage_timestamp: portage_timestamp)
 end
 
 def update_ci

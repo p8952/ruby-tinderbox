@@ -52,10 +52,8 @@ def run_repoman(docker_image, num_of_packages)
 
 	update_timestamp = Time.now.to_i
 	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
-	Repoman.each do |repoman|
-		repoman.update(update_timestamp: update_timestamp)
-		repoman.update(portage_timestamp: portage_timestamp)
-	end
+	Repoman.dataset.update(update_timestamp: update_timestamp)
+	Repoman.dataset.update(portage_timestamp: portage_timestamp)
 end
 
 def update_repoman

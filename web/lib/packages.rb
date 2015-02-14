@@ -33,8 +33,6 @@ def update_packages
 
 	update_timestamp = Time.now.to_i
 	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
-	Package.each do |package|
-		package.update(update_timestamp: update_timestamp)
-		package.update(portage_timestamp: portage_timestamp)
-	end
+	Package.dataset.update(update_timestamp: update_timestamp)
+	Package.dataset.update(portage_timestamp: portage_timestamp)
 end

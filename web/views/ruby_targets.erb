@@ -1,5 +1,11 @@
 <div id="ruby_targets">
 	<h1>Ruby Targets</h1>
+	<small>
+		Last updated on
+		<%=Time.at(packages.first[1][0][:update_timestamp].to_i).strftime('%Y-%m-%d')%>
+		using a portage snapshot dated
+		<%=Time.at(packages.first[1][0][:portage_timestamp].to_i).strftime('%Y-%m-%d')%>
+	</small>
 </div>
 
 <form class="pull-right">

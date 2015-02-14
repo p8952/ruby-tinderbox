@@ -6,6 +6,12 @@
 <script src='/js/jquery.flot.plot.build.result.js'></script>
 
 <h1>Visualizations</h1>
+<small>
+	Last updated on
+	<%=Time.at(packages.first[:update_timestamp].to_i).strftime('%Y-%m-%d')%>
+	using a portage snapshot dated
+	<%=Time.at(packages.first[:portage_timestamp].to_i).strftime('%Y-%m-%d')%>
+</small>
 
 <h2>Number of Packages per Ruby Target</h2>
 <table style="display:none;" class='table table-bordered table-condensed'>

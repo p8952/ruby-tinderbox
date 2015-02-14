@@ -1,5 +1,11 @@
 <div id="outdated_gems">
 	<h1>Outdated Gems</h1>
+	<small>
+		Last updated on
+		<%=Time.at(packages.first[:update_timestamp].to_i).strftime('%Y-%m-%d')%>
+		using a portage snapshot dated
+		<%=Time.at(packages.first[:portage_timestamp].to_i).strftime('%Y-%m-%d')%>
+	</small>
 </div>
 
 <form class="pull-right">

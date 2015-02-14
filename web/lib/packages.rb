@@ -30,4 +30,11 @@ def update_packages
 			package.delete
 		end
 	end
+
+	update_timestamp = Time.now.to_i
+	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
+	Package.each do |package|
+		package.update(update_timestamp: update_timestamp)
+		package.update(portage_timestamp: portage_timestamp)
+	end
 end

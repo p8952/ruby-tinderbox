@@ -60,6 +60,9 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/visualizations' do
+		# Last Updated
+		packages = Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version), Sequel.desc(:revision)).exclude(gem_version: 'nil')
+
 		# Ruby Targets
 		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count
 		ruby_1_9__amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: '~amd64').count
@@ -82,6 +85,7 @@ class RubyStats < Sinatra::Base
 		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count
 
 		erb :visualizations, locals: {
+			packages: packages,
 			ruby_1_9_amd64: ruby_1_9_amd64,
 			ruby_1_9__amd64: ruby_1_9__amd64,
 			ruby_2_0_amd64: ruby_2_0_amd64,

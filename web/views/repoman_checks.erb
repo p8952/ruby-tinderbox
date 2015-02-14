@@ -1,5 +1,11 @@
 <div id="repoman_checks">
 	<h1>Repoman Checks</h1>
+	<small>
+		Last updated on
+		<%=Time.at(repomans.first[:update_timestamp].to_i).strftime('%Y-%m-%d')%>
+		using a portage snapshot dated
+		<%=Time.at(repomans.first[:portage_timestamp].to_i).strftime('%Y-%m-%d')%>
+	</small>
 </div>
 
 <form class="pull-right">

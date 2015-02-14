@@ -49,6 +49,13 @@ def run_repoman(docker_image, num_of_packages)
 	tar.unlink
 
 	docker_container.delete
+
+	update_timestamp = Time.now.to_i
+	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
+	Repoman.each do |repoman|
+		repoman.update(update_timestamp: update_timestamp)
+		repoman.update(portage_timestamp: portage_timestamp)
+	end
 end
 
 def update_repoman

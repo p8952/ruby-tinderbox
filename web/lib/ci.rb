@@ -47,11 +47,6 @@ def run_ci(docker_image, num_of_packages)
 
 		docker_container.delete
 	end
-
-	update_timestamp = Time.now.to_i
-	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
-	Build.dataset.update(update_timestamp: update_timestamp)
-	Build.dataset.update(portage_timestamp: portage_timestamp)
 end
 
 def update_ci
@@ -83,6 +78,7 @@ def update_ci
 			gem_list: gem_list
 		)
 	end
+
 	Build.each do |build|
 		Package.where(identifier: build[:package_id]).update(tested: true)
 	end

@@ -2,9 +2,9 @@
 	<h1>Build Status (CI)</h1>
 	<small>
 		Last updated on
-		<%=Time.at(builds.first[:update_timestamp].to_i).strftime('%Y-%m-%d')%>
+		<%=Time.at(update_timestamp.to_i).strftime('%Y-%m-%d')%>
 		using a portage snapshot dated
-		<%=Time.at(builds.first[:portage_timestamp].to_i).strftime('%Y-%m-%d')%>
+		<%=Time.at(portage_timestamp.to_i).strftime('%Y-%m-%d')%>
 	</small>
 </div>
 

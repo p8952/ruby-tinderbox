@@ -20,18 +20,24 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/ruby_targets' do
+		update_timestamp = Package.first[:update_timestamp]
+		portage_timestamp = Package.first[:portage_timestamp]
 		packages = Package.order { [category, lower(name), version, revision] }.to_hash_groups(:identifier)
-		erb :ruby_targets, locals: { packages: packages }
+		erb :ruby_targets, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
 	end
 
 	get '/outdated_gems' do
+		update_timestamp = Package.first[:update_timestamp]
+		portage_timestamp = Package.first[:portage_timestamp]
 		packages = Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version), Sequel.desc(:revision)).exclude(gem_version: 'nil')
-		erb :outdated_gems, locals: { packages: packages }
+		erb :outdated_gems, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
 	get '/build_status' do
+		update_timestamp = Build.order(:time).last[:time]
+		portage_timestamp = Package.first[:portage_timestamp]
 		builds = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time))
-		erb :build_status, locals: { builds: builds }
+		erb :build_status, locals: { builds: builds, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
 	get '/build_history/:category/:package' do
@@ -45,8 +51,10 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/repoman_checks' do
+		update_timestamp = Repoman.order(:time).last[:time]
+		portage_timestamp = Package.first[:portage_timestamp]
 		repomans = Repoman.distinct(:package_id).order(:package_id, Sequel.desc(:time))
-		erb :repoman_checks, locals: { repomans: repomans }
+		erb :repoman_checks, locals: { repomans: repomans, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
 	get '/repoman_logs/:category/:package/:time' do
@@ -60,8 +68,9 @@ class RubyStats < Sinatra::Base
 	end
 
 	get '/visualizations' do
-		# Last Updated
-		packages = Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version), Sequel.desc(:revision)).exclude(gem_version: 'nil')
+		# Timestamps
+		update_timestamp = Package.first[:update_timestamp]
+		portage_timestamp = Package.first[:portage_timestamp]
 
 		# Ruby Targets
 		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count
@@ -85,7 +94,8 @@ class RubyStats < Sinatra::Base
 		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count
 
 		erb :visualizations, locals: {
-			packages: packages,
+			portage_timestamp: portage_timestamp,
+			update_timestamp: update_timestamp,
 			ruby_1_9_amd64: ruby_1_9_amd64,
 			ruby_1_9__amd64: ruby_1_9__amd64,
 			ruby_2_0_amd64: ruby_2_0_amd64,

@@ -1,6 +1,6 @@
 require_relative 'minitest_helper'
 
-class TestString < MiniTest::Unit::TestCase
+class TestString < Minitest::Test
 	def test_camel_case_with_default_delimiter
 		assert_equal 'Camel Case', 'camel case'.camelcase
 	end

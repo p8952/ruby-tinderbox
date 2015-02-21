@@ -8,6 +8,3 @@ end
 
 class Repoman < Sequel::Model(:repomans)
 end
-
-class Timestamp < Sequel::Model
-end

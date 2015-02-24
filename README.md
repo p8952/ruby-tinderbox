@@ -32,16 +32,14 @@ removed you can persist them by bind mounting a directory on the host to
 	docker run -v /tmp/bincache:/usr/portage/packages gentoo/ruby-tinderbox \
 		/ruby-tinderbox/tinder.sh category/package-version-revision
 
-# [Ruby Stats](http://ruby-stats.p8952.info/)
+# [Ruby Tinderbox Web](http://ruby-stats.p8952.info/)
 
 Web interface and build server built on top of the Ruby Tinderbox framework.
 
-## Usage
-
 # License
 
-Ruby Tinderbox and Ruby Stats are both [licensed under the AGPL](https://github.com/p8952/ruby-tinderbox/blob/master/LICENSE).
+Ruby Tinderbox is [licensed under the AGPL](https://github.com/p8952/ruby-tinderbox/blob/master/LICENSE).
 
-Some of the [javascript used by Ruby Stats](https://github.com/p8952/ruby-tinderbox/tree/master/web/public/js)
+Some of the [javascript used by the web interface](https://github.com/p8952/ruby-tinderbox/tree/master/web/public/js)
 is licensed under the Mozilla Public License and MIT licenses. This is noted in
 the headers of the relevant files.

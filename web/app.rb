@@ -14,7 +14,7 @@ require_relative 'lib/models'
 require_relative 'lib/packages'
 require_relative 'lib/repoman'
 
-class RubyStats < Sinatra::Base
+class RubyTinderbox < Sinatra::Base
 	get '/' do
 		redirect to('/ruby_targets')
 	end

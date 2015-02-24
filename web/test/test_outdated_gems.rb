@@ -4,7 +4,7 @@ class TestWeb < Minitest::Test
 	include Rack::Test::Methods
 
 	def app
-		RubyStats
+		RubyTinderbox
 	end
 
 	def test_headings

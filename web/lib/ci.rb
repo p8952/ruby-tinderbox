@@ -1,4 +1,4 @@
-def run_ci(docker_image, num_of_packages)
+def run_ci(volume_container, ci_image, num_of_packages)
 	packages = []
 	Package.order { [category, lower(name), version] }.each do |package|
 		packages << package[:identifier]
@@ -32,12 +32,16 @@ def run_ci(docker_image, num_of_packages)
 
 	packages = packages.uniq
 	packages.each do |package|
-		docker_container = docker_image.run("/ruby-tinderbox/tinder.sh #{package}")
-		docker_container.wait(36_000)
+		ci_container = Docker::Container.create(
+			Cmd: %W[/ruby-tinderbox/tinder.sh #{package}],
+			Image: ci_image.id
+		)
+		ci_container.start(VolumesFrom: volume_container.id)
+		ci_container.wait(36_000)
 
 		tar = Tempfile.new('tar')
 		File.open(tar, 'w') do |file|
-			docker_container.copy('/ruby-tinderbox/ci-logs') do |chunk|
+			ci_container.copy('/ruby-tinderbox/ci-logs') do |chunk|
 				file.write(chunk)
 			end
 		end
@@ -45,7 +49,7 @@ def run_ci(docker_image, num_of_packages)
 		tar.close
 		tar.unlink
 
-		docker_container.delete
+		ci_container.delete
 	end
 end
 

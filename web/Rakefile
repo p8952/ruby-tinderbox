@@ -60,37 +60,52 @@ namespace :docker do
 	task :setup do
 		Docker.options[:read_timeout] = 36_000
 		Docker.options[:write_timeout] = 36_000
+
+		@volume_image = Docker::Image.build('FROM busybox')
+		@volume_container = Docker::Container.create(
+			Image: @volume_image.id,
+			Volumes: {
+				'/usr/portage/packages' => {
+					'/usr/portage/packages' => 'rw'
+				}
+			}
+		)
+		@volume_container.start
+		@volume_container.wait(36_000)
+
 		docker_path = File.dirname(File.expand_path(File.dirname(__FILE__)))
-		@docker_image = Docker::Image.build_from_dir(docker_path)
+		@ci_image = Docker::Image.build_from_dir(docker_path)
 	end
 
 	desc 'Remove a previously built docker image'
 	task :teardown do
-		@docker_image.remove
+		@ci_image.delete
+		@volume_container.delete(v: 1)
+		@volume_image.delete
 	end
 
 	desc 'Build and test all packages'
 	task :run_ci_all do
-		run_ci(@docker_image, :all)
+		run_ci(@volume_container, @ci_image, :all)
 	end
 
 	desc 'Build and test a fixed number of packages (NUM_OF_PACKAGES=5)'
 	task :run_ci_some do
-		run_ci(@docker_image, num_of_packages)
+		run_ci(@volume_container, @ci_image, num_of_packages)
 	end
 
 	desc 'Build and test all untested packages and their reverse dependencies'
 	task :run_ci_untested do
-		run_ci(@docker_image, :untested)
+		run_ci(@volume_container, @ci_image, :untested)
 	end
 
 	desc 'QA test all packages'
 	task :run_repoman_all do
-		run_repoman(@docker_image, :all)
+		run_repoman(@ci_image, :all)
 	end
 
 	desc 'QA test a fixed number of packages (NUM_OF_PACKAGES=5)'
 	task :run_repoman_some do
-		run_repoman(@docker_image, num_of_packages)
+		run_repoman(@ci_image, num_of_packages)
 	end
 end

@@ -1,4 +1,4 @@
-def run_repoman(docker_image, num_of_packages)
+def run_repoman(ci_image, num_of_packages)
 	packages = []
 	Package.order { [category, lower(name), version] }.each do |package|
 		target = ''
@@ -29,26 +29,26 @@ def run_repoman(docker_image, num_of_packages)
 	end
 
 	packages = packages.uniq
-	packages.each do |package|
-		package = "'" + package + "'"
-	end
-	packages = packages.unshift('/ruby-tinderbox/repoman.sh')
+	packages.peach(8) do |package|
+		ci_container = Docker::Container.create(
+			Cmd: %W[/ruby-tinderbox/repoman.sh #{package}],
+			Image: ci_image.id
+		)
+		ci_container.start
+		ci_container.wait(36_000)
 
-	docker_container = docker_image.run(packages)
-	docker_container.wait(36_000)
-
-	tar = Tempfile.new('tar')
-	File.open(tar, 'w') do |file|
-		docker_container.copy('/ruby-tinderbox/repo-logs') do |chunk|
-			file.write(chunk)
-			puts chunk
+		tar = Tempfile.new('tar')
+		File.open(tar, 'w') do |file|
+			ci_container.copy('/ruby-tinderbox/repo-logs') do |chunk|
+				file.write(chunk)
+			end
 		end
-	end
-	Archive::Tar::Minitar.unpack(tar, File.dirname(File.expand_path(File.dirname(__FILE__))))
-	tar.close
-	tar.unlink
+		Archive::Tar::Minitar.unpack(tar, File.dirname(File.expand_path(File.dirname(__FILE__))))
+		tar.close
+		tar.unlink
 
-	docker_container.delete
+		ci_container.delete
+	end
 end
 
 def update_repoman

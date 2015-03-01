@@ -23,7 +23,7 @@ def update_packages
 		)
 	end
 
-	Package.each do |package|
+	Package.peach(8) do |package|
 		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]} #{package[:slot]} #{package[:amd64_keyword]} #{package[:r19_target]} #{package[:r20_target]} #{package[:r21_target]} #{package[:r22_target]}")
 			package.update(dependencies: `python3 lib/deps.py #{package[:identifier]}`)
 		else

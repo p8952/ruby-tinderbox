@@ -67,6 +67,18 @@ class RubyTinderbox < Sinatra::Base
 		erb :repoman_history, locals: { repomans: repomans }
 	end
 
+	get '/new_targets' do
+		erb :new_targets
+	end
+
+	get '/new_versions' do
+		erb :new_versions
+	end
+
+	get '/new_keywords' do
+		erb :new_keywords
+	end
+
 	get '/visualizations' do
 		# Timestamps
 		update_timestamp = Package.first[:update_timestamp]

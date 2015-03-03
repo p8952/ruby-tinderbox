@@ -38,45 +38,68 @@ function SETUP () {
 function EMERGE() {
 	set +e
 	timeout 1000 emerge --usepkg --buildpkg "=$PACKAGE"
-	LOG "$?" "$PACKAGE"
+	LOG "$?"
 	set -e
 }
 
 function LOG() {
 	DATE=$(date +%s)
-	mkdir -p "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE"
-	emerge --info "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-info"
-	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/emerge-pqv"
-	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/build.log"
-	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/environment"
-	gem list > "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/gem-list"
+	SHA1=$(sha1sum "/usr/portage/$CATEGORY/$NAME/$NAME-$VERSION.ebuild" | awk '{print $1}')
+	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE"
+
+	emerge --info "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/emerge-info"
+	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/emerge-pqv"
+	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/build.log"
+	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/environment"
+	gem list > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/gem-list"
+
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/succeeded"
+		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/succeeded"
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/failed"
+		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/failed"
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/timedout"
+		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/timedout"
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE/unknown"
+		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/unknown"
 	fi
-	chmod 755 -R "$SCRIPT_DIR/ci-logs/$PACKAGE/$DATE"
+
+	chmod 755 -R "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE"
 }
 
 function CLEANUP() {
 	mv /var/lib/portage/world.original /var/lib/portage/world
-	emerge --depclean --quiet
 	rm -r /var/tmp/portage/* || true
+	emerge --depclean --quiet
+	echo -e "$PACKAGE : $RESULT"
 }
 
 ENV_SETUP
-PACKAGES=("$@")
-for PACKAGE in "${PACKAGES[@]}"; do
-	SETUP $PACKAGE
-	EMERGE $PACKAGE
+
+PKG_ARR=($(qatom $1))
+CATEGORY="${PKG_ARR[0]}"
+NAME="${PKG_ARR[1]}"
+if [[ ${PKG_ARR[3]:=foo} == 'foo' ]]; then
+	VERSION="${PKG_ARR[2]}"
+else
+	VERSION="${PKG_ARR[2]}-${PKG_ARR[3]}"
+fi
+
+if [[ $# -eq 1 ]]; then
+	TYPE='current_target'
+	PACKAGE=$1
+	SETUP
+	EMERGE
 	CLEANUP
-	echo -e "$PACKAGE : $RESULT"
-done
+elif [[ $# -eq 3 ]]; then
+	TYPE='next_target'
+	PACKAGE=$1
+	CURR_TARGET=$2
+	NEXT_TARGET=$3
+	SETUP
+	EMERGE
+	CLEANUP
+fi

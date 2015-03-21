@@ -7,17 +7,6 @@ task :test do
 	Dir.glob('./test/test_*.rb') { |f| require f }
 end
 
-desc 'Run : update_packages => run_ci_untested => update_ci => run_repoman => update_repoman'
-task :nightly do
-	Rake::Task['db:update_packages'].invoke
-	Rake::Task['docker:setup'].invoke
-	Rake::Task['docker:run_ci_untested'].invoke
-	Rake::Task['db:update_ci'].invoke
-	Rake::Task['docker:run_repoman_all'].invoke
-	Rake::Task['db:update_repoman'].invoke
-	Rake::Task['docker:teardown'].invoke
-end
-
 namespace :db do
 	DB.loggers << Logger.new($stdout)
 
@@ -53,8 +42,11 @@ namespace :db do
 end
 
 namespace :docker do
-	num_of_packages = ENV['NUM_OF_PACKAGES'].to_i
-	num_of_packages = 5 if num_of_packages == 0
+	num_of_packages = ENV['NUM_OF_PACKAGES']
+	begin
+		num_of_packages = Integer(num_of_packages)
+	rescue
+	end
 
 	desc 'Build a docker image to use with subsequent tasks'
 	task :setup do
@@ -84,28 +76,13 @@ namespace :docker do
 		@volume_image.delete
 	end
 
-	desc 'Build and test all packages'
-	task :run_ci_all do
-		run_ci(@volume_container, @ci_image, :all)
-	end
-
-	desc 'Build and test a fixed number of packages (NUM_OF_PACKAGES=5)'
-	task :run_ci_some do
+	desc 'Build test packages ( NUM_OF_PACKAGES={5,all,untested} )'
+	task :run_build do
 		run_ci(@volume_container, @ci_image, num_of_packages)
 	end
 
-	desc 'Build and test all untested packages and their reverse dependencies'
-	task :run_ci_untested do
-		run_ci(@volume_container, @ci_image, :untested)
-	end
-
-	desc 'QA test all packages'
-	task :run_repoman_all do
-		run_repoman(@ci_image, :all)
-	end
-
-	desc 'QA test a fixed number of packages (NUM_OF_PACKAGES=5)'
-	task :run_repoman_some do
+	desc 'QA test packages ( NUM_OF_PACKAGES={5,all} )'
+	task :run_repoman do
 		run_repoman(@ci_image, num_of_packages)
 	end
 end

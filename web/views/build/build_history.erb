@@ -1,0 +1,20 @@
+<h1 class="text-center"><%=builds.first.package[:identifier]%></h1>
+
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th class="width-50">Build Date</th>
+			<th class="width-50">Build Result</th>
+		</tr>
+	</thead>
+	<%builds.each do |build|%>
+	<tr>
+		<td class="width-50">
+			<%=Time.at(build[:timestamp].to_i).strftime('%Y-%m-%d')%>
+		</td>
+		<td class="width-50 <%=build[:result]%>">
+			<a href="/build_logs/<%=build.package[:sha1]%>/<%=build[:timestamp]%>"><%=build[:result].camelcase%></a>
+		</td>
+	</tr>
+	<%end%>
+</table>

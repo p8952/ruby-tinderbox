@@ -1,22 +1,22 @@
 def run_ci(volume_container, ci_image, num_of_packages)
 	packages = []
-	Package.order { [category, lower(name), version] }.each do |package|
+	Package.each do |package|
 		packages << package[:identifier]
 	end
 
-	if num_of_packages == :all
+	if num_of_packages == 'all'
 		packages = packages
-	elsif num_of_packages == :untested
+	elsif num_of_packages == 'untested'
 		packages = []
-		Package.exclude(tested: true).order { [category, lower(name), version] }.each do |package|
+		Package.each do |package|
+			next if package.build.count > 0
+			next if "#{package[:category]}/#{package[:name]}" == 'virtual/rubygems'
+			next if "#{package[:category]}/#{package[:name]}" == 'dev-ruby/rake'
+			next if "#{package[:category]}/#{package[:name]}" == 'dev-ruby/rspec'
+			next if "#{package[:category]}/#{package[:name]}" == 'dev-ruby/rspec-core'
+			next if "#{package[:category]}/#{package[:name]}" == 'dev-ruby/rdoc'
+
 			packages << package[:identifier]
-			next if [
-				'virtual/rubygems',
-				'dev-ruby/rake',
-				'dev-ruby/rspec',
-				'dev-ruby/rspec-core',
-				'dev-ruby/rdoc'
-			].include?("#{package[:category]}/#{package[:name]}")
 			Package.where(Sequel.like(
 				:dependencies,
 				"#{package[:category]}/#{package[:name]} %",
@@ -26,8 +26,11 @@ def run_ci(volume_container, ci_image, num_of_packages)
 				packages << rdep[:identifier]
 			end
 		end
-	else
+	elsif num_of_packages.is_a?(Integer)
 		packages = packages.sample(num_of_packages)
+	else
+		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
+		exit
 	end
 
 	packages = packages.uniq
@@ -54,37 +57,37 @@ def run_ci(volume_container, ci_image, num_of_packages)
 end
 
 def update_ci
-	Dir.glob('ci-logs/*/*/*') do |build|
-		build_array = build.split('/')
-		package_id = "#{build_array[1]}/#{build_array[2]}"
-		time = build_array[3]
+	Dir.glob('ci-logs/*/*/builds/*') do |build|
+		begin
+			build_array = build.split('/')
+			sha1 = build_array[1]
+			timestamp = build_array[4]
+			target = build_array[2].sub('_target', '')
 
-		if File.exist?("#{build}/succeeded")
-			result = 'succeeded'
-		elsif File.exist?("#{build}/failed")
-			result = 'failed'
-		elsif File.exist?("#{build}/timedout")
-			result = 'timed out'
+			result = File.read("#{build}/result")
+			emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
+			emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
+			build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
+			gem_list = File.read("#{build}/gem-list") if File.exist?("#{build}/gem-list")
+
+			package = Package.where(sha1: sha1).first
+			unless package.nil?
+				package.add_build(
+					Build.find_or_create(
+						timestamp: timestamp,
+						target: target,
+						result: result,
+						emerge_info: emerge_info,
+						emerge_pqv: emerge_pqv,
+						build_log: build_log,
+						gem_list: gem_list
+					)
+				)
+			end
+		rescue => e
+			puts "ERROR: #{e}"
+			next
 		end
-
-		emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
-		emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
-		build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
-		gem_list = File.read("#{build}/gem-list") if File.exist?("#{build}/gem-list")
-
-		Build.find_or_create(
-			package_id: package_id,
-			time: time,
-			result: result,
-			emerge_info: emerge_info,
-			emerge_pqv: emerge_pqv,
-			build_log: build_log,
-			gem_list: gem_list
-		)
-	end
-
-	Build.each do |build|
-		Package.where(identifier: build[:package_id]).update(tested: true)
 	end
 end
 

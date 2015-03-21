@@ -22,61 +22,61 @@ class RubyTinderbox < Sinatra::Base
 	get '/ruby_targets' do
 		update_timestamp = Package.first[:update_timestamp]
 		portage_timestamp = Package.first[:portage_timestamp]
-		packages = Package.order { [category, lower(name), version, revision] }.to_hash_groups(:identifier)
-		erb :ruby_targets, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
+		packages = Package.distinct(:sha1, :identifier).order(:identifier)
+		erb :'package/ruby_targets', locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
 	end
 
 	get '/outdated_gems' do
 		update_timestamp = Package.first[:update_timestamp]
 		portage_timestamp = Package.first[:portage_timestamp]
 		packages = Package.distinct(:category, :name).order(:category, :name, Sequel.desc(:version), Sequel.desc(:revision)).exclude(gem_version: 'nil')
-		erb :outdated_gems, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
+		erb :'package/outdated_gems', locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
 	get '/build_status' do
-		update_timestamp = Build.order(:time).last[:time]
+		update_timestamp = Build.order(:timestamp).last[:timestamp]
 		portage_timestamp = Package.first[:portage_timestamp]
-		builds = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time))
-		erb :build_status, locals: { builds: builds, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
+		builds = []
+		Package.each do |package|
+			builds << package.build_dataset.where(target: 'current').reverse_order(:timestamp).first
+		end
+		builds = builds.compact.sort_by { |build| build.package[:identifier] }
+		erb :'build/build_status', locals: { builds: builds, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
-	get '/build_history/:category/:package' do
-		builds = Build.where(package_id: params[:category] + '/' + params[:package]).reverse_order(:time)
-		erb :build_history, locals: { builds: builds }
+	get '/build_logs/:sha1/:timestamp' do
+		package = Package.where(sha1: params[:sha1]).first
+		build = package.build_dataset.where(timestamp: params[:timestamp]).first
+		erb :'build/build_logs', locals: { package: package, build: build }
 	end
 
-	get '/build_logs/:category/:package/:time' do
-		build = Build.where(package_id: params[:category] + '/' + params[:package], time: params[:time]).first
-		erb :build_logs, locals: { build: build }
+	get '/build_history/:sha1' do
+		package = Package.where(sha1: params[:sha1]).first
+		builds = package.build_dataset.where(target: 'current').reverse_order(:timestamp)
+		erb :'build/build_history', locals: { builds: builds }
 	end
 
 	get '/repoman_checks' do
-		update_timestamp = Repoman.order(:time).last[:time]
+		update_timestamp = Build.order(:timestamp).last[:timestamp]
 		portage_timestamp = Package.first[:portage_timestamp]
-		repomans = Repoman.distinct(:package_id).order(:package_id, Sequel.desc(:time))
-		erb :repoman_checks, locals: { repomans: repomans, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
+		repomans = []
+		Package.each do |package|
+			repomans << package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
+		end
+		repomans = repomans.compact.sort_by { |repoman| repoman.package[:identifier] }
+		erb :'repoman/repoman_checks', locals: { repomans: repomans, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
-	get '/repoman_logs/:category/:package/:time' do
-		repomans = Repoman.where(package_id: params[:category] + '/' + params[:package], time: params[:time]).first
-		erb :repoman_logs, locals: { repomans: repomans }
+	get '/repoman_logs/:sha1/:timestamp' do
+		package = Package.where(sha1: params[:sha1]).first
+		repoman = package.repoman_dataset.where(timestamp: params[:timestamp]).first
+		erb :'repoman/repoman_logs', locals: { package: package, repoman: repoman }
 	end
 
-	get '/repoman_history/:category/:package' do
-		repomans = Repoman.where(package_id: params[:category] + '/' + params[:package]).reverse_order(:time)
-		erb :repoman_history, locals: { repomans: repomans }
-	end
-
-	get '/new_targets' do
-		erb :new_targets
-	end
-
-	get '/new_versions' do
-		erb :new_versions
-	end
-
-	get '/new_keywords' do
-		erb :new_keywords
+	get '/repoman_history/:sha1' do
+		package = Package.where(sha1: params[:sha1]).first
+		repomans = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp)
+		erb :'repoman/repoman_history', locals: { repomans: repomans }
 	end
 
 	get '/visualizations' do
@@ -101,11 +101,11 @@ class RubyTinderbox < Sinatra::Base
 		Package.distinct(:category, :name).reverse_order(:category, :name, :version).exclude(gem_version: 'nil').each { |p| outdated << p if p[:version] < p[:gem_version] }
 
 		# Build Status
-		succeeded = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'succeeded').count
-		failed = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'failed').count
-		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:time)).where(result: 'timed out').count
+		succeeded = Build.distinct(:package_id).order(:package_id, Sequel.desc(:timestamp)).where(result: "succeeded\n").count
+		failed = Build.distinct(:package_id).order(:package_id, Sequel.desc(:timestamp)).where(result: "failed\n").count
+		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:timestamp)).where(result: "timed out\n").count
 
-		erb :visualizations, locals: {
+		erb :'overview/visualizations', locals: {
 			portage_timestamp: portage_timestamp,
 			update_timestamp: update_timestamp,
 			ruby_1_9_amd64: ruby_1_9_amd64,

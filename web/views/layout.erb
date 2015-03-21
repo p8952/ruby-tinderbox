@@ -11,7 +11,7 @@
 <script src="https://1b9a50f4f9de4348cd9f-e703bc50ba0aa66772a874f8c7698be7.ssl.cf5.rackcdn.com/jquery.min.js"></script>
 <script src="https://1b9a50f4f9de4348cd9f-e703bc50ba0aa66772a874f8c7698be7.ssl.cf5.rackcdn.com/bootstrap.min.js"></script>
 <script src="https://1b9a50f4f9de4348cd9f-e703bc50ba0aa66772a874f8c7698be7.ssl.cf5.rackcdn.com/retina.min.js"></script>
-<script src='/js/tablesort.min.js'></script>
+<script src="/js/tablesort.min.js"></script>
 <link rel="icon" href="http://www.gentoo.org/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -34,7 +34,7 @@
 								<li><a href="http://packages.gentoo.org/" title="Find software for your Gentoo"><span class="fa fa-hdd-o fa-fw"></span> Packages</a></li>
 								<li class="divider"></li>
 								<li><a href="http://overlays.gentoo.org/" title="Collaborate on maintaining packages"><span class="fa fa-code-fork fa-fw"></span> Overlays</a></li>
-								<li><a href="http://planet.gentoo.org/" title="Find out what's going on in the developer community"><span class="fa fa-rss fa-fw"></span> Planet</a></li>
+								<li><a href="http://planet.gentoo.org/" title="Find out what"s going on in the developer community"><span class="fa fa-rss fa-fw"></span> Planet</a></li>
 								<li><a href="http://archives.gentoo.org/" title="Read up on past discussions"><span class="fa fa-archive fa-fw"></span> Archives</a></li>
 								<li><a href="http://sources.gentoo.org/" title="Browse our source code"><span class="fa fa-code fa-fw"></span> Sources</a></li>
 								<li class="divider"></li>
@@ -67,13 +67,6 @@
 						<li><a href="/outdated_gems">Outdated Gems</a></li>
 						<li><a href="/build_status">Build Status (CI)</a></li>
 						<li><a href="/repoman_checks">Repoman Checks (QA)</a></li>
-						<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Package Bumps <span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="/new_targets">New Targets</a></li>
-							<li><a href="/new_versions">New Versions</a></li>
-							<li><a href="/new_keywords">New Keywords</a></li>
-						</ul>
 						<li><a href="/visualizations">Visualizations</a></li>
 						</li>
 
@@ -108,7 +101,17 @@
 	</div>
 </footer>
 <script>
-new Tablesort(document.getElementById("sortable"));
+$(document).ready(function() {
+	new Tablesort(document.getElementById("sortable"), {
+		descending: true
+	});
+});
+$(".succeeded").addClass("success");
+$(".passed").addClass("success");
+$(".timed").addClass("info");
+$(".partial").addClass("info");
+$(".unknown").addClass("warning");
+$(".failed").addClass("danger");
 </script>
 </body>
 </html>

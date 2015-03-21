@@ -21,12 +21,10 @@ function REPOMAN() {
 	repoman scan || true
 	repoman manifest
 	repoman full > /tmp/repoman_log_current || true
-	echo $? > /tmp/repoman_result_current
 
 	sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
 	repoman manifest
 	repoman full > /tmp/repoman_log_next || true
-	echo $? > /tmp/repoman_result_next
 
 	LOG
 }
@@ -38,18 +36,14 @@ function LOG() {
 	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE"
 
 	cp /tmp/repoman_log_current "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE/repoman_log"
-	cp /tmp/repoman_result_current "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE/repoman_result"
 	cp /tmp/repoman_log_next "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE/repoman_log"
-	cp /tmp/repoman_result_next "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE/repoman_result"
 
 	chmod 755 -R "$SCRIPT_DIR/ci-logs"
 }
 
 function CLEANUP() {
 	rm /tmp/repoman_log_current
-	rm /tmp/repoman_result_current
 	rm /tmp/repoman_log_next
-	rm /tmp/repoman_result_next
 	rm -r "$SCRIPT_DIR/overlay"
 }
 

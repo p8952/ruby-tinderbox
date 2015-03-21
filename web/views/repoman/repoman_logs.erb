@@ -1,0 +1,16 @@
+<div class="text-center">
+	<h1><%=package[:identifier]%></h1>
+	<h3><%=Time.at(repoman[:timestamp].to_i).strftime('%Y-%m-%d')%></h3>
+</div>
+<br>
+
+<%unless repoman[:log].nil?%>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4><a name="current_log">Repoman Full</a></h4>
+	</div>
+	<div class="panel-body">
+		<pre><%=repoman[:log]%></pre>
+	</div>
+</div>
+<%end%>

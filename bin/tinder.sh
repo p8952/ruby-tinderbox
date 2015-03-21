@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
-[[ $(whoami) == 'root' ]] || exit 1
+[[ $(whoami) == "root" ]] || exit 1
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 function ENV_SETUP() {
@@ -55,16 +55,16 @@ function LOG() {
 
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/succeeded"
+		echo "succeeded" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/failed"
+		echo "failed" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/timedout"
+		echo "timed out" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		touch "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/unknown"
+		echo "unknown" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
 	fi
 
 	chmod 755 -R "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE"
@@ -82,20 +82,20 @@ ENV_SETUP
 PKG_ARR=($(qatom $1))
 CATEGORY="${PKG_ARR[0]}"
 NAME="${PKG_ARR[1]}"
-if [[ ${PKG_ARR[3]:=foo} == 'foo' ]]; then
+if [[ ${PKG_ARR[3]:=foo} == "foo" ]]; then
 	VERSION="${PKG_ARR[2]}"
 else
 	VERSION="${PKG_ARR[2]}-${PKG_ARR[3]}"
 fi
 
 if [[ $# -eq 1 ]]; then
-	TYPE='current_target'
+	TYPE="current_target"
 	PACKAGE=$1
 	SETUP
 	EMERGE
 	CLEANUP
 elif [[ $# -eq 3 ]]; then
-	TYPE='next_target'
+	TYPE="next_target"
 	PACKAGE=$1
 	CURR_TARGET=$2
 	NEXT_TARGET=$3

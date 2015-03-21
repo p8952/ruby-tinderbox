@@ -5,21 +5,22 @@ def update_packages
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
-		# ebuild = "/usr/portage/#{category}/#{name}/#{identifier.split('/')[1]}.ebuild"
-		# ebuild_hash = Digest::MD5.hexdigest(File.read(ebuild))
+		ebuild = "/usr/portage/#{category}/#{name}/#{identifier.split('/')[1]}.ebuild"
+		sha1 = Digest::SHA1.hexdigest(File.read(ebuild))
 		Package.find_or_create(
+			sha1: sha1,
 			category: category,
 			name: name,
 			version: version,
 			revision: revision,
 			slot: slot,
-			amd64_keyword: amd64_keyword,
 			identifier: identifier,
-			gem_version: gem_version,
+			amd64_keyword: amd64_keyword,
 			r19_target: r19_target,
 			r20_target: r20_target,
 			r21_target: r21_target,
-			r22_target: r22_target
+			r22_target: r22_target,
+			gem_version: gem_version
 		)
 	end
 
@@ -27,6 +28,8 @@ def update_packages
 		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]} #{package[:slot]} #{package[:amd64_keyword]} #{package[:r19_target]} #{package[:r20_target]} #{package[:r21_target]} #{package[:r22_target]}")
 			package.update(dependencies: `python3 lib/deps.py #{package[:identifier]}`)
 		else
+			package.build.map(&:delete)
+			package.repoman.map(&:delete)
 			package.delete
 		end
 	end

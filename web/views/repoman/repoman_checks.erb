@@ -8,6 +8,8 @@
 	</small>
 </div>
 
+<%=erb :'partials/search', :layout => false%>
+
 <form class="pull-right">
 	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64
 	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
@@ -22,6 +24,7 @@
 			<th class="width-17">History</th>
 		</tr>
 	</thead>
+	<tbody class="searchable">
 	<%repomans.each do |repoman|%>
 	<%next if repoman.nil?%>
 	<tr>
@@ -42,4 +45,5 @@
 		</td>
 	</tr>
 	<%end%>
+	</tbody>
 </table>

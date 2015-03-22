@@ -8,6 +8,8 @@
 	</small>
 </div>
 
+<%=erb :'partials/search', :layout => false%>
+
 <form class="pull-right">
 	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64
 	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
@@ -23,6 +25,7 @@
 			<th class="width-12">Ruby 2.2</th>
 		</tr>
 	</thead>
+	<tbody class="searchable">
 	<%packages.each do |package|%>
 	<tr>
 		<td class="width-52">
@@ -45,4 +48,5 @@
 		</td>
 	</tr>
 	<%end%>
+	</tbody>
 </table>

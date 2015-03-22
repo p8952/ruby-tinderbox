@@ -1,0 +1,19 @@
+<br>
+<div class="input-group"> <span class="input-group-addon">Filter Packages</span>
+	<input id="filter" type="text" class="form-control">
+</div>
+<br>
+
+<script>
+$(document).ready(function () {
+	(function ($) {
+		$('#filter').keyup(function () {
+			var rex = new RegExp($(this).val(), 'i');
+			$('.searchable tr').hide();
+			$('.searchable tr').filter(function () {
+				return rex.test($(this).text());
+			}).show();
+		})
+	}(jQuery));
+});
+</script>

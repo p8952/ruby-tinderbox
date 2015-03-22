@@ -1,0 +1,48 @@
+<div id="ruby_targets">
+	<h1>New Targets</h1>
+	<small>
+		Last updated on
+		<%=Time.at(update_timestamp.to_i).strftime('%Y-%m-%d')%>
+		using a portage snapshot dated
+		<%=Time.at(portage_timestamp.to_i).strftime('%Y-%m-%d')%>
+	</small>
+</div>
+
+<form class="pull-right">
+	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64
+	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
+</form>
+
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th class="width-52">Package</th>
+			<th class="width-12">CI Current</th>
+			<th class="width-12">CI Next</th>
+			<th class="width-12">QA Current</th>
+			<th class="width-12">QA Next</th>
+		</tr>
+	</thead>
+	<%packages.each do |package|%>
+	<tr>
+		<td class="width-52">
+			<%=package[0][:identifier]%>
+		</td>
+		<td class="width-12 <%=package[1][:result]%>">
+			<%=package[1][:result].camelcase%>
+		</td>
+		<td class="width-12">
+			ToDo
+		</td>
+		<td class="width-12 <%=package[3][:result]%>">
+			<%=package[3][:result].camelcase%>
+		</td>
+		<td class="width-12 <%=package[4][:result]%>">
+			<%=package[4][:result].camelcase%>
+		</td>
+		<td style="display:none;">
+			+<%=package[0][:amd64_keyword]%>
+		</td>
+	</tr>
+	<%end%>
+</table>

@@ -85,17 +85,19 @@ class RubyTinderbox < Sinatra::Base
 		packages = []
 		Package.each do |package|
 			build_current = package.build_dataset.where(target: 'current').reverse_order(:timestamp).first
-			repoman_current = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
-			repoman_next = package.repoman_dataset.where(target: 'next').reverse_order(:timestamp).first
-
 			next if build_current.nil?
+
+			repoman_current = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
 			next if repoman_current.nil?
+
+			repoman_next = package.repoman_dataset.where(target: 'next').reverse_order(:timestamp).first
 			next if repoman_next.nil?
 
 			if repoman_current[:result] == 'passed' and repoman_next[:result] == 'passed'
 				packages << [package, build_current, nil, repoman_current, repoman_next]
 			end
 		end
+		packages = packages.compact.sort_by { |package| package[0][:identifier] }
 		erb :'bumps/new_targets', locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
 	end
 

@@ -8,6 +8,8 @@
 	</small>
 </div>
 
+<%=erb :'partials/search', :layout => false%>
+
 <form class="pull-right">
 	<input type="checkbox" onclick="$('td:contains(\'+amd64\')').parent().toggle();" checked> amd64
 	<input type="checkbox" onclick="$('td:contains(\'+~amd64\')').parent().toggle();" checked> ~amd64
@@ -21,6 +23,7 @@
 			<th class="width-24">RubyGem Version</th>
 		</tr>
 	</thead>
+	<tbody class="searchable">
 	<%packages.each do |package|%>
 	<%if package[:gem_version] > package[:version]%>
 	<tr>
@@ -35,4 +38,5 @@
 	</tr>
 	<%end%>
 	<%end%>
+	</tbody>
 </table>

@@ -1,5 +1,5 @@
 <div id="ruby_targets">
-	<h1>Ruby Targets</h1>
+	<h1>New Targets</h1>
 	<small>
 		Last updated on
 		<%=Time.at(update_timestamp.to_i).strftime('%Y-%m-%d')%>
@@ -17,32 +17,31 @@
 	<thead>
 		<tr>
 			<th class="width-52">Package</th>
-			<th class="width-12">Ruby 1.9</th>
-			<th class="width-12">Ruby 2.0</th>
-			<th class="width-12">Ruby 2.1</th>
-			<th class="width-12">Ruby 2.2</th>
+			<th class="width-12">CI Current</th>
+			<th class="width-12">CI Next</th>
+			<th class="width-12">QA Current</th>
+			<th class="width-12">QA Next</th>
 		</tr>
 	</thead>
 	<%packages.each do |package|%>
-	<%package = package[1][0]%>
 	<tr>
 		<td class="width-52">
-			<%=package[:identifier]%>
+			<%=package[0][:identifier]%>
 		</td>
-		<td class="width-12 <%=package[:r19_target] == "nil" ? "danger" : "success"%>">
-			<%=package[:r19_target]%>
+		<td class="width-12 <%=package[1][:result]%>">
+			<%=package[1][:result].camelcase%>
 		</td>
-		<td class="width-12 <%=package[:r20_target] == "nil" ? "danger" : "success"%>">
-			<%=package[:r20_target]%>
+		<td class="width-12">
+			ToDo
 		</td>
-		<td class="width-12 <%=package[:r21_target] == "nil" ? "danger" : "success"%>">
-			<%=package[:r21_target]%>
+		<td class="width-12 <%=package[3][:result]%>">
+			<%=package[3][:result].camelcase%>
 		</td>
-		<td class="width-12 <%=package[:r22_target] == "nil" ? "danger" : "success"%>">
-			<%=package[:r22_target]%>
+		<td class="width-12 <%=package[4][:result]%>">
+			<%=package[4][:result].camelcase%>
 		</td>
 		<td style="display:none;">
-			+<%=package[:amd64_keyword]%>
+			+<%=package[0][:amd64_keyword]%>
 		</td>
 	</tr>
 	<%end%>

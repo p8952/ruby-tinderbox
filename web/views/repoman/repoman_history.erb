@@ -1,0 +1,20 @@
+<h1 class="text-center"><%=repomans.first.package[:identifier]%></h1>
+
+<table id="sortable" class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th class="width-50">Check Date</th>
+			<th class="width-5o">Check Result</th>
+		</tr>
+	</thead>
+	<%repomans.each do |repoman|%>
+	<tr>
+		<td class="width-50">
+			<%=Time.at(repoman[:timestamp].to_i).strftime('%Y-%m-%d')%>
+		</td>
+		<td class="width-50 <%=repoman[:result]%>">
+			<a href="/repoman_logs/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
+		</td>
+	</tr>
+	<%end%>
+</table>

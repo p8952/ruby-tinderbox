@@ -16,5 +16,7 @@ Style/IndentHash:
     Enabled: false
 Style/IndentationWidth:
     Enabled: false
+Style/MultilineOperationIndentation:
+    EnforcedStyle: indented
 Style/Tab:
     Enabled: false

@@ -1,6 +1,6 @@
 <div class="text-center">
-	<h1><%=build[:package_id]%></h1>
-	<h3><%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%></h3>
+	<h1><%=package[:identifier]%></h1>
+	<h3><%=Time.at(build[:timestamp].to_i).strftime('%Y-%m-%d')%></h3>
 	<div class="btn-group btn-group-justified">
 		<a class="btn btn-default <%="disabled" if build[:emerge_info].nil?%>" href="#emerge_info">Emerge Info</a>
 		<a class="btn btn-default <%="disabled" if build[:emerge_pqv].nil?%>" href="#emerge_pqv">Emerge PQV</a>

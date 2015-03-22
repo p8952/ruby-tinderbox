@@ -1,5 +1,5 @@
-<div id="build_status">
-	<h1>Build Status (CI)</h1>
+<div id="repoman_checks">
+	<h1>Repoman Checks</h1>
 	<small>
 		Last updated on
 		<%=Time.at(update_timestamp.to_i).strftime('%Y-%m-%d')%>
@@ -22,27 +22,23 @@
 			<th class="width-17">History</th>
 		</tr>
 	</thead>
-	<%builds.each do |build|%>
-	<%package = Package.where(identifier: build[:package_id]).first%>
-	<%next if package.nil?%>
-	<%result = 'success' if build[:result] == 'succeeded'%>
-	<%result = 'info' if build[:result] == 'timed out'%>
-	<%result = 'danger' if build[:result] == 'failed'%>
+	<%repomans.each do |repoman|%>
+	<%next if repoman.nil?%>
 	<tr>
 		<td class="width-52">
-			<%=build[:package_id]%>
+			<%=repoman.package[:identifier]%>
 		</td>
 		<td class="width-14">
-			<%=Time.at(build[:time].to_i).strftime('%Y-%m-%d')%>
+			<%=Time.at(repoman[:timestamp].to_i).strftime('%Y-%m-%d')%>
 		</td>
-		<td class="width-17 <%=result%>">
-			<a href="/build_logs/<%=build[:package_id]%>/<%=build[:time]%>"><%=build[:result].camelcase%></a>
+		<td class="width-17 <%=repoman[:result]%>">
+			<a href="/repoman_logs/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
 		</td>
 		<td class="width-17">
-			<a href="/build_history/<%=build[:package_id]%>"><%=Build.where(package_id: build[:package_id]).count%> Build(s)</a>
+			<a href="/repoman_history/<%=repoman.package[:sha1]%>"><%=repoman.package.repoman_dataset.where(target: 'current').count%> Checks(s)</a>
 		</td>
 		<td style="display:none;">
-			+<%=package[:amd64_keyword]%>
+			+<%=repoman.package[:amd64_keyword]%>
 		</td>
 	</tr>
 	<%end%>

@@ -26,6 +26,20 @@ function SETUP () {
 		rm "/usr/portage/packages/$PACKAGE.tbz2"
 	fi
 
+	if [[ $TYPE == "next_target" ]]; then
+		mkdir -p "$SCRIPT_DIR/overlay"
+		mkdir -p "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
+		cp "/usr/portage/$CATEGORY/$NAME/$NAME-$VERSION.ebuild" "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
+		cp "/usr/portage/$CATEGORY/$NAME/metadata.xml" "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
+		cp -r "/usr/portage/$CATEGORY/$NAME/files" "$SCRIPT_DIR/overlay/$CATEGORY/$NAME" || true
+
+		cd "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
+		sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
+		repoman manifest
+		repoman full
+		cd -
+	fi
+
 	set +e
 	emerge --pretend --quiet "=$PACKAGE"
 	if [[ $? == 1 ]]; then
@@ -75,6 +89,10 @@ function CLEANUP() {
 	rm -r /var/tmp/portage/* || true
 	emerge --depclean --quiet
 	echo -e "$PACKAGE : $RESULT"
+
+	if [[ $TYPE == "next_target" ]]; then
+		rm -r "$SCRIPT_DIR/overlay"
+	fi
 }
 
 ENV_SETUP
@@ -95,6 +113,12 @@ if [[ $# -eq 1 ]]; then
 	EMERGE
 	CLEANUP
 elif [[ $# -eq 3 ]]; then
+	TYPE="current_target"
+	PACKAGE=$1
+	SETUP
+	EMERGE
+	CLEANUP
+
 	TYPE="next_target"
 	PACKAGE=$1
 	CURR_TARGET=$2

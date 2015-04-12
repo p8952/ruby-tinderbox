@@ -1,4 +1,39 @@
-def run_ci(volume_container, ci_image, num_of_packages)
+def run_ci(volume_container, ci_image, ci_type, num_of_packages)
+	packages = generate_package_list(ci_type, num_of_packages)
+
+	packages.peach(8) do |package|
+		package = package.split(' ')
+		identifier = package[0]
+		current_target = package[1]
+		next_target = package[2]
+
+		if ci_type == 'build'
+			cmd = %W[/ruby-tinderbox/tinder.sh #{identifier} #{current_target} #{next_target}]
+		elsif ci_type == 'repoman'
+			cmd = %W[/ruby-tinderbox/repoman.sh #{identifier} #{current_target} #{next_target}]
+		end
+		ci_container = Docker::Container.create(
+			Cmd: cmd,
+			Image: ci_image.id
+		)
+		ci_container.start(VolumesFrom: volume_container.id)
+		ci_container.wait(36_000)
+
+		tar = Tempfile.new('tar')
+		File.open(tar, 'w') do |file|
+			ci_container.copy('/ruby-tinderbox/ci-logs') do |chunk|
+				file.write(chunk)
+			end
+		end
+		Archive::Tar::Minitar.unpack(tar, File.dirname(File.expand_path(File.dirname(__FILE__))))
+		tar.close
+		tar.unlink
+
+		ci_container.delete
+	end
+end
+
+def generate_package_list(ci_type, num_of_packages)
 	packages = []
 	Package.each do |package|
 		packages << package[:identifier]
@@ -6,7 +41,9 @@ def run_ci(volume_container, ci_image, num_of_packages)
 
 	if num_of_packages == 'all'
 		packages = packages
-	elsif num_of_packages == 'untested'
+	elsif num_of_packages == 'untested' and ci_type == 'repoman'
+		packages = packages
+	elsif num_of_packages == 'untested' and ci_type == 'build'
 		packages = []
 		Package.each do |package|
 			next if package.build.count > 0
@@ -30,33 +67,33 @@ def run_ci(volume_container, ci_image, num_of_packages)
 		packages = packages.sample(num_of_packages)
 	else
 		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
+		puts ci_type
+		puts num_of_packages
 		exit
 	end
 
-	packages = packages.uniq
-	packages.each do |package|
-		ci_container = Docker::Container.create(
-			Cmd: %W[/ruby-tinderbox/tinder.sh #{package}],
-			Image: ci_image.id
-		)
-		ci_container.start(VolumesFrom: volume_container.id)
-		ci_container.wait(36_000)
+	packages_with_targets = []
+	packages.uniq.each do |package|
+		package = Package.where(identifier: package).first
 
-		tar = Tempfile.new('tar')
-		File.open(tar, 'w') do |file|
-			ci_container.copy('/ruby-tinderbox/ci-logs') do |chunk|
-				file.write(chunk)
-			end
-		end
-		Archive::Tar::Minitar.unpack(tar, File.dirname(File.expand_path(File.dirname(__FILE__))))
-		tar.close
-		tar.unlink
+		target = 'unknown'
+		target = package[:r19_target] unless package[:r19_target] == 'nil'
+		target = package[:r20_target] unless package[:r20_target] == 'nil'
+		target = package[:r21_target] unless package[:r21_target] == 'nil'
+		target = package[:r22_target] unless package[:r22_target] == 'nil'
 
-		ci_container.delete
+		next_target = 'unknown'
+		next_target = 'ruby20' if target == 'ruby19'
+		next_target = 'ruby21' if target == 'ruby20'
+		next_target = 'ruby22' if target == 'ruby21'
+
+		packages_with_targets << "#{package[:identifier]} #{target} #{next_target}"
 	end
+
+	packages_with_targets
 end
 
-def update_ci
+def update_build
 	Dir.glob('ci-logs/*/*/builds/*') do |build|
 		begin
 			build_array = build.split('/')
@@ -91,6 +128,44 @@ def update_ci
 	end
 end
 
-def clear_ci
+def update_repoman
+	Dir.glob('ci-logs/*/*/repomans/*') do |repoman|
+		begin
+			repoman_array = repoman.split('/')
+			sha1 = repoman_array[1]
+			timestamp = repoman_array[4]
+			target = repoman_array[2].sub('_target', '')
+
+			log = File.read("#{repoman}/repoman_log")
+
+			result = 'unknown'
+			if log.include?('If everyone were like you, I\'d be out of business!')
+				result = 'passed'
+			elsif log.include?('You\'re only giving me a partial QA payment?')
+				result = 'partial'
+			elsif log.include?('Make your QA payment on time and you\'ll never see the likes of me.')
+				result = 'failed'
+			end
+
+			Package.where(sha1: sha1).first.add_repoman(
+				Repoman.find_or_create(
+					timestamp: timestamp,
+					target: target,
+					result: result,
+					log: log
+				)
+			)
+		rescue => e
+			puts "ERROR: #{e}"
+			next
+		end
+	end
+end
+
+def clear_build
 	Build.map(&:delete)
+end
+
+def clear_repoman
+	Repoman.map(&:delete)
 end

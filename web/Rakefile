@@ -20,14 +20,19 @@ namespace :db do
 		update_packages
 	end
 
+	desc 'Clear the packages database'
+	task :clear_packages do
+		clear_build
+	end
+
 	desc 'Update the build database with logfiles from ci-logs/'
-	task :update_ci do
-		update_ci
+	task :update_build do
+		update_build
 	end
 
 	desc 'Clear the build database'
-	task :clear_ci do
-		clear_ci
+	task :clear_build do
+		clear_build
 	end
 
 	desc 'Update the repoman database with logfiles from repo-logs/'
@@ -65,24 +70,28 @@ namespace :docker do
 		@volume_container.start
 		@volume_container.wait(36_000)
 
-		docker_path = File.dirname(File.expand_path(File.dirname(__FILE__)))
-		@ci_image = Docker::Image.build_from_dir(docker_path)
+		if ENV['CI_IMAGE'].nil?
+			docker_path = File.dirname(File.expand_path(File.dirname(__FILE__)))
+			@ci_image = Docker::Image.build_from_dir(docker_path)
+		else
+			@ci_image = Docker::Image.get(ENV['CI_IMAGE'])
+		end
 	end
 
 	desc 'Remove a previously built docker image'
 	task :teardown do
-		@ci_image.delete
+		@ci_image.delete if ENV['CI_IMAGE'].nil?
 		@volume_container.delete(v: 1)
 		@volume_image.delete
 	end
 
 	desc 'Build test packages ( NUM_OF_PACKAGES={5,all,untested} )'
 	task :run_build do
-		run_ci(@volume_container, @ci_image, num_of_packages)
+		run_ci(@volume_container, @ci_image, 'build', num_of_packages)
 	end
 
 	desc 'QA test packages ( NUM_OF_PACKAGES={5,all} )'
 	task :run_repoman do
-		run_repoman(@ci_image, num_of_packages)
+		run_ci(@volume_container, @ci_image, 'repoman', num_of_packages)
 	end
 end

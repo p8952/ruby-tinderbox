@@ -12,7 +12,6 @@ require_relative 'lib/ci'
 require_relative 'lib/helpers'
 require_relative 'lib/models'
 require_relative 'lib/packages'
-require_relative 'lib/repoman'
 
 class RubyTinderbox < Sinatra::Base
 	get '/' do

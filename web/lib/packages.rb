@@ -1,5 +1,5 @@
 def update_packages
-	packages_txt = `python3 lib/packages.py`
+	packages_txt = `python3 lib/packages.py`.uniq
 	packages_txt.lines.peach do |line|
 		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
@@ -38,4 +38,12 @@ def update_packages
 	portage_timestamp = File.read('/usr/portage/metadata/timestamp.x').split.first
 	Package.dataset.update(update_timestamp: update_timestamp)
 	Package.dataset.update(portage_timestamp: portage_timestamp)
+end
+
+def clear_packages
+	Package.each do |package|
+		package.build.map(&:delete)
+		package.repoman.map(&:delete)
+		package.delete
+	end
 end

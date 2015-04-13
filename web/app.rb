@@ -92,7 +92,7 @@ class RubyTinderbox < Sinatra::Base
 			repoman_next = package.repoman_dataset.where(target: 'next').reverse_order(:timestamp).first
 			next if repoman_next.nil?
 
-			if repoman_current[:result] == 'passed' and repoman_next[:result] == 'passed'
+			if repoman_current[:result] == 'passed' && repoman_next[:result] == 'passed'
 				packages << [package, build_current, nil, repoman_current, repoman_next]
 			end
 		end

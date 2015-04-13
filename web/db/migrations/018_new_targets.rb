@@ -18,5 +18,4 @@ Sequel.migration do
 			add_foreign_key :package_id, :packages
 		end
 	end
-
 end

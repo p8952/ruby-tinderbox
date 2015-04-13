@@ -1,5 +1,5 @@
 def update_packages
-	packages_txt = `python3 lib/packages.py`.uniq
+	packages_txt = `python3 lib/packages.py | sort -u`
 	packages_txt.lines.peach do |line|
 		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")

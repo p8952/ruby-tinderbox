@@ -22,9 +22,11 @@ function REPOMAN() {
 	repoman manifest
 	repoman full > /tmp/repoman_log_current || true
 
-	sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
-	repoman manifest
-	repoman full > /tmp/repoman_log_next || true
+	if [[ "$NEXT_TARGET" != 'unknown' ]]; then
+		sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
+		repoman manifest
+		repoman full > /tmp/repoman_log_next || true
+	fi
 
 	LOG
 }
@@ -32,19 +34,22 @@ function REPOMAN() {
 function LOG() {
 	DATE=$(date +%s)
 	SHA1=$(sha1sum "/usr/portage/$CATEGORY/$NAME/$NAME-$VERSION.ebuild" | awk '{print $1}')
-	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE"
-	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE"
 
+	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE"
 	cp /tmp/repoman_log_current "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE/repoman_log"
-	cp /tmp/repoman_log_next "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE/repoman_log"
+
+	if [[ "$NEXT_TARGET" != 'unknown' ]]; then
+		mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE"
+		cp /tmp/repoman_log_next "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE/repoman_log"
+	fi
 
 	chmod 755 -R "$SCRIPT_DIR/ci-logs"
 }
 
 function CLEANUP() {
-	rm /tmp/repoman_log_current
-	rm /tmp/repoman_log_next
-	rm -r "$SCRIPT_DIR/overlay"
+	rm /tmp/repoman_log_current || true
+	rm /tmp/repoman_log_next || true
+	rm -r "$SCRIPT_DIR/overlay" || true
 }
 
 ENV_SETUP

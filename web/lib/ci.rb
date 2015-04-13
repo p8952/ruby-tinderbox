@@ -41,9 +41,9 @@ def generate_package_list(ci_type, num_of_packages)
 
 	if num_of_packages == 'all'
 		packages = packages
-	elsif num_of_packages == 'untested' and ci_type == 'repoman'
+	elsif num_of_packages == 'untested' && ci_type == 'repoman'
 		packages = packages
-	elsif num_of_packages == 'untested' and ci_type == 'build'
+	elsif num_of_packages == 'untested' && ci_type == 'build'
 		packages = []
 		Package.each do |package|
 			next if package.build.count > 0

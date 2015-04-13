@@ -8,8 +8,6 @@ task :test do
 end
 
 namespace :db do
-	DB.loggers << Logger.new($stdout)
-
 	task :migrate do
 		Sequel.extension :migration
 		Sequel::Migrator.run(DB, 'db/migrations')
@@ -51,6 +49,7 @@ namespace :docker do
 	begin
 		num_of_packages = Integer(num_of_packages)
 	rescue
+		'Do not suppress exceptions'
 	end
 
 	desc 'Build a docker image to use with subsequent tasks'

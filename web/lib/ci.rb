@@ -147,14 +147,17 @@ def update_repoman
 				result = 'failed'
 			end
 
-			Package.where(sha1: sha1).first.add_repoman(
-				Repoman.find_or_create(
-					timestamp: timestamp,
-					target: target,
-					result: result,
-					log: log
+			package = Package.where(sha1: sha1).first
+			unless package.nil?
+				package.add_repoman(
+					Repoman.find_or_create(
+						timestamp: timestamp,
+						target: target,
+						result: result,
+						log: log
+					)
 				)
-			)
+			end
 		rescue => e
 			puts "ERROR: #{e}"
 			next

@@ -86,6 +86,9 @@ class RubyTinderbox < Sinatra::Base
 			build_current = package.build_dataset.where(target: 'current').reverse_order(:timestamp).first
 			next if build_current.nil?
 
+			build_next = package.build_dataset.where(target: 'next').reverse_order(:timestamp).first
+			next if build_next.nil?
+
 			repoman_current = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
 			next if repoman_current.nil?
 
@@ -93,7 +96,7 @@ class RubyTinderbox < Sinatra::Base
 			next if repoman_next.nil?
 
 			if repoman_current[:result] == 'passed' && repoman_next[:result] == 'passed'
-				packages << [package, build_current, nil, repoman_current, repoman_next]
+				packages << [package, build_current, build_next, repoman_current, repoman_next]
 			end
 		end
 		packages = packages.compact.sort_by { |package| package[0][:identifier] }

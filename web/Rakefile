@@ -20,7 +20,7 @@ namespace :db do
 
 	desc 'Clear the packages database'
 	task :clear_packages do
-		clear_build
+		clear_packages
 	end
 
 	desc 'Update the build database with logfiles from ci-logs/'

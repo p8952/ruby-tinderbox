@@ -32,7 +32,7 @@ removed you can persist them by bind mounting a directory on the host to
 	docker run -v /tmp/bincache:/usr/portage/packages gentoo/ruby-tinderbox \
 		/ruby-tinderbox/tinder.sh category/package-version-revision
 
-# [Ruby Tinderbox Web](http://ruby-stats.p8952.info/)
+# [Ruby Tinderbox Web](http://ruby-tinderbox.p8952.info/)
 
 Web interface and build server built on top of the Ruby Tinderbox framework.
 

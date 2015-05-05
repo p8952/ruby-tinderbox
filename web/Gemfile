@@ -8,6 +8,7 @@ gem 'net-ssh'
 gem 'pg'
 gem 'pmap'
 gem 'puma'
+gem 'rake'
 gem 'sequel'
 gem 'sinatra'
 

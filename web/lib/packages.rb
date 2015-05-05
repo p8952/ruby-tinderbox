@@ -1,12 +1,10 @@
 def update_packages
 	packages_txt = `python3 lib/packages.py | sort -u`
 	packages_txt.lines.peach do |line|
-		category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
+		sha1, category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
-		ebuild = "/usr/portage/#{category}/#{name}/#{identifier.split('/')[1]}.ebuild"
-		sha1 = Digest::SHA1.hexdigest(File.read(ebuild))
 		Package.find_or_create(
 			sha1: sha1,
 			category: category,
@@ -25,7 +23,7 @@ def update_packages
 	end
 
 	Package.peach(8) do |package|
-		if packages_txt.include?("#{package[:category]} #{package[:name]} #{package[:version]} #{package[:revision]} #{package[:slot]} #{package[:amd64_keyword]} #{package[:r19_target]} #{package[:r20_target]} #{package[:r21_target]} #{package[:r22_target]}")
+		if packages_txt.include?(package[:sha1])
 			package.update(dependencies: `python3 lib/deps.py #{package[:identifier]}`)
 		else
 			package.build.map(&:delete)

@@ -1,8 +1,9 @@
-import portage
+import portage, hashlib
 
 def format_output(cpv, slot, iuse, keyword):
     category, pkgname, version, revision = portage.catpkgsplit(cpv)
-    print (category + ' ' + pkgname + ' ' + version + ' ' + revision + ' ' + slot + ' ' + keyword, end=' ')
+    sha1 = hashlib.sha1(open(porttree.dbapi.findname(cpv), 'rb').read()).hexdigest()
+    print (sha1 + ' ' + category + ' ' + pkgname + ' ' + version + ' ' + revision + ' ' + slot + ' ' + keyword, end=' ')
     if 'ruby_targets_ruby19' in iuse:
         print('ruby19', end=' ')
     else:

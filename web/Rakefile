@@ -13,11 +13,6 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
 
-	desc 'Update the packages database with new versions and targets'
-	task :update_packages do
-		update_packages
-	end
-
 	desc 'Clear the packages database'
 	task :clear_packages do
 		clear_packages
@@ -82,6 +77,11 @@ namespace :docker do
 		@ci_image.delete if ENV['CI_IMAGE'].nil?
 		@volume_container.delete(v: 1)
 		@volume_image.delete
+	end
+
+	desc 'Update the packages database with new versions and targets'
+	task :update_packages do
+		update_packages(@ci_image)
 	end
 
 	desc 'Build test packages ( NUM_OF_PACKAGES={5,all,untested} )'

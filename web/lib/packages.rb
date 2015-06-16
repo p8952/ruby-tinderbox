@@ -1,5 +1,14 @@
-def update_packages
-	packages_txt = `python3 lib/packages.py | sort -u`
+def update_packages(ci_image)
+	cmd =  %W[python3 /ruby-tinderbox/packages.py | sort -u]
+	ci_container = Docker::Container.create(
+		Cmd: cmd,
+		Image: ci_image.id
+	)
+	ci_container.start
+	ci_container.wait(36_000)
+	packages_txt = ci_container.logs(stdout: true)
+	ci_container.delete
+
 	packages_txt.lines.peach do |line|
 		sha1, category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")

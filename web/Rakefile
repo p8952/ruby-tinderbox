@@ -4,6 +4,8 @@ task default: 'test'
 
 desc 'Run the test suite'
 task :test do
+	sh 'bundle exec rubocop'
+	sh "shellcheck #{Dir.glob('../**/*.sh').join(' ')}"
 	Dir.glob('./test/test_*.rb') { |f| require f }
 end
 

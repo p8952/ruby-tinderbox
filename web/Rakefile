@@ -6,6 +6,7 @@ desc 'Run the test suite'
 task :test do
 	sh 'bundle exec rubocop'
 	sh "shellcheck #{Dir.glob('../**/*.sh').join(' ')}"
+	sh "pylint --reports=n #{Dir.glob('../**/*.py').join(' ')}"
 	Dir.glob('./test/test_*.rb') { |f| require f }
 end
 

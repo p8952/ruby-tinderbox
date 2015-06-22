@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import portage, hashlib
+import hashlib, portage
 
 def format_deps(dep_list):
     for item in list(dep_list):
@@ -35,7 +35,7 @@ def get_deps(cpv):
 
 def format_output(cpv, slot, iuse, keyword):
     category, pkgname, version, revision = portage.catpkgsplit(cpv)
-    sha1 = hashlib.sha1(open(porttree.dbapi.findname(cpv), 'rb').read()).hexdigest()
+    sha1 = hashlib.sha1(open(PORTTREE.dbapi.findname(cpv), 'rb').read()).hexdigest()
     print(sha1 + ' ' + \
             category + ' ' + \
             pkgname + ' ' + \
@@ -64,23 +64,23 @@ def format_output(cpv, slot, iuse, keyword):
     print()
 
 
-porttree = portage.db[portage.root]['porttree']
-for cp in porttree.dbapi.cp_all():
+PORTTREE = portage.db[portage.root]['PORTTREE']
+for cp in PORTTREE.dbapi.cp_all():
     slot_dict = {}
-    for cpv in porttree.dbapi.cp_list(cp):
-        slot, iuse = porttree.dbapi.aux_get(cpv, ['SLOT', 'IUSE'])
+    for cpv in PORTTREE.dbapi.cp_list(cp):
+        slot, iuse = PORTTREE.dbapi.aux_get(cpv, ['SLOT', 'IUSE'])
         slot_dict.setdefault(slot, {})[cpv] = (iuse)
     for slot, cpvd in slot_dict.items():
         if 'ruby_targets_' in iuse:
 
-            cpvbs = (porttree.dep_bestmatch(cp))
+            cpvbs = (PORTTREE.dep_bestmatch(cp))
             if cpvbs:
-                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbs, ['SLOT', 'IUSE', 'KEYWORDS'])
+                slot, iuse, keywords = PORTTREE.dbapi.aux_get(cpvbs, ['SLOT', 'IUSE', 'KEYWORDS'])
                 if '~amd64' not in keywords and 'amd64' in keywords:
                     format_output(cpvbs, slot, iuse, 'amd64')
 
             cpvbu = portage.best(list(cpvd))
             if cpvbu:
-                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbu, ['SLOT', 'IUSE', 'KEYWORDS'])
+                slot, iuse, keywords = PORTTREE.dbapi.aux_get(cpvbu, ['SLOT', 'IUSE', 'KEYWORDS'])
                 if '~amd64' in keywords:
                     format_output(cpvbu, slot, iuse, '~amd64')

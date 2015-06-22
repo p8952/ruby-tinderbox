@@ -9,7 +9,7 @@ def update_packages(ci_image)
 	packages_txt = ci_container.logs(stdout: true)
 	ci_container.delete
 
-	packages_txt.lines.each do |line|
+	packages_txt.lines.peach do |line|
 		line = line.bytes.drop(8).pack('c*')
 		next if line.empty?
 		sha1, category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')

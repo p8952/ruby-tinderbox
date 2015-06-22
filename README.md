@@ -1,4 +1,4 @@
-# Ruby Tinderbox
+# Ruby Tinderbox [![Build Status](https://travis-ci.org/p8952/ruby-tinderbox.svg?branch=master)](https://travis-ci.org/p8952/ruby-tinderbox) 
 
 Framework for testing Ruby related packages in Gentoo Linux.
 

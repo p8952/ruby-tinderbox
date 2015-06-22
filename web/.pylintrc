@@ -1,5 +1,5 @@
 [MESSAGES CONTROL]
-disable=missing-docstring, no-member, redefined-outer-name
+disable=import-error, missing-docstring, no-member, redefined-outer-name
 
 [REPORTS]
 reports=no

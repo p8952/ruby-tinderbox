@@ -1,5 +1,5 @@
 def update_packages(ci_image)
-	cmd =  %W[/ruby-tinderbox/packages.py | sort -u]
+	cmd =  %w(/ruby-tinderbox/packages.py | sort -u)
 	ci_container = Docker::Container.create(
 		Cmd: cmd,
 		Image: ci_image.id

@@ -33,11 +33,12 @@ function SETUP () {
 		cp "/usr/portage/$CATEGORY/$NAME/metadata.xml" "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
 		cp -r "/usr/portage/$CATEGORY/$NAME/files" "$SCRIPT_DIR/overlay/$CATEGORY/$NAME" || true
 
+		(
 		cd "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
 		sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
 		repoman manifest
 		repoman full
-		cd -
+		)
 	fi
 
 	set +e
@@ -97,7 +98,7 @@ function CLEANUP() {
 
 ENV_SETUP
 
-PKG_ARR=($(qatom $1))
+PKG_ARR=($(qatom "$1"))
 CATEGORY="${PKG_ARR[0]}"
 NAME="${PKG_ARR[1]}"
 if [[ ${PKG_ARR[3]:=foo} == "foo" ]]; then

@@ -8,9 +8,9 @@ def run_ci(volume_container, ci_image, ci_type, num_of_packages)
 		next_target = package[2]
 
 		if ci_type == 'build'
-			cmd = %W[/ruby-tinderbox/tinder.sh #{identifier} #{current_target} #{next_target}]
+			cmd = %W(/ruby-tinderbox/tinder.sh #{identifier} #{current_target} #{next_target})
 		elsif ci_type == 'repoman'
-			cmd = %W[/ruby-tinderbox/repoman.sh #{identifier} #{current_target} #{next_target}]
+			cmd = %W(/ruby-tinderbox/repoman.sh #{identifier} #{current_target} #{next_target})
 		end
 		ci_container = Docker::Container.create(
 			Cmd: cmd,

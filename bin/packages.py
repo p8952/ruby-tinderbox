@@ -4,8 +4,10 @@ import portage, hashlib
 
 def format_deps(dep_list):
     for item in list(dep_list):
-        if "||" in item: dep_list.remove(item)
-        if "?" in item: dep_list.remove(item)
+        if "||" in item:
+            dep_list.remove(item)
+        if "?" in item:
+            dep_list.remove(item)
 
     index = 0
     for item in list(dep_list):
@@ -34,7 +36,14 @@ def get_deps(cpv):
 def format_output(cpv, slot, iuse, keyword):
     category, pkgname, version, revision = portage.catpkgsplit(cpv)
     sha1 = hashlib.sha1(open(porttree.dbapi.findname(cpv), 'rb').read()).hexdigest()
-    print (sha1 + ' ' + category + ' ' + pkgname + ' ' + version + ' ' + revision + ' ' + slot + ' ' + keyword, end=' ')
+    print(sha1 + ' ' + \
+            category + ' ' + \
+            pkgname + ' ' + \
+            version + ' ' + \
+            revision + ' ' + \
+            slot + ' ' + \
+            keyword, \
+            end=' ')
     if 'ruby_targets_ruby19' in iuse:
         print('ruby19', end=' ')
     else:
@@ -66,7 +75,7 @@ for cp in porttree.dbapi.cp_all():
 
             cpvbs = (porttree.dep_bestmatch(cp))
             if cpvbs:
-                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbs, ['SLOT', 'IUSE','KEYWORDS'])
+                slot, iuse, keywords = porttree.dbapi.aux_get(cpvbs, ['SLOT', 'IUSE', 'KEYWORDS'])
                 if '~amd64' not in keywords and 'amd64' in keywords:
                     format_output(cpvbs, slot, iuse, 'amd64')
 

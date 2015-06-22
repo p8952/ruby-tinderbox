@@ -7,5 +7,5 @@ LATEST_STAGE3=$(curl -s $DIST_MIRROR/releases/amd64/autobuilds/latest-stage3-amd
 STAGE3_URI="$DIST_MIRROR/releases/amd64/autobuilds/$LATEST_STAGE3"
 
 if [[ ! -f "$SCRIPT_DIR/../cache/stage3-amd64.tar.bz2" ]]; then
-	curl -o "$SCRIPT_DIR/../cache/stage3-amd64.tar.bz2" $STAGE3_URI
+	curl -o "$SCRIPT_DIR/../cache/stage3-amd64.tar.bz2" "$STAGE3_URI"
 fi

@@ -54,7 +54,7 @@ function CLEANUP() {
 
 ENV_SETUP
 
-PKG_ARR=($(qatom $1))
+PKG_ARR=($(qatom "$1"))
 CATEGORY="${PKG_ARR[0]}"
 NAME="${PKG_ARR[1]}"
 if [[ ${PKG_ARR[3]:=foo} == 'foo' ]]; then
@@ -63,7 +63,6 @@ else
 	VERSION="${PKG_ARR[2]}-${PKG_ARR[3]}"
 fi
 
-PACKAGE=$1
 CURR_TARGET=$2
 NEXT_TARGET=$3
 SETUP

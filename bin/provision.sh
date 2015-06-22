@@ -13,12 +13,12 @@ fi
 emerge-webrsync
 emerge --metadata
 
-RUBIES="dev-lang/ruby:1.9 dev-lang/ruby:2.0 dev-lang/ruby:2.1 dev-lang/ruby:2.2"
+RUBIES=(dev-lang/ruby:1.9 dev-lang/ruby:2.0 dev-lang/ruby:2.1 dev-lang/ruby:2.2)
 set +e
-emerge --pretend --quiet $RUBIES
+emerge --pretend --quiet "${RUBIES[@]}"
 if [[ $? == 1 ]]; then
-	emerge --autounmask-write $RUBIES
+	emerge --autounmask-write "${RUBIES[@]}"
 	etc-update --automode -5
 fi
 set -e
-emerge --noreplace --quiet $RUBIES
+emerge --noreplace --quiet "${RUBIES[@]}"

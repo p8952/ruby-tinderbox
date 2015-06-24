@@ -4,7 +4,7 @@ require 'rack/test'
 require_relative '../app'
 
 clear_packages
-package = File.read('test/test-logs/1/package').lines.each(&:strip!)
+package = File.read('test/test-logs/1/package').lines.to_a.each(&:strip!)
 Package.create(
 	sha1: package[0],
 	category: package[1],

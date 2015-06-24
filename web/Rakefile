@@ -1,17 +1,26 @@
 require_relative 'app'
 
-task default: 'test'
+task default: 'lint_and_test'
 
-desc 'Run the test suite'
+desc 'Run tests'
 task :test do
+	puts "\nMINITEST:"
+	Dir.glob('./test/test_*.rb') { |f| require f }
+end
+
+desc 'Run linters'
+task :lint do
 	puts "RUBOCOP:\n"
 	sh 'bundle exec rubocop'
 	puts "\nSHELLCHECK:\n"
 	sh "shellcheck --exclude=SC2016 #{Dir.glob('../**/*.sh').join(' ')}"
 	puts "\nPYLINT:\n"
 	sh "pylint --rcfile=.pylintrc #{Dir.glob('../**/*.py').join(' ')}"
-	puts "\nMINITEST:"
-	Dir.glob('./test/test_*.rb') { |f| require f }
+end
+
+task :lint_and_test do
+	Rake::Task['lint'].invoke
+	Rake::Task['test'].invoke
 end
 
 namespace :db do
@@ -27,7 +36,7 @@ namespace :db do
 
 	desc 'Update the build database with logfiles from ci-logs/'
 	task :update_build do
-		update_build
+		update_build('ci-logs/*/*/builds/*')
 	end
 
 	desc 'Clear the build database'
@@ -37,7 +46,7 @@ namespace :db do
 
 	desc 'Update the repoman database with logfiles from repo-logs/'
 	task :update_repoman do
-		update_repoman
+		update_repoman('ci-logs/*/*/repomans/*')
 	end
 
 	desc 'Clear the repoman database'

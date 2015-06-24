@@ -93,10 +93,11 @@ def generate_package_list(ci_type, num_of_packages)
 	packages_with_targets
 end
 
-def update_build
-	Dir.glob('ci-logs/*/*/builds/*') do |build|
+def update_build(log_path)
+	Dir.glob(log_path) do |build|
 		begin
 			build_array = build.split('/')
+			build_array.shift(1) if build_array[1] == 'test-logs'
 			sha1 = build_array[1]
 			timestamp = build_array[4]
 			target = build_array[2].sub('_target', '')
@@ -128,10 +129,11 @@ def update_build
 	end
 end
 
-def update_repoman
-	Dir.glob('ci-logs/*/*/repomans/*') do |repoman|
+def update_repoman(log_path)
+	Dir.glob(log_path) do |repoman|
 		begin
 			repoman_array = repoman.split('/')
+			repoman_array.shift(1) if repoman_array[1] == 'test-logs'
 			sha1 = repoman_array[1]
 			timestamp = repoman_array[4]
 			target = repoman_array[2].sub('_target', '')

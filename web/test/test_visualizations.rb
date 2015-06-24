@@ -7,7 +7,7 @@ class TestWeb < Minitest::Test
 		RubyTinderbox
 	end
 
-	def test_headings
+	def test_heading
 		get '/visualizations'
 		assert last_response.ok?
 		assert last_response.body.include? '<h1>Visualizations</h1>'

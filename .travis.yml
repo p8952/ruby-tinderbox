@@ -24,4 +24,4 @@ install:
   - sudo pip install pylint
 script:
   - bundle exec rake db:migrate
-  - bundle exec rake test
+  - bundle exec rake

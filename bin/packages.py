@@ -64,7 +64,7 @@ def format_output(cpv, slot, iuse, keyword):
     print()
 
 
-PORTTREE = portage.db[portage.root]['PORTTREE']
+PORTTREE = portage.db[portage.root]['porttree']
 for cp in PORTTREE.dbapi.cp_all():
     slot_dict = {}
     for cpv in PORTTREE.dbapi.cp_list(cp):

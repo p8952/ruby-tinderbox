@@ -6,7 +6,7 @@ Framework for testing Ruby related packages in Gentoo Linux.
 
 Build the docker base image:
 
-	./conf/get_stage3.sh
+	./bin/get_stage3.sh
     docker build -t gentoo/ruby-tinderbox .
 
 Run the tinderbox scripts against a single package:

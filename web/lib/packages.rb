@@ -6,12 +6,11 @@ def update_packages(ci_image)
 	)
 	ci_container.start
 	ci_container.wait(36_000)
-	packages_txt = ci_container.logs(stdout: true)
+	packages_txt = ci_container.streaming_logs(stdout: true)
 	ci_container.delete
 
 	packages_txt = packages_txt.lines.sort.uniq
 	packages_txt.peach do |line|
-		line = line.bytes.drop(8).pack('c*')
 		next if line.empty?
 		sha1, category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
@@ -37,7 +36,7 @@ def update_packages(ci_image)
 	end
 
 	Package.peach(8) do |package|
-		unless packages_txt.find { |sha1| /#{package[:sha1]}/ =~ sha1 }
+		unless packages_txt.find { |sha1| /^#{package[:sha1]}/ =~ sha1 }
 			package.build.map(&:delete)
 			package.repoman.map(&:delete)
 			package.delete

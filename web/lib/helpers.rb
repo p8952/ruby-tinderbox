@@ -36,6 +36,7 @@ module Archive
 					end
 
 					case
+					when name =~ /^web/
 					when File.file?(name)
 						outputter.add_file_simple(name, stats) do |os|
 							stats[:current] = 0

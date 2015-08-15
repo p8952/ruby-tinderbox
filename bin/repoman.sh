@@ -23,7 +23,7 @@ function REPOMAN() {
 	repoman full > /tmp/repoman_log_current || true
 
 	if [[ "$NEXT_TARGET" != 'unknown' ]]; then
-		sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
+		sed -i -e "/^USE_RUBY/s/=\"/=\"$NEXT_TARGET /" "$NAME-$VERSION.ebuild"
 		repoman manifest
 		repoman full > /tmp/repoman_log_next || true
 	fi
@@ -63,8 +63,7 @@ else
 	VERSION="${PKG_ARR[2]}-${PKG_ARR[3]}"
 fi
 
-CURR_TARGET=$2
-NEXT_TARGET=$3
+NEXT_TARGET=$2
 SETUP
 REPOMAN
 CLEANUP

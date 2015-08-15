@@ -13,9 +13,17 @@ def update_packages(ci_image)
 	packages_txt.peach do |line|
 		next if line.empty?
 		sha1, category, name, version, revision, slot, amd64_keyword, r19_target, r20_target, r21_target, r22_target = line.split(' ')
+
 		identifier = category + '/' + name + '-' + version + (revision == 'r0' ? '' : "-#{revision}")
+
 		gem_version = Gems.info(name)['version']
 		gem_version = 'nil' if gem_version.nil?
+
+		next_target = 'nil'
+		next_target = 'ruby20' if r19_target == 'ruby19' && r20_target == 'nil'
+		next_target = 'ruby21' if r20_target == 'ruby20' && r21_target == 'nil'
+		next_target = 'ruby22' if r21_target == 'ruby21' && r22_target == 'nil'
+
 		package = Package.find_or_create(
 			sha1: sha1,
 			category: category,
@@ -29,7 +37,8 @@ def update_packages(ci_image)
 			r20_target: r20_target,
 			r21_target: r21_target,
 			r22_target: r22_target,
-			gem_version: gem_version
+			next_target: next_target,
+			gem_version: gem_version,
 		)
 		deps = line.split(' ').drop(11).join.gsub(';', ' ')
 		package.update(dependencies: deps)

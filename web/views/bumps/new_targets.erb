@@ -29,7 +29,7 @@
 	<%packages.each do |package|%>
 	<tr>
 		<td class="width-52">
-			<%=package[0][:identifier]%>
+			<%=package[0][:identifier]%> <sup>+<%=package[0][:next_target]%></sup>
 		</td>
 		<td class="width-12 <%=package[1][:result]%>">
 			<%=package[1][:result].camelcase%>

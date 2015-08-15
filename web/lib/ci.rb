@@ -4,13 +4,12 @@ def run_ci(volume_container, ci_image, ci_type, num_of_packages)
 	packages.peach(8) do |package|
 		package = package.split(' ')
 		identifier = package[0]
-		current_target = package[1]
-		next_target = package[2]
+		next_target = package[1]
 
 		if ci_type == 'build'
-			cmd = %W(/ruby-tinderbox/tinder.sh #{identifier} #{current_target} #{next_target})
+			cmd = %W(/ruby-tinderbox/tinder.sh #{identifier} #{next_target})
 		elsif ci_type == 'repoman'
-			cmd = %W(/ruby-tinderbox/repoman.sh #{identifier} #{current_target} #{next_target})
+			cmd = %W(/ruby-tinderbox/repoman.sh #{identifier} #{next_target})
 		end
 		ci_container = Docker::Container.create(
 			Cmd: cmd,
@@ -29,7 +28,7 @@ def run_ci(volume_container, ci_image, ci_type, num_of_packages)
 		tar.close
 		tar.unlink
 
-		ci_container.delete
+		#ci_container.delete
 	end
 end
 
@@ -64,7 +63,8 @@ def generate_package_list(ci_type, num_of_packages)
 			end
 		end
 	elsif num_of_packages.is_a?(Integer)
-		packages = packages.sample(num_of_packages)
+		puts packages.count
+		packages = packages[25..(25 + num_of_packages)]
 	else
 		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
 		puts ci_type
@@ -75,19 +75,7 @@ def generate_package_list(ci_type, num_of_packages)
 	packages_with_targets = []
 	packages.uniq.each do |package|
 		package = Package.where(identifier: package).first
-
-		target = 'unknown'
-		target = package[:r19_target] unless package[:r19_target] == 'nil'
-		target = package[:r20_target] unless package[:r20_target] == 'nil'
-		target = package[:r21_target] unless package[:r21_target] == 'nil'
-		target = package[:r22_target] unless package[:r22_target] == 'nil'
-
-		next_target = 'unknown'
-		next_target = 'ruby20' if target == 'ruby19'
-		next_target = 'ruby21' if target == 'ruby20'
-		next_target = 'ruby22' if target == 'ruby21'
-
-		packages_with_targets << "#{package[:identifier]} #{target} #{next_target}"
+		packages_with_targets << "#{package[:identifier]} #{package[:next_target]}"
 	end
 
 	packages_with_targets

@@ -35,7 +35,7 @@ function SETUP () {
 
 		(
 		cd "$SCRIPT_DIR/overlay/$CATEGORY/$NAME"
-		sed -i -e "/^USE_RUBY/s/$CURR_TARGET/$CURR_TARGET $NEXT_TARGET/" "$NAME-$VERSION.ebuild"
+		sed -i -e "/^USE_RUBY/s/=\"/=\"$NEXT_TARGET /" "$NAME-$VERSION.ebuild"
 		repoman manifest
 		repoman full
 		)
@@ -113,7 +113,7 @@ if [[ $# -eq 1 ]]; then
 	SETUP
 	EMERGE
 	CLEANUP
-elif [[ $# -eq 3 ]]; then
+elif [[ $# -eq 2 ]]; then
 	TYPE="current_target"
 	PACKAGE=$1
 	SETUP
@@ -122,8 +122,7 @@ elif [[ $# -eq 3 ]]; then
 
 	TYPE="next_target"
 	PACKAGE=$1
-	CURR_TARGET=$2
-	NEXT_TARGET=$3
+	NEXT_TARGET=$2
 	SETUP
 	EMERGE
 	CLEANUP

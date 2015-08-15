@@ -12,6 +12,7 @@ fi
 
 emerge --sync
 emerge --metadata
+emerge --oneshot portage
 
 RUBIES=(dev-lang/ruby:1.9 dev-lang/ruby:2.0 dev-lang/ruby:2.1 dev-lang/ruby:2.2)
 set +e

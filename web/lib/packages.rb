@@ -38,7 +38,7 @@ def update_packages(ci_image)
 			r21_target: r21_target,
 			r22_target: r22_target,
 			next_target: next_target,
-			gem_version: gem_version,
+			gem_version: gem_version
 		)
 		deps = line.split(' ').drop(11).join.gsub(';', ' ')
 		package.update(dependencies: deps)

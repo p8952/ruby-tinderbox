@@ -19,4 +19,4 @@ install:
   - bundle install
 script:
   - bundle exec rake db:migrate
-  - bundle exec rake
+  - bundle exec rake test

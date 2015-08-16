@@ -12,8 +12,8 @@ desc 'Run linters'
 task :lint do
 	puts "RUBOCOP:\n"
 	sh 'bundle exec rubocop'
-	# puts "\nSHELLCHECK:\n"
-	# sh "shellcheck --exclude=SC2016 #{Dir.glob('../**/*.sh').join(' ')}"
+	puts "\nSHELLCHECK:\n"
+	sh "shellcheck --exclude=SC2016 #{Dir.glob('../**/*.sh').join(' ')}"
 	puts "\nPYLINT:\n"
 	sh "pylint --rcfile=.pylintrc #{Dir.glob('../**/*.py').join(' ')}"
 end

@@ -35,10 +35,10 @@
 			<%=Time.at(repoman[:timestamp].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td class="width-17 <%=repoman[:result]%>">
-			<a href="/repoman_logs/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
+			<a href="/repoman_checks/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
 		</td>
 		<td class="width-17">
-			<a href="/repoman_history/<%=repoman.package[:sha1]%>"><%=repoman.package.repoman_dataset.where(target: 'current').count%> Check(s)</a>
+			<a href="/repoman_checks/<%=repoman.package[:sha1]%>"><%=repoman.package.repoman_dataset.where(target: 'current').count%> Check(s)</a>
 		</td>
 		<td style="display:none;">
 			+<%=repoman.package[:amd64_keyword]%>

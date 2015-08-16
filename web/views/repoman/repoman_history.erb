@@ -13,7 +13,7 @@
 			<%=Time.at(repoman[:timestamp].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td class="width-50 <%=repoman[:result]%>">
-			<a href="/repoman_logs/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
+			<a href="/repoman_checks/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
 		</td>
 	</tr>
 	<%end%>

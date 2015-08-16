@@ -35,10 +35,10 @@
 			<%=Time.at(build[:timestamp].to_i).strftime('%Y-%m-%d')%>
 		</td>
 		<td class="width-17 <%=build[:result]%>">
-			<a href="/build_logs/<%=build.package[:sha1]%>/<%=build[:timestamp]%>"><%=build[:result].camelcase%></a>
+			<a href="/build_status/<%=build.package[:sha1]%>/<%=build[:timestamp]%>"><%=build[:result].camelcase%></a>
 		</td>
 		<td class="width-17">
-			<a href="/build_history/<%=build.package[:sha1]%>"><%=build.package.build_dataset.where(target: 'current').count%> Build(s)</a>
+			<a href="/build_status/<%=build.package[:sha1]%>"><%=build.package.build_dataset.where(target: 'current').count%> Build(s)</a>
 		</td>
 		<td style="display:none;">
 			+<%=build.package[:amd64_keyword]%>

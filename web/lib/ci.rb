@@ -28,7 +28,7 @@ def run_ci(volume_container, ci_image, ci_type, num_of_packages)
 		tar.close
 		tar.unlink
 
-		#ci_container.delete
+		ci_container.delete
 	end
 end
 

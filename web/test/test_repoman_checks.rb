@@ -10,6 +10,6 @@ class TestWeb < Minitest::Test
 	def test_heading
 		get '/repoman_checks'
 		assert last_response.ok?
-		assert last_response.body.include? '<h1>Repoman Checks</h1>'
+		assert last_response.body.include? '<h1>Repoman Checks (QA)</h1>'
 	end
 end

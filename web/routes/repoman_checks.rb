@@ -7,18 +7,18 @@ class RubyTinderbox < Sinatra::Base
 			repomans << package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
 		end
 		repomans = repomans.compact.sort_by { |repoman| repoman.package[:identifier] }
-		erb :'repoman/repoman_checks', locals: { repomans: repomans, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
+		erb :repoman_checks, locals: { repomans: repomans, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp  }
 	end
 
 	get '/repoman_checks/:sha1' do
 		package = Package.where(sha1: params[:sha1]).first
 		repomans = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp)
-		erb :'repoman/repoman_history', locals: { repomans: repomans }
+		erb :repoman_checks_sha1, locals: { repomans: repomans }
 	end
 
 	get '/repoman_checks/:sha1/:timestamp' do
 		package = Package.where(sha1: params[:sha1]).first
 		repoman = package.repoman_dataset.where(timestamp: params[:timestamp]).first
-		erb :'repoman/repoman_logs', locals: { package: package, repoman: repoman }
+		erb :repoman_checks_sha1_timestamp, locals: { package: package, repoman: repoman }
 	end
 end

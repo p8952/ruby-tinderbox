@@ -21,6 +21,6 @@ class RubyTinderbox < Sinatra::Base
 			end
 		end
 		packages = packages.compact.sort_by { |package| package[0][:identifier] }
-		erb :'bumps/new_targets', locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
+		erb :new_targets, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }
 	end
 end

@@ -25,7 +25,7 @@ class RubyTinderbox < Sinatra::Base
 		failed = Build.distinct(:package_id).order(:package_id, Sequel.desc(:timestamp)).where(result: "failed\n").count
 		timed_out = Build.distinct(:package_id).order(:package_id, Sequel.desc(:timestamp)).where(result: "timed out\n").count
 
-		erb :'overview/visualizations', locals: {
+		erb :visualizations, locals: {
 			portage_timestamp: portage_timestamp,
 			update_timestamp: update_timestamp,
 			ruby_1_9_amd64: ruby_1_9_amd64,

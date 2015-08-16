@@ -63,8 +63,7 @@ def generate_package_list(ci_type, num_of_packages)
 			end
 		end
 	elsif num_of_packages.is_a?(Integer)
-		puts packages.count
-		packages = packages[25..(25 + num_of_packages)]
+		packages = packages.sample(num_of_packages)
 	else
 		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
 		puts ci_type
@@ -90,7 +89,7 @@ def update_build(log_path)
 			timestamp = build_array[4]
 			target = build_array[2].sub('_target', '')
 
-			result = File.read("#{build}/result")
+			result = File.read("#{build}/result").strip
 			emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
 			emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
 			build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")

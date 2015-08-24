@@ -38,7 +38,7 @@
 			<a href="/repoman_checks/<%=repoman.package[:sha1]%>/<%=repoman[:timestamp]%>"><%=repoman[:result].camelcase%></a>
 		</td>
 		<td class="width-17">
-			<a href="/repoman_checks/<%=repoman.package[:sha1]%>"><%=repoman.package.repoman_dataset.where(target: 'current').count%> Check(s)</a>
+			<a href="/repoman_checks/<%=repoman.package[:sha1]%>"><%=repoman.package.repoman_dataset.count%> Check(s)</a>
 		</td>
 		<td style="display:none;">
 			+<%=repoman.package[:amd64_keyword]%>

@@ -4,19 +4,13 @@ class RubyTinderbox < Sinatra::Base
 		portage_timestamp = Package.first[:portage_timestamp]
 		packages = []
 		Package.each do |package|
-			build_current = package.build_dataset.where(target: 'current').reverse_order(:timestamp).first
-			next if build_current.nil? || build_current[:result] != 'succeeded'
+			build = package.build_dataset.reverse_order(:timestamp).first
+			next if build.nil? || build[:result] != 'succeeded' || build[:result_next_target] != 'succeeded'
 
-			build_next = package.build_dataset.where(target: 'next').reverse_order(:timestamp).first
-			next if build_next.nil? || build_next[:result] != 'succeeded'
+			repoman = package.repoman_dataset.reverse_order(:timestamp).first
+			next if repoman.nil? || repoman[:result] != 'passed' || repoman[:result_next_target] != 'passed'
 
-			repoman_current = package.repoman_dataset.where(target: 'current').reverse_order(:timestamp).first
-			next if repoman_current.nil? || repoman_current[:result] != 'passed'
-
-			repoman_next = package.repoman_dataset.where(target: 'next').reverse_order(:timestamp).first
-			next if repoman_next.nil? || repoman_next[:result] != 'passed'
-
-			packages << [package, build_current, build_next, repoman_current, repoman_next]
+			packages << [package, build, repoman]
 		end
 		packages = packages.compact.sort_by { |package| package[0][:identifier] }
 		erb :new_targets, locals: { packages: packages, update_timestamp: update_timestamp, portage_timestamp: portage_timestamp }

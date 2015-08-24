@@ -63,7 +63,10 @@ def generate_package_list(ci_type, num_of_packages)
 			end
 		end
 	elsif num_of_packages.is_a?(Integer)
-		packages = packages.sample(num_of_packages)
+		packages = []
+		packages << Package.where(identifier: 'dev-ruby/color-1.7.1').first
+		packages << Package.where(identifier: 'dev-ruby/crack-0.4.2-r1').first
+		packages << Package.where(identifier: 'dev-ruby/atomic-1.1.99').first
 	else
 		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
 		puts ci_type
@@ -73,7 +76,6 @@ def generate_package_list(ci_type, num_of_packages)
 
 	packages_with_targets = []
 	packages.uniq.each do |package|
-		package = Package.where(identifier: package).first
 		packages_with_targets << "#{package[:identifier]} #{package[:next_target]}"
 	end
 
@@ -86,26 +88,35 @@ def update_build(log_path)
 			build_array = build.split('/')
 			build_array.shift(1) if build_array[1] == 'test-logs'
 			sha1 = build_array[1]
-			timestamp = build_array[4]
-			target = build_array[2].sub('_target', '')
+			timestamp = build_array[2]
 
-			result = File.read("#{build}/result").strip
-			emerge_info = File.read("#{build}/emerge-info") if File.exist?("#{build}/emerge-info")
-			emerge_pqv = File.read("#{build}/emerge-pqv") if File.exist?("#{build}/emerge-pqv")
-			build_log = File.read("#{build}/build.log") if File.exist?("#{build}/build.log")
-			gem_list = File.read("#{build}/gem-list") if File.exist?("#{build}/gem-list")
+			result = File.read("#{build}/current/result").strip if File.exist?("#{build}/current/result")
+			emerge_info = File.read("#{build}/current/emerge-info") if File.exist?("#{build}/current/emerge-info")
+			emerge_pqv = File.read("#{build}/current/emerge-pqv") if File.exist?("#{build}/current/emerge-pqv")
+			build_log = File.read("#{build}/current/build.log") if File.exist?("#{build}/current/build.log")
+			gem_list = File.read("#{build}/current/gem-list") if File.exist?("#{build}/current/gem-list")
+
+			result_next_target = File.read("#{build}/next_target/result").strip if File.exist?("#{build}/next_target/result")
+			emerge_info_next_target = File.read("#{build}/next_target/emerge-info") if File.exist?("#{build}/next_target/emerge-info")
+			emerge_pqv_next_target = File.read("#{build}/next_target/emerge-pqv") if File.exist?("#{build}/next_target/emerge-pqv")
+			build_log_next_target = File.read("#{build}/next_target/build.log") if File.exist?("#{build}/next_target/build.log")
+			gem_list_next_target = File.read("#{build}/next_target/gem-list") if File.exist?("#{build}/next_target/gem-list")
 
 			package = Package.where(sha1: sha1).first
 			unless package.nil?
 				package.add_build(
 					Build.find_or_create(
 						timestamp: timestamp,
-						target: target,
 						result: result,
 						emerge_info: emerge_info,
 						emerge_pqv: emerge_pqv,
 						build_log: build_log,
-						gem_list: gem_list
+						gem_list: gem_list,
+						result_next_target: result_next_target,
+						emerge_info_next_target: emerge_info_next_target,
+						emerge_pqv_next_target: emerge_pqv_next_target,
+						build_log_next_target: build_log_next_target,
+						gem_list_next_target: gem_list_next_target
 					)
 				)
 			end
@@ -122,10 +133,10 @@ def update_repoman(log_path)
 			repoman_array = repoman.split('/')
 			repoman_array.shift(1) if repoman_array[1] == 'test-logs'
 			sha1 = repoman_array[1]
-			timestamp = repoman_array[4]
-			target = repoman_array[2].sub('_target', '')
+			timestamp = repoman_array[2]
 
-			log = File.read("#{repoman}/repoman_log")
+			log = File.read("#{repoman}/current/repoman_log") if File.exist?("#{repoman}/current/repoman_log")
+			log_next_target = File.read("#{repoman}/next_target/repoman_log") if File.exist?("#{repoman}/next_target/repoman_log")
 
 			result = 'unknown'
 			if log.include?('If everyone were like you, I\'d be out of business!')
@@ -136,14 +147,26 @@ def update_repoman(log_path)
 				result = 'failed'
 			end
 
+			result_next_target = 'unknown'
+			unless log_next_target.nil?
+				if log_next_target.include?('If everyone were like you, I\'d be out of business!')
+					result_next_target = 'passed'
+				elsif log_next_target.include?('You\'re only giving me a partial QA payment?')
+					result_next_target = 'partial'
+				elsif log_next_target.include?('Make your QA payment on time and you\'ll never see the likes of me.')
+					result_next_target = 'failed'
+				end
+			end
+
 			package = Package.where(sha1: sha1).first
 			unless package.nil?
 				package.add_repoman(
 					Repoman.find_or_create(
 						timestamp: timestamp,
-						target: target,
 						result: result,
-						log: log
+						log: log,
+						result_next_target: result_next_target,
+						log_next_target: log_next_target
 					)
 				)
 			end

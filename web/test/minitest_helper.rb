@@ -18,8 +18,10 @@ Package.create(
 	r20_target: package[9],
 	r21_target: package[10],
 	r22_target: package[11],
-	gem_version: package[12]
+	next_target: package[12],
+	gem_version: package[13]
 )
-update_build('test/test-logs/*/*/builds/*')
+update_build('test/test-logs/*/*/builds')
+update_repoman('test/test-logs/*/*/repomans')
 
-MiniTest.after_run { clear_packages }
+# MiniTest.after_run { clear_packages }

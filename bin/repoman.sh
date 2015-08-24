@@ -22,7 +22,7 @@ function REPOMAN() {
 	repoman manifest
 	repoman full > /tmp/repoman_log_current || true
 
-	if [[ "$NEXT_TARGET" != 'unknown' ]]; then
+	if [[ "$NEXT_TARGET" != 'nil' ]]; then
 		sed -i -e "/^USE_RUBY/s/=\"/=\"$NEXT_TARGET /" "$NAME-$VERSION.ebuild"
 		repoman manifest
 		repoman full > /tmp/repoman_log_next || true
@@ -32,15 +32,14 @@ function REPOMAN() {
 }
 
 function LOG() {
-	DATE=$(date +%s)
 	SHA1=$(sha1sum "/usr/portage/$CATEGORY/$NAME/$NAME-$VERSION.ebuild" | awk '{print $1}')
 
-	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE"
-	cp /tmp/repoman_log_current "$SCRIPT_DIR/ci-logs/$SHA1/current_target/repomans/$DATE/repoman_log"
+	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/repomans/current"
+	cp /tmp/repoman_log_current "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/repomans/current/repoman_log"
 
-	if [[ "$NEXT_TARGET" != 'unknown' ]]; then
-		mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE"
-		cp /tmp/repoman_log_next "$SCRIPT_DIR/ci-logs/$SHA1/next_target/repomans/$DATE/repoman_log"
+	if [[ "$NEXT_TARGET" != 'nil' ]]; then
+		mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/repomans/next_target"
+		cp /tmp/repoman_log_next "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/repomans/next_target/repoman_log"
 	fi
 
 	chmod 755 -R "$SCRIPT_DIR/ci-logs"
@@ -54,6 +53,7 @@ function CLEANUP() {
 
 ENV_SETUP
 
+DATE=$(date +%s)
 PKG_ARR=($(qatom "$1"))
 CATEGORY="${PKG_ARR[0]}"
 NAME="${PKG_ARR[1]}"

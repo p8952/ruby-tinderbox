@@ -27,6 +27,6 @@ class TestWeb < Minitest::Test
 		assert last_response.body.include? 'ruby19'
 		assert last_response.body.include? 'ruby20'
 		assert last_response.body.include? 'ruby21'
-		assert last_response.body.include? 'ruby22'
+		assert last_response.body.include? 'nil'
 	end
 end

@@ -58,31 +58,30 @@ function EMERGE() {
 }
 
 function LOG() {
-	DATE=$(date +%s)
 	SHA1=$(sha1sum "/usr/portage/$CATEGORY/$NAME/$NAME-$VERSION.ebuild" | awk '{print $1}')
-	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE"
+	mkdir -p "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE"
 
-	emerge --info "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/emerge-info"
-	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/emerge-pqv"
-	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/build.log"
-	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/environment"
-	gem list > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/gem-list"
+	emerge --info "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/emerge-info"
+	emerge -pqv "=$PACKAGE" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/emerge-pqv"
+	cp "/var/tmp/portage/$PACKAGE/temp/build.log" "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/build.log"
+	cp "/var/tmp/portage/$PACKAGE/temp/environment" "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/environment"
+	gem list > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/gem-list"
 
 	if [[ $1 == 0 ]]; then
 		RESULT="\e[0;32mBUILD SUCCEEDED\e[0m"
-		echo "succeeded" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
+		echo "succeeded" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/result"
 	elif [[ $1 == 1 ]]; then
 		RESULT="\e[0;31mBUILD FAILED\e[0m"
-		echo "failed" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
+		echo "failed" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/result"
 	elif [[ $1 == 124 ]]; then
 		RESULT="\e[0;31mBUILD TIMED OUT\e[0m"
-		echo "timed out" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
+		echo "timed out" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/result"
 	else
 		RESULT="\e[0;31mBUILD UNKNOWN\e[0m"
-		echo "unknown" > "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE/result"
+		echo "unknown" > "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE/result"
 	fi
 
-	chmod 755 -R "$SCRIPT_DIR/ci-logs/$SHA1/$TYPE/builds/$DATE"
+	chmod 755 -R "$SCRIPT_DIR/ci-logs/$SHA1/$DATE/builds/$TYPE"
 }
 
 function CLEANUP() {
@@ -98,6 +97,7 @@ function CLEANUP() {
 
 ENV_SETUP
 
+DATE=$(date +%s)
 PKG_ARR=($(qatom "$1"))
 CATEGORY="${PKG_ARR[0]}"
 NAME="${PKG_ARR[1]}"
@@ -108,13 +108,13 @@ else
 fi
 
 if [[ $# -eq 1 ]]; then
-	TYPE="current_target"
+	TYPE="current"
 	PACKAGE=$1
 	SETUP
 	EMERGE
 	CLEANUP
 elif [[ $# -eq 2 ]]; then
-	TYPE="current_target"
+	TYPE="current"
 	PACKAGE=$1
 	SETUP
 	EMERGE

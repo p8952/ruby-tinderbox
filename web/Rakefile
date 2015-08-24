@@ -36,7 +36,7 @@ namespace :db do
 
 	desc 'Update the build database with logfiles from ci-logs/'
 	task :update_build do
-		update_build('ci-logs/*/*/builds/*')
+		update_build('ci-logs/*/*/builds')
 	end
 
 	desc 'Clear the build database'
@@ -46,7 +46,7 @@ namespace :db do
 
 	desc 'Update the repoman database with logfiles from repo-logs/'
 	task :update_repoman do
-		update_repoman('ci-logs/*/*/repomans/*')
+		update_repoman('ci-logs/*/*/repomans')
 	end
 
 	desc 'Clear the repoman database'

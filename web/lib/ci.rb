@@ -63,10 +63,7 @@ def generate_package_list(ci_type, num_of_packages)
 			end
 		end
 	elsif num_of_packages.is_a?(Integer)
-		packages = []
-		packages << Package.where(identifier: 'dev-ruby/color-1.7.1').first
-		packages << Package.where(identifier: 'dev-ruby/crack-0.4.2-r1').first
-		packages << Package.where(identifier: 'dev-ruby/atomic-1.1.99').first
+                packages = packages.sample(num_of_packages)
 	else
 		puts 'ERROR: Invalid value for NUM_OF_PACKAGES'
 		puts ci_type
@@ -76,7 +73,8 @@ def generate_package_list(ci_type, num_of_packages)
 
 	packages_with_targets = []
 	packages.uniq.each do |package|
-		packages_with_targets << "#{package[:identifier]} #{package[:next_target]}"
+          package = Package.where(identifier: package).first
+	  packages_with_targets << "#{package[:identifier]} #{package[:next_target]}"
 	end
 
 	packages_with_targets

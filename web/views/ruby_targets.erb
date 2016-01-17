@@ -19,10 +19,10 @@
 	<thead>
 		<tr>
 			<th class="width-52">Package</th>
-			<th class="width-12">Ruby 1.9</th>
 			<th class="width-12">Ruby 2.0</th>
 			<th class="width-12">Ruby 2.1</th>
 			<th class="width-12">Ruby 2.2</th>
+			<th class="width-12">Ruby 2.3</th>
 		</tr>
 	</thead>
 	<tbody class="searchable">
@@ -30,9 +30,6 @@
 	<tr>
 		<td class="width-52">
 			<%=package[:identifier]%>
-		</td>
-		<td class="width-12 <%=package[:r19_target] == "nil" ? "danger" : "success"%>">
-			<%=package[:r19_target]%>
 		</td>
 		<td class="width-12 <%=package[:r20_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r20_target]%>
@@ -42,6 +39,9 @@
 		</td>
 		<td class="width-12 <%=package[:r22_target] == "nil" ? "danger" : "success"%>">
 			<%=package[:r22_target]%>
+		</td>
+                <td class="width-12 <%=package[:r23_target] == "nil" ? "danger" : "success"%>">
+			<%=package[:r23_target]%>
 		</td>
 		<td style="display:none;">
 			+<%=package[:amd64_keyword]%>

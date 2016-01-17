@@ -5,14 +5,14 @@ class RubyTinderbox < Sinatra::Base
 		portage_timestamp = Package.first[:portage_timestamp]
 
 		# Ruby Targets
-		ruby_1_9_amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: 'amd64').count
-		ruby_1_9__amd64 = Package.where(r19_target: 'ruby19', amd64_keyword: '~amd64').count
 		ruby_2_0_amd64 = Package.where(r20_target: 'ruby20', amd64_keyword: 'amd64').count
 		ruby_2_0__amd64 = Package.where(r20_target: 'ruby20', amd64_keyword: '~amd64').count
 		ruby_2_1_amd64 = Package.where(r21_target: 'ruby21', amd64_keyword: 'amd64').count
 		ruby_2_1__amd64 = Package.where(r21_target: 'ruby21', amd64_keyword: '~amd64').count
 		ruby_2_2_amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: 'amd64').count
 		ruby_2_2__amd64 = Package.where(r22_target: 'ruby22', amd64_keyword: '~amd64').count
+                ruby_2_3_amd64 = Package.where(r23_target: 'ruby23', amd64_keyword: 'amd64').count
+		ruby_2_3__amd64 = Package.where(r23_target: 'ruby23', amd64_keyword: '~amd64').count
 
 		# Outdated Gems
 		uptodate = []
@@ -28,14 +28,14 @@ class RubyTinderbox < Sinatra::Base
 		erb :visualizations, locals: {
 			portage_timestamp: portage_timestamp,
 			update_timestamp: update_timestamp,
-			ruby_1_9_amd64: ruby_1_9_amd64,
-			ruby_1_9__amd64: ruby_1_9__amd64,
 			ruby_2_0_amd64: ruby_2_0_amd64,
 			ruby_2_0__amd64: ruby_2_0__amd64,
 			ruby_2_1_amd64: ruby_2_1_amd64,
 			ruby_2_1__amd64: ruby_2_1__amd64,
 			ruby_2_2_amd64: ruby_2_2_amd64,
 			ruby_2_2__amd64: ruby_2_2__amd64,
+                        ruby_2_3_amd64: ruby_2_3_amd64,
+			ruby_2_3__amd64: ruby_2_3__amd64,
 			uptodate: uptodate.count,
 			outdated: outdated.count,
 			succeeded: succeeded,

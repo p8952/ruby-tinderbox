@@ -1,13 +1,5 @@
 $(function() {
 	var datasets = {
-		"ruby_1.9_amd64": {
-			label: "Ruby 1.9 amd64",
-			data: [[1, $('td[id="ruby_1.9_amd64"]').text()]]
-		},
-		"ruby_1.9_~amd64": {
-			label: "Ruby 1.9 ~amd64",
-			data: [[1, $('td[id="ruby_1.9_~amd64"]').text()]]
-		},
 		"ruby_2.0_amd64": {
 			label: "Ruby 2.0 amd64",
 			data: [[1, $('td[id="ruby_2.0_amd64"]').text()]]
@@ -31,6 +23,14 @@ $(function() {
 		"ruby_2.2_~amd64": {
 			label: "Ruby 2.2 ~amd64",
 			data: [[1, $('td[id="ruby_2.2_~amd64"]').text()]]
+		},
+		"ruby_2.3_amd64": {
+			label: "Ruby 2.3 amd64",
+			data: [[1, $('td[id="ruby_2.3_amd64"]').text()]]
+		},
+		"ruby_2.3_~amd64": {
+			label: "Ruby 2.3 ~amd64",
+			data: [[1, $('td[id="ruby_2.3_~amd64"]').text()]]
 		}
 	};
 

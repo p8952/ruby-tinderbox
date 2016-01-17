@@ -44,10 +44,6 @@ def format_output(cpv, slot, iuse, keyword):
             slot + ' ' + \
             keyword, \
             end=' ')
-    if 'ruby_targets_ruby19' in iuse:
-        print('ruby19', end=' ')
-    else:
-        print('nil', end=' ')
     if 'ruby_targets_ruby20' in iuse:
         print('ruby20', end=' ')
     else:
@@ -58,6 +54,10 @@ def format_output(cpv, slot, iuse, keyword):
         print('nil', end=' ')
     if 'ruby_targets_ruby22' in iuse:
         print('ruby22', end=' ')
+    else:
+        print('nil', end=' ')
+    if 'ruby_targets_ruby23' in iuse:
+        print('ruby23', end=' ')
     else:
         print('nil', end=' ')
     print(get_deps(cpv), end=' ')
